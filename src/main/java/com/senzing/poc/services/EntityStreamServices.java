@@ -124,7 +124,7 @@ public class EntityStreamServices extends EntityDataServices
   @POST
   @Path("load-queue/data-sources/{dataSourceCode}/records")
   @Produces(APPLICATION_JSON)
-  public SzBasicResponse streamLoadRecord(
+  public SzBasicResponse postRecordToLoadQueue(
       @PathParam("dataSourceCode") String dataSourceCode,
       @QueryParam("loadId")        String loadId,
       @Context UriInfo                    uriInfo,
@@ -221,7 +221,7 @@ public class EntityStreamServices extends EntityDataServices
    */
   @PUT
   @Path("load-queue/data-sources/{dataSourceCode}/records/{recordId}")
-  public SzBasicResponse loadRecord(
+  public SzBasicResponse putRecordOnLoadQueue(
       @PathParam("dataSourceCode")  String  dataSourceCode,
       @PathParam("recordId")        String  recordId,
       @QueryParam("loadId")         String  loadId,
