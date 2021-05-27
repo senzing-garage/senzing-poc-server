@@ -35,7 +35,8 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
    */
   SQS_LOAD_URL(
       "--sqs-load-url", Set.of("-sqsLoadUrl"),
-      "SENZING_SQS_LOAD_QUEUE_URL", null, 1,
+      "SENZING_SQS_LOAD_QUEUE_URL",
+      List.of("SENZING_SQS_QUEUE_URL"), 1,
       SQS_LOAD_QUEUE_GROUP, URL_PROPERTY_KEY, false),
 
   /**
@@ -202,7 +203,7 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
   RABBIT_LOAD_ROUTING_KEY(
       "--rabbit-load-routing-key", Set.of("-rabbitLoadRoutingKey"),
       "SENZING_RABBITMQ_LOAD_ROUTING_KEY",
-      null, 1,
+      List.of("SENZING_RABBITMQ_ROUTING_KEY"), 1,
       RABBITMQ_LOAD_QUEUE_GROUP, ROUTING_KEY_PROPERTY_KEY, false),
 
   /**
@@ -275,7 +276,8 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
    */
   KAFKA_LOAD_TOPIC(
       "--kafka-load-topic", Set.of("-kafkaLoadTopic"),
-      "SENZING_KAFKA_LOAD_TOPIC", null, 1,
+      "SENZING_KAFKA_LOAD_TOPIC",
+      List.of("SENZING_KAFKA_TOPIC"), 1,
       KAFKA_LOAD_QUEUE_GROUP, TOPIC_PROPERTY_KEY, false);
 
   /**

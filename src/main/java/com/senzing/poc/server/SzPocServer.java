@@ -193,6 +193,9 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
         "   --sqs-load-url <url>",
         "        Also -sqsLoadUrl.  Specifies an Amazon SQS queue URL as the load queue.",
         "        --> VIA ENVIRONMENT: " + SQS_LOAD_URL.getEnvironmentVariable(),
+        "                             "
+            + SQS_LOAD_URL.getEnvironmentFallbacks().iterator().next()
+            + " (fallback)",
         "",
         "   --rabbit-load-host <hostname>",
         "        Also -rabbitLoadHost.  Used to specify the hostname for connecting to",
@@ -246,6 +249,9 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
         "        Also -rabbitLoadRoutingKey.  Used to specify the routing key for",
         "        connecting to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_ROUTING_KEY.getEnvironmentVariable(),
+        "                             "
+            + RABBIT_LOAD_ROUTING_KEY.getEnvironmentFallbacks().iterator().next()
+            + " (fallback)",
         "",
         "   --kafka-load-bootstrap-server <bootstrap servers>",
         "        Also -kafkaLoadBootstrapServer.  Used to specify the bootstrap servers",
@@ -267,6 +273,9 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
         "        Also -kafkaLoadTopic.  Used to specify the topic name for connecting to",
         "        Kafka as part of specifying a Kafka load topic.",
         "        --> VIA ENVIRONMENT: " + KAFKA_LOAD_TOPIC.getEnvironmentVariable(),
+        "                             "
+            + KAFKA_LOAD_TOPIC.getEnvironmentFallbacks().iterator().next()
+            + " (fallback)",
         ""));
   }
 
