@@ -48,6 +48,9 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
    *                          the delimiter, followed by the "from" entity type
    *                          then the delimiter then the target entity type.
    * @param loadId The optional load ID to use for loading the records.
+   * @param maxBatchCount The maximum number of records to include in a
+   *                      micro-batch, though less may be sent if the records
+   *                      are large or if there is a delay in receiving more.
    * @param maxFailures The maximum number of failures or a negative number if
    *                    no maximum.
    * @param mediaType The media type for the content.
@@ -65,6 +68,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
       @QueryParam("mapEntityTypes") String mapEntityTypes,
       @QueryParam("mapEntityType") List<String> mapEntityTypeList,
       @QueryParam("loadId") String loadId,
+      @DefaultValue("10") @QueryParam("maxBatchCount") int maxBatchCount,
       @DefaultValue("0") @QueryParam("maxFailures") int maxFailures,
       @HeaderParam("Content-Type") MediaType mediaType,
       @FormDataParam("data") InputStream dataInputStream,
@@ -86,6 +90,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                         mapEntityTypes,
                                         mapEntityTypeList,
                                         loadId,
+                                        maxBatchCount,
                                         maxFailures,
                                         mediaType,
                                         dataInputStream,
@@ -132,6 +137,9 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
    *                          the delimiter, followed by the "from" entity type
    *                          then the delimiter then the target entity type.
    * @param loadId The optional load ID to use for loading the records.
+   * @param maxBatchCount The maximum number of records to include in a
+   *                      micro-batch, though less may be sent if the records
+   *                      are large or if there is a delay in receiving more.
    * @param maxFailures The maximum number of failures or a negative number if
    *                    no maximum.
    */
@@ -149,6 +157,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
       @QueryParam("mapEntityTypes") String mapEntityTypes,
       @QueryParam("mapEntityType") List<String> mapEntityTypeList,
       @QueryParam("loadId") String loadId,
+      @DefaultValue("10") @QueryParam("maxBatchCount") int maxBatchCount,
       @DefaultValue("0") @QueryParam("maxFailures") int maxFailures,
       @HeaderParam("Content-Type") MediaType mediaType,
       InputStream dataInputStream,
@@ -175,6 +184,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                         mapEntityTypes,
                                         mapEntityTypeList,
                                         loadId,
+                                        maxBatchCount,
                                         maxFailures,
                                         mediaType,
                                         dataInputStream,
@@ -221,6 +231,9 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
    *                          the delimiter, followed by the "from" entity type
    *                          then the delimiter then the target entity type.
    * @param loadId The optional load ID to use for loading the records.
+   * @param maxBatchCount The maximum number of records to include in a
+   *                      micro-batch, though less may be sent if the records
+   *                      are large or if there is a delay in receiving more.
    * @param maxFailures The maximum number of failures or a negative number if
    *                    no maximum.
    * @param progressPeriod The suggested maximum time between SSE `progress`
@@ -244,6 +257,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
       @QueryParam("mapEntityTypes") String mapEntityTypes,
       @QueryParam("mapEntityType") List<String> mapEntityTypeList,
       @QueryParam("loadId") String loadId,
+      @DefaultValue("10") @QueryParam("maxBatchCount") int maxBatchCount,
       @DefaultValue("0") @QueryParam("maxFailures") int maxFailures,
       @HeaderParam("Content-Type") MediaType mediaType,
       @FormDataParam("data") InputStream dataInputStream,
@@ -269,6 +283,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                  mapEntityTypes,
                                  mapEntityTypeList,
                                  loadId,
+                                 maxBatchCount,
                                  maxFailures,
                                  mediaType,
                                  dataInputStream,
@@ -315,6 +330,9 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
    *                          the delimiter, followed by the "from" entity type
    *                          then the delimiter then the target entity type.
    * @param loadId The optional load ID to use for loading the records.
+   * @param maxBatchCount The maximum number of records to include in a
+   *                      micro-batch, though less may be sent if the records
+   *                      are large or if there is a delay in receiving more.
    * @param maxFailures The maximum number of failures or a negative number if
    *                    no maximum.
    * @param progressPeriod The suggested maximum time between SSE `progress`
@@ -342,6 +360,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
       @QueryParam("mapEntityTypes") String mapEntityTypes,
       @QueryParam("mapEntityType") List<String> mapEntityTypeList,
       @QueryParam("loadId") String loadId,
+      @DefaultValue("10") @QueryParam("maxBatchCount") int maxBatchCount,
       @DefaultValue("0") @QueryParam("maxFailures") int maxFailures,
       @HeaderParam("Content-Type") MediaType mediaType,
       InputStream dataInputStream,
@@ -365,6 +384,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                  mapEntityTypes,
                                  mapEntityTypeList,
                                  loadId,
+                                 maxBatchCount,
                                  maxFailures,
                                  mediaType,
                                  dataInputStream,

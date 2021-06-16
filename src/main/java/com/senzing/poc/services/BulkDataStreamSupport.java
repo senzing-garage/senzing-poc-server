@@ -22,18 +22,14 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import static com.senzing.api.model.SzBulkDataStatus.ABORTED;
 import static com.senzing.api.model.SzBulkDataStatus.COMPLETED;
 import static com.senzing.api.model.SzHttpMethod.POST;
 import static com.senzing.poc.services.StreamLoadUtilities.logFailedAsyncLoad;
+import static com.senzing.io.IOUtilities.UTF_8;
 
 /**
  * Extends {@link BulkDataSupport} and {@link StreamLoadSupport} to provide
@@ -42,6 +38,11 @@ import static com.senzing.poc.services.StreamLoadUtilities.logFailedAsyncLoad;
 public interface BulkDataStreamSupport
     extends BulkDataSupport, StreamLoadSupport
 {
+  /**
+   * The maximum number of bytes for a micro batch to avoid queue limits.
+   */
+  int MAXIMUM_BATCH_BYTES = 224 * 1024;
+
   /**
    * Prepares for performing a stream-loading operation by ensuring a load
    * queue is configured, the server is not in read-only mode and a long-running
@@ -84,6 +85,7 @@ public interface BulkDataStreamSupport
       String                      mapEntityTypes,
       List<String>                mapEntityTypeList,
       String                      explicitLoadId,
+      int                         maxBatchCount,
       int                         maxFailures,
       MediaType                   mediaType,
       InputStream                 dataInputStream,
@@ -94,6 +96,9 @@ public interface BulkDataStreamSupport
       Sse                         sse,
       Session                     webSocketSession)
   {
+    // check if the maximum batch count is less-than or equal to zero
+    if (maxBatchCount <= 0) maxBatchCount = Integer.MAX_VALUE;
+
     OutboundSseEvent.Builder eventBuilder
         = (sseEventSink != null && sse != null) ? sse.newEventBuilder() : null;
 
@@ -130,8 +135,8 @@ public interface BulkDataStreamSupport
 
       // check if we need to auto-detect the media type
       try (InputStream        is  = dataCache.getInputStream(true);
-           InputStreamReader isr = new InputStreamReader(is, charset);
-           BufferedReader br  = new BufferedReader(isr))
+           InputStreamReader  isr = new InputStreamReader(is, charset);
+           BufferedReader     br  = new BufferedReader(isr))
       {
         // if format is null then RecordReader will auto-detect
         RecordReader recordReader = new RecordReader(bulkDataSet.getFormat(),
@@ -146,6 +151,13 @@ public interface BulkDataStreamSupport
         boolean       done      = false;
         SzMessage[]   failedMsg = { null };
 
+        ByteArrayOutputStream batchBytes
+            = new ByteArrayOutputStream(MAXIMUM_BATCH_BYTES);
+
+        int             batchCount    = 0;
+        String          prefix        = "[";
+        List<String[]>  trackingList  = new LinkedList<>();
+
         // loop through the records and handle each record
         while (!done) {
           JsonObject record = recordReader.readRecord();
@@ -153,47 +165,123 @@ public interface BulkDataStreamSupport
           // check if the record is null
           if (record == null) {
             done = true;
-            continue;
           }
 
           // check if we have a data source and entity type
-          String resolvedDS = JsonUtils.getString(record, "DATA_SOURCE");
-          String resolvedET = JsonUtils.getString(record, "ENTITY_TYPE");
-          if (resolvedDS == null || resolvedDS.trim().length() == 0
-              || resolvedET == null || resolvedET.trim().length() == 0)
+          String resolvedDS = (done) ? null
+              : JsonUtils.getString(record, "DATA_SOURCE");
+          String resolvedET = (done) ? null
+              : JsonUtils.getString(record, "ENTITY_TYPE");
+          if ((!done)
+              && (resolvedDS == null || resolvedDS.trim().length() == 0
+                  || resolvedET == null || resolvedET.trim().length() == 0))
           {
             bulkLoadResult.trackIncompleteRecord(resolvedDS, resolvedET);
 
           } else {
-            String      recordText  = JsonUtils.toJsonText(record);
-            SzMessage   message     = new SzMessage(recordText);
+            String  recordText  = (done) ? null : JsonUtils.toJsonText(record);
+            byte[]  recordBytes = (done) ? null : recordText.getBytes(UTF_8);
+            int     byteCount   = (done) ? 0    : recordBytes.length + 3;
 
-            this.sendingAsyncMessage(timers, LOAD_QUEUE_NAME);
-            try {
-              // send the info on the async queue
-              loadSink.send(message, (exception, msg) -> {
-                logFailedAsyncLoad(exception, msg);
+            String          messageBody       = null;
+            List<String[]>  batchTrackingList = trackingList;
+
+            // check if adding this record to the batch does NOT exceed the
+            // maximum number of bytes in a batch nor max number of records
+            if ((!done) && (byteCount + batchBytes.size() < MAXIMUM_BATCH_BYTES)
+                && (batchCount < maxBatchCount))
+            {
+              batchCount++;
+              batchBytes.write(prefix.getBytes(UTF_8));
+              batchBytes.write(recordBytes);
+              prefix = ",";
+              String[] trackParams = {resolvedDS, resolvedET};
+              trackingList.add(trackParams);
+              recordBytes = null;
+            }
+
+            // now check if we are sending the current batch
+            if ((batchCount > 0)
+                && (done || batchCount >= maxBatchCount
+                    || (batchBytes.size() + 1) >= MAXIMUM_BATCH_BYTES))
+            {
+              // create the batch message
+              batchBytes.write("]".getBytes(UTF_8));
+              messageBody = new String(batchBytes.toByteArray(), UTF_8);
+
+              // reset the batch
+              batchBytes    = new ByteArrayOutputStream(MAXIMUM_BATCH_BYTES);
+              trackingList  = new LinkedList<>();
+              batchCount    = 0;
+              prefix        = "[";
+            }
+
+            // check if we are ready to send a batch
+            if (messageBody != null) {
+              // create the message object
+              SzMessage message = new SzMessage(messageBody);
+
+              // send the batch
+              this.sendingAsyncMessage(timers, LOAD_QUEUE_NAME);
+              try {
+                // send the info on the async queue
+                loadSink.send(message, (exception, msg) -> {
+                  logFailedAsyncLoad(exception, msg);
+                  if (failedMsg[0] != message) {
+                    failedMsg[0] = message;
+                    for (String[] trackParams : batchTrackingList) {
+                      String trackDS = trackParams[0];
+                      String trackET = trackParams[1];
+                      bulkLoadResult.trackFailedRecord(
+                          trackDS, trackET, this.newError(exception));
+                    }
+                  }
+                });
+
+                // track that we successfully enqueued the record
+                for (String[] trackParams : batchTrackingList) {
+                  String trackDS = trackParams[0];
+                  String trackET = trackParams[1];
+                  bulkLoadResult.trackLoadedRecord(trackDS, trackET);
+                }
+
+              } catch (Exception e) {
+                // failed async logger will not double-log
+                logFailedAsyncLoad(e, message);
                 if (failedMsg[0] != message) {
                   failedMsg[0] = message;
-                  bulkLoadResult.trackFailedRecord(
-                      resolvedDS, resolvedET, this.newError(exception));
+
+                  for (String[] trackParams : batchTrackingList) {
+                    String trackDS = trackParams[0];
+                    String trackET = trackParams[1];
+                    bulkLoadResult.trackFailedRecord(
+                        trackDS, trackET, this.newError(e));
+                  }
                 }
-              });
 
-              // track that we successfully enqueued the record
-              bulkLoadResult.trackLoadedRecord(resolvedDS, resolvedET);
-
-            } catch (Exception e) {
-              // failed async logger will not double-log
-              logFailedAsyncLoad(e, message);
-              if (failedMsg[0] != message) {
-                failedMsg[0] = message;
-                bulkLoadResult.trackFailedRecord(
-                    resolvedDS, resolvedET, this.newError(e));
+              } finally {
+                this.sentAsyncMessage(timers, LOAD_QUEUE_NAME);
               }
+            }
 
-            } finally {
-              this.sentAsyncMessage(timers, LOAD_QUEUE_NAME);
+            // now check if we have a record that was not added to the batch
+            if (recordBytes != null) {
+              // check if the individual message is simply too large to send
+              if ((byteCount + 2) >= MAXIMUM_BATCH_BYTES) {
+                bulkLoadResult.trackFailedRecord(
+                    resolvedDS, resolvedET,
+                    this.newError("Maximum message size ("
+                                      + MAXIMUM_BATCH_BYTES + ") exceeded: "
+                                      + byteCount));
+              } else {
+                // add this record to the newly created batch
+                batchCount++;
+                batchBytes.write(prefix.getBytes(UTF_8));
+                batchBytes.write(recordBytes);
+                prefix = ",";
+                String[] trackParams = {resolvedDS, resolvedET};
+                trackingList.add(trackParams);
+              }
             }
           }
 

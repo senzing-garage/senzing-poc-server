@@ -3863,6 +3863,21 @@ paths:
             multipleSpecificOverridesWithEmptyExample:
               summary: Map multiple specific data sources with empty mapping
               value: [ "::GENERIC", ":COMP:COMPANY", ":ORG:ORGANIZATION" ]
+        - name: maxBatchCount
+          description: |
+            The maximum number of records to include in a single-message
+            "micro batch" when adding to the queue.  If the value is zero or
+            negative then as many records as possible are included in the
+            "micro batch" without exceeding the maximum message size.  If
+            one (1) then an array containing a single record is sent.  If
+            greater than one (1) then arrays of multiple items may be sent,
+            providing the total message size is not too large.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
         - name: maxFailures
           description: |
             The maximum number of failures that can occur before the bulk
