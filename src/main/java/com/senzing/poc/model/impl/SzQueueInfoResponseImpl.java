@@ -1,23 +1,26 @@
 package com.senzing.poc.model.impl;
 
-import com.senzing.api.model.SzBasicResponse;
 import com.senzing.api.model.SzLinks;
 import com.senzing.api.model.SzMeta;
+import com.senzing.api.model.impl.SzBasicResponseImpl;
 import com.senzing.poc.model.SzQueueInfo;
+import com.senzing.poc.model.SzQueueInfoResponse;
 
 /**
- *
+ * Provides a default implementation of {@link SzQueueInfoResponse}.
  */
-public class SzQueueInfoResponse extends SzBasicResponse {
+public class SzQueueInfoResponseImpl extends SzBasicResponseImpl
+  implements SzQueueInfoResponse
+{
   /**
    * The data for this instance.
    */
   private SzQueueInfo queueInfo;
 
   /**
-   * Default constructor.
+   * Default constructor for JSON deserialization.
    */
-  SzQueueInfoResponse() {
+  protected SzQueueInfoResponseImpl() {
     this.queueInfo = null;
   }
 
@@ -29,7 +32,7 @@ public class SzQueueInfoResponse extends SzBasicResponse {
    *
    * @param links The links for the response.
    */
-  public SzQueueInfoResponse(SzMeta meta, SzLinks links) {
+  public SzQueueInfoResponseImpl(SzMeta meta, SzLinks links) {
     this(meta, links, null);
   }
 
@@ -44,7 +47,9 @@ public class SzQueueInfoResponse extends SzBasicResponse {
    * @param queueInfo The {@link SzQueueInfo} describing the data for this 
    *                  instance.
    */
-  public SzQueueInfoResponse(SzMeta meta, SzLinks links, SzQueueInfo queueInfo) 
+  public SzQueueInfoResponseImpl(SzMeta       meta,
+                                 SzLinks      links,
+                                 SzQueueInfo  queueInfo)
   {
     super(meta, links);
     this.queueInfo = queueInfo;
@@ -67,5 +72,4 @@ public class SzQueueInfoResponse extends SzBasicResponse {
   public void setData(SzQueueInfo info) {
     this.queueInfo = info;
   }
-  
 }

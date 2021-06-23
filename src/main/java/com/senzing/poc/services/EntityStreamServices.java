@@ -5,7 +5,8 @@ import com.senzing.api.model.SzHttpMethod;
 import com.senzing.api.model.SzLoadRecordResponse;
 import com.senzing.api.services.*;
 import com.senzing.poc.model.SzQueueInfo;
-import com.senzing.poc.model.impl.SzQueueInfoResponse;
+import com.senzing.poc.model.SzQueueInfoResponse;
+import com.senzing.poc.model.impl.SzQueueInfoResponseImpl;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.util.JsonUtils;
 import com.senzing.util.Timers;
@@ -40,7 +41,7 @@ public class EntityStreamServices extends EntityDataServices
    * <tt>"GET /load-queue"</tt>.
    *
    * @param uriInfo The {@link UriInfo} for the equest.
-   * @return The {@link SzQueueInfoResponse} describing the queue.
+   * @return The {@link SzQueueInfoResponseImpl} describing the queue.
    */
   @GET
   @Path("load-queue")
@@ -95,9 +96,9 @@ public class EntityStreamServices extends EntityDataServices
   }
 
   /**
-   * Creates a new instance of {@link SzQueueInfo}.
+   * Creates a new instance of {@link SzQueueInfoResponse}.
    *
-   * @return A new instance of {@link SzQueueInfo}.
+   * @return A new instance of {@link SzQueueInfoResponse}.
    */
   protected SzQueueInfoResponse newQueueInfoResponse(SzHttpMethod   method,
                                                      UriInfo        uriInfo,
@@ -105,7 +106,7 @@ public class EntityStreamServices extends EntityDataServices
                                                      String         description,
                                                      SzMessageSink  sink)
   {
-    return new SzQueueInfoResponse(
+    return SzQueueInfoResponse.FACTORY.create(
         this.newMeta(method, 200, timers),
         this.newLinks(uriInfo),
         this.newQueueInfo(description, sink));
@@ -188,7 +189,7 @@ public class EntityStreamServices extends EntityDataServices
       this.asyncLoadRecord(provider, null, timers, recordText);
 
       // construct the response
-      SzBasicResponse response = new SzBasicResponse(
+      SzBasicResponse response = SzBasicResponse.FACTORY.create(
           this.newMeta(POST, 200, timers),
           this.newLinks(uriInfo));
 
@@ -279,7 +280,7 @@ public class EntityStreamServices extends EntityDataServices
       this.asyncLoadRecord(provider, null, timers, recordText);
 
       // construct the response
-      SzBasicResponse response = new SzBasicResponse(
+      SzBasicResponse response = SzBasicResponse.FACTORY.create(
           this.newMeta(PUT, 200, timers),
           this.newLinks(uriInfo));
 
