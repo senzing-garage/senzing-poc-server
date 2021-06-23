@@ -3,7 +3,7 @@ info:
   title: Senzing POC REST API
   version: "1.0.0"
   description: >-
-    This is the Senzing REST API.  It describes the REST interface
+    This is the Senzing POC REST API.  It describes the REST interface
     to Senzing API functions available via REST.  It leverages the
     Senzing native API which is documented at
     [https://docs.senzing.com](https://docs.senzing.com).
@@ -4879,6 +4879,13 @@ components:
               type: object
               nullable: true
               additionalProperties: {}
+    SzLicenseResponseData:
+      description: >
+        Represents the data segment included with an `SzLicenseResponse`
+      type: object
+      properties:
+        license:
+          $ref: '#/components/schemas/SzLicenseInfo'
     SzLicenseResponse:
       description: >-
         The response containing the license information.
@@ -4887,10 +4894,7 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                license:
-                  $ref: '#/components/schemas/SzLicenseInfo'
+              $ref: '#/components/schemas/SzLicenseResponseData'
     SzVersionResponse:
       description: >-
         The response containing the version information.
@@ -4909,6 +4913,17 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/SzServerInfo'
+    SzAttributeTypesResponseData:
+      description: >-
+        Describes the data associated with the `SzAttributeTypesResponse`.
+      type: object
+      properties:
+        attributeTypes:
+          description: >-
+            The list of attribute types.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzAttributeType'
     SzAttributeTypesResponse:
       description: >-
         The response containing attribute type information.
@@ -4917,14 +4932,14 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                attributeTypes:
-                  description: >-
-                    The list of attribute types.
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/SzAttributeType'
+              $ref: '#/components/schemas/SzAttributeTypesResponseData'
+    SzAttributeTypeResponseData:
+      description: >-
+        Describes the data segment associated with `SzAttributeTypeResponse`
+      type: object
+      properties:
+        attributeType:
+          $ref: '#/components/schemas/SzAttributeType'
     SzAttributeTypeResponse:
       description: >-
         The response containing information for a single attribute type.
@@ -4933,10 +4948,16 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                attributeType:
-                  $ref: '#/components/schemas/SzAttributeType'
+              $ref: '#/components/schemas/SzAttributeTypeResponseData'
+    SzDataSourceResponseData:
+      description: >-
+        Describes the data associated with `SzDataSourceResponse`
+      type: object
+      properties:
+        dataSource:
+          description: >-
+            The requested data source as an `SzDataSource` object.
+          $ref: '#/components/schemas/SzDataSource'
     SzDataSourceResponse:
       description: >-
         The response describing a data source.
@@ -4945,12 +4966,26 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                dataSource:
-                  description: >-
-                    The requested data source as an `SzDataSource` object.
-                  $ref: '#/components/schemas/SzDataSource'
+              $ref: '#/components/schemas/SzDataSourceResponseData'
+    SzDataSourcesResponseData:
+      description: >-
+        Describes the data for `SzDataSourceResponse`.
+      type: object
+      properties:
+        dataSources:
+          description: >-
+            The list of data source codes for the configured data
+            sources.
+          type: array
+          items:
+            type: string
+        dataSourceDetails:
+          description: >-
+            The list of `SzDataSource` instances describing the data
+            sources that are configured.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SzDataSource'
     SzDataSourcesResponse:
       description: >-
         The response describing the configured data sources.
@@ -4959,22 +4994,16 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                dataSources:
-                  description: >-
-                    The list of data source codes for the configured data
-                    sources.
-                  type: array
-                  items:
-                    type: string
-                dataSourceDetails:
-                  description: >-
-                    The list of `SzDataSource` instances describing the data
-                    sources that are configured.
-                  type: object
-                  additionalProperties:
-                    $ref: '#/components/schemas/SzDataSource'
+              $ref: '#/components/schemas/SzDataSourcesResponseData'
+    SzEntityTypeResponseData:
+      description: >-
+        Describes the data segment of `SzEntityTypeResponse`
+      type: object
+      properties:
+        entityType:
+          description: >-
+            The requested entity type as an `SzEntityType` object.
+          $ref: '#/components/schemas/SzEntityType'
     SzEntityTypeResponse:
       description: >-
         The response describing an entity type.
@@ -4983,12 +5012,26 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                entityType:
-                  description: >-
-                    The requested entity type as an `SzEntityType` object.
-                  $ref: '#/components/schemas/SzEntityType'
+              $ref: '#/components/schemas/SzEntityTypeResponseData'
+    SzEntityTypesResponseData:
+      description: >-
+        Describes the data segment associated with `SzEntityTypesResponse`
+      type: object
+      properties:
+        entityTypes:
+          description: >-
+            The list of entity type codes for the configured entity
+            types.
+          type: array
+          items:
+            type: string
+        entityTypeDetails:
+          description: >-
+            The list of `SzEntityType` instances describing the
+            configured entity types.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SzEntityType'
     SzEntityTypesResponse:
       description: >-
         The response describing the configured entity types.
@@ -4997,22 +5040,16 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                entityTypes:
-                  description: >-
-                    The list of entity type codes for the configured entity
-                    types.
-                  type: array
-                  items:
-                    type: string
-                entityTypeDetails:
-                  description: >-
-                    The list of `SzEntityType` instances describing the
-                    configured entity types.
-                  type: object
-                  additionalProperties:
-                    $ref: '#/components/schemas/SzEntityType'
+              $ref: '#/components/schemas/SzEntityTypesResponseData'
+    SzEntityClassResponseData:
+      description: >-
+        Describes the data segment of `SzEntityClassResponse`
+      type: object
+      properties:
+        entityClass:
+          description: >-
+            The requested data source as an `SzEntityClass` object.
+          $ref: '#/components/schemas/SzEntityClass'
     SzEntityClassResponse:
       description: >-
         The response describing an entity class.
@@ -5021,12 +5058,26 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                entityClass:
-                  description: >-
-                    The requested data source as an `SzEntityClass` object.
-                  $ref: '#/components/schemas/SzEntityClass'
+              $ref: '#/components/schemas/SzEntityClassResponseData'
+    SzEntityClassesResponseData:
+      description: >-
+        Describes the data associated with `SzEntityClassesResponse`
+      type: object
+      properties:
+        entityClasses:
+          description: >-
+            The list of entity classes codes for the configured entity
+            classes.
+          type: array
+          items:
+            type: string
+        entityClassDetails:
+          description: >-
+            The list of `SzEntityClass` instances describing the
+            configured entity classes.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SzEntityClass'
     SzEntityClassesResponse:
       description: >-
         The response describing the configured entity classes.
@@ -5035,69 +5086,66 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                entityClasses:
-                  description: >-
-                    The list of entity classes codes for the configured entity
-                    classes.
-                  type: array
-                  items:
-                    type: string
-                entityClassDetails:
-                  description: >-
-                    The list of `SzEntityClass` instances describing the
-                    configured entity classes.
-                  type: object
-                  additionalProperties:
-                    $ref: '#/components/schemas/SzEntityClass'
+              $ref: '#/components/schemas/SzEntityClassesResponseData'
     SzConfigResponse:
       description: >-
         The response containing raw configuration in the rawData field.
       allOf:
         - $ref: '#/components/schemas/SzResponseWithRawData'
+    SzLoadRecordResponseData:
+      description: >-
+        Describes the data segment of `SzLoadRecordResponse`.
+      type: object
+      properties:
+        recordId:
+          description: >-
+            The record ID of the record that was loaded.
+          type: string
+        info:
+          description: >-
+            The optionally requested info associated with the load.
+          $ref: '#/components/schemas/SzResolutionInfo'
     SzLoadRecordResponse:
+      description: >-
+        Describes the response when a record is successfully loaded.
       allOf:
         - $ref: '#/components/schemas/SzResponseWithRawData'
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                recordId:
-                  description: >-
-                    The record ID of the record that was loaded.
-                  type: string
-                info:
-                  description: >-
-                    The optionally requested info associated with the load.
-                  $ref: '#/components/schemas/SzResolutionInfo'
+              $ref: '#/components/schemas/SzLoadRecordResponseData'
+    SzReevaluateResponseData:
+      description: >-
+        Describes the data segment of `SzReevaluateResponse`.
+      type: object
+      properties:
+        info:
+          description: >-
+            The optionally requested info associated with the load.
+          $ref: '#/components/schemas/SzResolutionInfo'
     SzReevaluateResponse:
       allOf:
         - $ref: '#/components/schemas/SzResponseWithRawData'
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                info:
-                  description: >-
-                    The optionally requested info associated with the
-                    reevaluation.
-                  $ref: '#/components/schemas/SzResolutionInfo'
+              $ref: '#/components/schemas/SzReevaluateResponseData'
+    SzDeleteRecordResponseData:
+      description: >-
+        Describes the data segment of `SzDeleteRecordResponse`.
+      type: object
+      properties:
+        info:
+          description: >-
+            The optionally requested info associated with the load.
+          $ref: '#/components/schemas/SzResolutionInfo'
     SzDeleteRecordResponse:
       allOf:
         - $ref: '#/components/schemas/SzResponseWithRawData'
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                info:
-                  description: >-
-                    The optionally requested info associated with the
-                    record deletion.
-                  $ref: '#/components/schemas/SzResolutionInfo'
+              $ref: '#/components/schemas/SzDeleteRecordResponseData'
     SzRecordResponse:
       description: >-
         The response describing an entity record.
@@ -5122,6 +5170,19 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/SzEntityData'
+    SzAttributeSearchResponseData:
+      description: >-
+        Describes the data segment of the `SzAttributeSearchResponse`
+      type: object
+      properties:
+        searchResults:
+          description: >-
+            The array of `AttributeSearchResult` instances describing the
+            entities matching the specified entity search attributes
+            including the `AttributeSearchResultType` for each.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzAttributeSearchResult'
     SzAttributeSearchResponse:
       description: >-
         The response describing the resolved entities found from a search.
@@ -5130,16 +5191,7 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                searchResults:
-                  description: >-
-                    The array AttributeSearchResult instances describing the
-                    entities matching the specified entity search attributes
-                    including the AttributeSearchResultType for each.
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/SzAttributeSearchResult'
+              $ref: '#/components/schemas/SzAttributeSearchResponseData'
     SzEntityPathResponse:
       description: >-
         The response describing a path between two resolved entities.
