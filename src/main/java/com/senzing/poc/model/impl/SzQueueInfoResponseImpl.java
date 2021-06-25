@@ -1,5 +1,6 @@
 package com.senzing.poc.model.impl;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.SzLinks;
 import com.senzing.api.model.SzMeta;
 import com.senzing.api.model.impl.SzBasicResponseImpl;
@@ -9,6 +10,7 @@ import com.senzing.poc.model.SzQueueInfoResponse;
 /**
  * Provides a default implementation of {@link SzQueueInfoResponse}.
  */
+@JsonDeserialize
 public class SzQueueInfoResponseImpl extends SzBasicResponseImpl
   implements SzQueueInfoResponse
 {
