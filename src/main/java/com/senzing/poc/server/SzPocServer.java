@@ -291,6 +291,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
     pw.println();
     printUsageIntro(pw);
     printStandardOptionsUsage(pw);
+    printSslOptionsUsage(pw);
     printInfoQueueOptionsUsage(pw);
     printLoadQueueOptionsUsage(pw);
     printAdvancedOptionsUsage(pw);

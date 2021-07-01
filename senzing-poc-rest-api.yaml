@@ -3,10 +3,13 @@ info:
   title: Senzing POC REST API
   version: "1.0.0"
   description: >-
-    This is the Senzing POC REST API.  It describes the REST interface
-    to Senzing API functions available via REST.  It leverages the
-    Senzing native API which is documented at
-    [https://docs.senzing.com](https://docs.senzing.com).
+    This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
+    backwards compatibility.  This API extends the
+    [Senzing REST API](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/Senzing/senzing-rest-api-specification/master/senzing-rest-api.yaml)
+    which is maintained for backwards compatibility.  However, the Senzing
+    POC API is specifically targeted at the Senzing One-Day POC application and
+    no guarantees are made for support.  It can be used as example for creating
+    your own extended API.
     <br><br>
     <b>SSE NOTE:</b> Some end-points described here will indicate "(Supports SSE)" to
     indicate that they support "Server-sent Events" via the `text/event-stream`
