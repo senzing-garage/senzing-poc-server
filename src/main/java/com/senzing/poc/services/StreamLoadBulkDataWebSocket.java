@@ -62,11 +62,10 @@ public class StreamLoadBulkDataWebSocket extends LoadBulkDataWebSocket
    * Implemented to load the records once the thread is started.
    */
   protected void doRun() {
-    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
-    Timers        timers    = this.newTimers();
+    SzPocProvider provider = (SzPocProvider) this.getApiProvider();
 
     this.streamLoadBulkRecords(provider,
-                               timers,
+                               this.timers,
                                this.dataSource,
                                this.mapDataSources,
                                this.mapDataSourceList,
