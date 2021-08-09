@@ -50,6 +50,33 @@ servers:
         default: '/'
 
 paths:
+  /:
+    get:
+      tags:
+        - Admin
+      summary: >-
+        Gets a root-level response from the server.  This returns the same
+        as the `GET /heartbeat` endpoint for now, but may change in the future
+        to provide additional information.
+      description: |
+        The root operation can be used to ensure that the HTTP server is
+        indeed running, but this operation does not call upon the underlying
+        native Senzing API and therefore does not ensure the Senzing
+        initialization or configuration is valid.
+      operationId: root
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzBaseResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzBaseResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzBaseResponse'
   /heartbeat:
     get:
       tags:
@@ -76,6 +103,32 @@ paths:
             default:
               schema:
                 $ref: '#/components/schemas/SzBaseResponse'
+  /specifications/open-api:
+    get:
+      tags:
+        - Admin
+      summary: >-
+        Gets this Open API specification to describe the API.
+      description: |
+        This operation can be used to obtain the Open API specification in JSON
+        format.  The specification can either be the `data` field of a standard
+        response (i.e.: a response with a `meta`, `links` and `data` field) or
+        as raw format where the root JSON document is the Open API specification
+        JSON.
+      operationId: openApiSpecification
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzOpenApiSpecResponseOrRawJson'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzOpenApiSpecResponseOrRawJson'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzOpenApiSpecResponseOrRawJson'
   /license:
     get:
       tags:
@@ -4848,6 +4901,8 @@ components:
       properties:
         self:
           type: string
+        openApiSpecification:
+          type: string
     SzBaseResponse:
       description: >-
         Represents the base information included in all responses sans the
@@ -4882,6 +4937,29 @@ components:
               type: object
               nullable: true
               additionalProperties: {}
+    SzOpenApiSpecResponse:
+      description: >-
+        Extends the BaseResponse to describe a response containing the
+        Open API specification in JSON format as the data.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                This Open API specification in JSON format.
+              type: object
+              nullable: false
+              additionalProperties: {}
+    SzOpenApiSpecResponseOrRawJson:
+      description: >-
+        This represents the possible return type for an Open API specification
+        which can be an instance of `SzOpenApiSpecResponse` or raw JSON of the
+        Open API specification.
+      oneOf:
+        - $ref: '#/components/schemas/SzOpenApiSpecResponse'
+        - type: object
+          additionalProperties: {}
     SzLicenseResponseData:
       description: >
         Represents the data segment included with an `SzLicenseResponse`
