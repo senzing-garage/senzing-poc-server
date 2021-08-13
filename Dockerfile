@@ -9,7 +9,7 @@ FROM ${BASE_BUILDER_IMAGE} as builder
 
 # Set Shell to use for RUN commands in builder step.
 
-ENV REFRESHED_AT=2021-08-100
+ENV REFRESHED_AT=2021-08-13
 
 LABEL Name="senzing/poc-api-server-builder" \
       Maintainer="support@senzing.com" \
@@ -17,8 +17,7 @@ LABEL Name="senzing/poc-api-server-builder" \
 
 # Build arguments.
 
-ARG SENZING_G2_JAR_RELATIVE_PATHNAME=unknown
-ARG SENZING_G2_JAR_VERSION=unknown
+ARG SENZING_API_SERVER_VERSION=2.7.0
 
 # Set environment variables.
 
@@ -26,6 +25,19 @@ ENV SENZING_ROOT=/opt/senzing
 ENV SENZING_G2_DIR=${SENZING_ROOT}/g2
 ENV PYTHONPATH=${SENZING_ROOT}/g2/python
 ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
+
+# Copy 'senzing-api-server.jar' to Builder step.
+
+COPY --from=senzing/senzing-api-server:2.7.0  "/app/senzing-api-server.jar" "/app/senzing-api-server.jar"
+
+# Install senzing-api-server.jar into maven repository.
+
+RUN mvn install:install-file \
+      -Dfile=/app/senzing-api-server.jar  \
+      -DgroupId=com.senzing \
+      -DartifactId=senzing-api-server \
+      -Dversion=${SENZING_API_SERVER_VERSION} \
+      -Dpackaging=jar
 
 # Copy Repo files to Builder step.
 
@@ -35,12 +47,10 @@ COPY . /poc-api-server
 
 WORKDIR /poc-api-server
 
-RUN export SENZING_API_SERVER_JAR_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
+RUN export POC_API_SERVER_JAR_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
  && make \
-     SENZING_G2_JAR_PATHNAME=/senzing-api-server/${SENZING_G2_JAR_RELATIVE_PATHNAME} \
-     SENZING_G2_JAR_VERSION=${SENZING_G2_JAR_VERSION} \
      package \
- && cp /senzing-api-server/target/senzing-api-server-${SENZING_API_SERVER_JAR_VERSION}.jar "/poc-api-server.jar"
+ && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_JAR_VERSION}.jar "/senzing-poc-server.jar"
 
 # -----------------------------------------------------------------------------
 # Stage: Final
@@ -81,7 +91,7 @@ EXPOSE 8080
 
 # Copy files from builder step.
 
-COPY --from=builder "/poc-api-server.jar" "/app/poc-api-server.jar"
+COPY --from=builder "/senzing-poc-server.jar" "/app/senzing-poc-server.jar"
 
 # Make non-root container.
 
@@ -90,4 +100,4 @@ USER 1001
 # Runtime execution.
 
 WORKDIR /app
-ENTRYPOINT ["java", "-jar", "poc-api-server.jar"]
+ENTRYPOINT ["java", "-jar", "senzing-poc-server.jar"]

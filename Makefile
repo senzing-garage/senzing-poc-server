@@ -2,11 +2,6 @@
 # It should match <artifactId> in pom.xml
 PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
 
-# User variables.
-
-SENZING_G2_JAR_PATHNAME ?= /opt/senzing/g2/lib/g2.jar
-SENZING_G2_JAR_VERSION ?= unknown
-
 # Information from git.
 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
@@ -43,14 +38,8 @@ default: help
 .PHONY: package
 package:
 
-	mvn install:install-file \
-		-Dfile=$(SENZING_G2_JAR_PATHNAME) \
-		-DgroupId=com.senzing \
-		-DartifactId=g2 \
-		-Dversion=$(SENZING_G2_JAR_VERSION) \
-		-Dpackaging=jar
-
 	mvn package \
+		-DskipTests \
 		-Dproject.version=$(GIT_VERSION) \
 		-Dgit.branch=$(GIT_BRANCH) \
 		-Dgit.repository.name=$(GIT_REPOSITORY_NAME) \
@@ -66,10 +55,7 @@ docker-package: docker-rmi-for-package
 	# Make docker image.
 
 	mkdir -p $(TARGET)
-	cp $(SENZING_G2_JAR_PATHNAME) $(TARGET)/
 	docker build \
-		--build-arg SENZING_G2_JAR_RELATIVE_PATHNAME=$(TARGET)/g2.jar \
-		--build-arg SENZING_G2_JAR_VERSION=$(SENZING_G2_JAR_VERSION) \
 		--tag $(DOCKER_IMAGE_PACKAGE) \
 		--file Dockerfile-package \
 		.
@@ -87,25 +73,17 @@ docker-package: docker-rmi-for-package
 # -----------------------------------------------------------------------------
 
 .PHONY: docker-build
-docker-build: docker-rmi-for-build
-	mkdir -p $(TARGET)
-	cp $(SENZING_G2_JAR_PATHNAME) $(TARGET)/
+docker-build:
 	docker build \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BASE_BUILDER_IMAGE=$(BASE_BUILDER_IMAGE) \
-		--build-arg SENZING_G2_JAR_RELATIVE_PATHNAME=$(TARGET)/g2.jar \
-		--build-arg SENZING_G2_JAR_VERSION=$(SENZING_G2_JAR_VERSION) \
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(GIT_VERSION) \
 		.
 
 .PHONY: docker-build-development-cache
 docker-build-development-cache: docker-rmi-for-build-development-cache
-	mkdir -p $(TARGET)
-	cp $(SENZING_G2_JAR_PATHNAME) $(TARGET)/
 	docker build \
-		--build-arg SENZING_G2_JAR_RELATIVE_PATHNAME=$(TARGET)/g2.jar \
-		--build-arg SENZING_G2_JAR_VERSION=$(SENZING_G2_JAR_VERSION) \
 		--tag $(DOCKER_IMAGE_TAG) \
 		.
 
