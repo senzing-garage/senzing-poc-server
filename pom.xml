@@ -402,7 +402,6 @@
            <filter>
               <artifact>com.senzing:senzing-api-server*</artifact>
               <excludes>
-                <exclude>com/senzing/g2/engine/**</exclude>
                 <exclude>com/ibm/icu/**</exclude>
                 <exclude>org/mozilla/universalchardet/**</exclude>
                 <exclude>org/glassfish/json/**</exclude>
