@@ -11,7 +11,7 @@ FROM ${BASE_BUILDER_IMAGE} as builder
 
 ENV REFRESHED_AT=2021-08-19
 
-LABEL Name="senzing/poc-api-server-builder" \
+LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
       Version="1.0.0"
 
