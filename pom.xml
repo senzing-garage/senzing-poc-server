@@ -11,7 +11,7 @@
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-api-server</artifactId>
-      <version>[2.7.0, 3.0.0)</version>
+      <version>[2.7.2, 3.0.0)</version>
     </dependency>
     <dependency>
      <groupId>org.xerial</groupId>
@@ -402,7 +402,6 @@
            <filter>
               <artifact>com.senzing:senzing-api-server*</artifact>
               <excludes>
-                <exclude>com/senzing/g2/engine/**</exclude>
                 <exclude>com/ibm/icu/**</exclude>
                 <exclude>org/mozilla/universalchardet/**</exclude>
                 <exclude>org/glassfish/json/**</exclude>
