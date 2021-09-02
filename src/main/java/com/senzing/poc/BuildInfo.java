@@ -21,7 +21,7 @@ public class BuildInfo {
   static {
     String resource = "/com/senzing/poc/build-info.properties";
     String version = "UNKNOWN";
-    try (InputStream is = com.senzing.poc.BuildInfo.class.getResourceAsStream(resource))
+    try (InputStream is = BuildInfo.class.getResourceAsStream(resource))
     {
       Properties buildProps = new Properties();
       buildProps.load(is);

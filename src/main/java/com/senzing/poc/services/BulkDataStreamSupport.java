@@ -10,6 +10,7 @@ import com.senzing.io.TemporaryDataCache;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.util.AccessToken;
 import com.senzing.util.JsonUtils;
+import com.senzing.util.LoggingUtilities;
 import com.senzing.util.Timers;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
@@ -133,6 +134,11 @@ public interface BulkDataStreamSupport
 
       String charset = bulkDataSet.getCharacterEncoding();
 
+      if (LoggingUtilities.isDebugLogging()) {
+        System.out.println(
+            "[BulkDataStreamSupport] BULK DATA CHARACTER ENCODING: " + charset);
+      }
+
       String loadId = (explicitLoadId == null)
           ? formatLoadId(dataCache, fileMetaData) : explicitLoadId;
 
@@ -150,6 +156,13 @@ public interface BulkDataStreamSupport
                                                      entityTypeMap,
                                                      loadId);
         bulkDataSet.setFormat(recordReader.getFormat());
+
+        if (LoggingUtilities.isDebugLogging()) {
+          System.out.println(
+              "[BulkDataStreamSupport] BULK DATA FORMAT: "
+                  + bulkDataSet.getFormat());
+        }
+
         bulkLoadResult.setCharacterEncoding(charset);
         bulkLoadResult.setMediaType(bulkDataSet.getFormat().getMediaType());
 
@@ -183,6 +196,13 @@ public interface BulkDataStreamSupport
             if ((!done)
                 && (resolvedDS == null || resolvedDS.trim().length() == 0
                 || resolvedET == null || resolvedET.trim().length() == 0)) {
+
+              if (LoggingUtilities.isDebugLogging()) {
+                System.out.println(
+                    "[BulkDataStreamSupport] INCOMPLETE RECORD NOT SENT: "
+                        + JsonUtils.toJsonText(record));
+              }
+
               bulkLoadResult.trackIncompleteRecord(resolvedDS, resolvedET);
 
             } else {
@@ -204,6 +224,16 @@ public interface BulkDataStreamSupport
                 String[] trackParams = {resolvedDS, resolvedET};
                 trackingList.add(trackParams);
                 recordBytes = null;
+
+                if (LoggingUtilities.isDebugLogging()) {
+                  System.out.println(
+                      "[BulkDataStreamSupport] BATCHING RECORD " + batchCount
+                      + " OF " + maxBatchCount + ": " + recordText);
+                  System.out.println(
+                      "[BulkDataStreamSupport] BATCH SIZE / MAX: "
+                          + batchBytes.size() + " bytes / "
+                          + MAXIMUM_BATCH_BYTES + " bytes");
+                }
               }
 
               // now check if we are sending the current batch
@@ -229,6 +259,12 @@ public interface BulkDataStreamSupport
                 // send the batch
                 this.sendingAsyncMessage(timers, LOAD_QUEUE_NAME);
                 try {
+                  if (LoggingUtilities.isDebugLogging()) {
+                    System.out.println(
+                        "[BulkDataStreamSupport] SENDING MESSAGE "
+                            + messageBody);
+                  }
+
                   // send the info on the async queue
                   loadSink.send(message, (exception, msg) -> {
                     logFailedAsyncLoad(exception, msg);
@@ -286,6 +322,15 @@ public interface BulkDataStreamSupport
                   prefix = ",";
                   String[] trackParams = {resolvedDS, resolvedET};
                   trackingList.add(trackParams);
+                  if (LoggingUtilities.isDebugLogging()) {
+                    System.out.println(
+                        "[BulkDataStreamSupport] BATCHING RECORD " + batchCount
+                            + " OF " + maxBatchCount + ": " + recordText);
+                    System.out.println(
+                        "[BulkDataStreamSupport] BATCH SIZE / MAX: "
+                            + batchBytes.size() + " bytes / "
+                            + MAXIMUM_BATCH_BYTES + " bytes");
+                  }
                 }
               }
             }
