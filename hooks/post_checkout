@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "hooks/post_checkout: Populating submodules"
+
+git submodule update --init
