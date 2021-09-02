@@ -9,9 +9,9 @@ FROM ${BASE_BUILDER_IMAGE} as builder
 
 # Set Shell to use for RUN commands in builder step.
 
-ENV REFRESHED_AT=2021-08-19
+ENV REFRESHED_AT=2021-08-22
 
-LABEL Name="senzing/poc-api-server-builder" \
+LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
       Version="1.0.0"
 
@@ -28,7 +28,7 @@ ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 
 # Copy 'senzing-api-server.jar' to Builder step.
 
-COPY --from=senzing/senzing-api-server:2.7.3  "/app/senzing-api-server.jar" "/app/senzing-api-server.jar"
+COPY --from=senzing/senzing-api-server:2.7.3 "/app/senzing-api-server.jar" "/app/senzing-api-server.jar"
 
 # Install senzing-api-server.jar into maven repository.
 
@@ -58,9 +58,9 @@ RUN export POC_API_SERVER_JAR_VERSION=$(mvn "help:evaluate" -Dexpression=project
 
 FROM ${BASE_IMAGE}
 
-ENV REFRESHED_AT=2021-08-10
+ENV REFRESHED_AT=2021-08-22
 
-LABEL Name="senzing/poc-api-server" \
+LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
       Version="1.0.1"
 
