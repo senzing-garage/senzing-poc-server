@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.util.*;
 
 import com.senzing.poc.BuildInfo;
+import com.senzing.util.LoggingUtilities;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -40,6 +41,11 @@ import static com.senzing.poc.BuildInfo.*;
  *
  */
 public class SzPocServer extends SzApiServer implements SzPocProvider {
+  static {
+    LoggingUtilities.setProductIdForPackage("com.senzing.poc",
+                                            "5026");
+  }
+
   /**
    * The description of the server: {@value}.
    */
