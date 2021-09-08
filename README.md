@@ -89,19 +89,16 @@ native API.  This is done through one of: `--init-file`, `--init-env-var` or the
 Other command-line options may be useful to you as well.  Execute
 
 ```console
-java -jar target/senzing-poc-server-1.0.0.jar --help
+java -jar target/senzing-poc-server-1.0.2.jar --help
 ```
 
 to obtain a help message describing all available options.
 For example:
 
 ```console
-$ java -jar target/senzing-poc-server-1.0.0.jar --help
-
-java -jar senzing-poc-server-1.0.0.jar <options>
+$ java -jar senzing-poc-server-1.0.2.jar <options>
 
 <options> includes: 
-
 
 [ Standard Options ]
    --help
@@ -272,11 +269,18 @@ java -jar senzing-poc-server-1.0.0.jar <options>
         setting whereas an explicit false overrides any environment variable.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_QUIET
 
+   --debug [true|false]
+        Also -debug.  If specified then debug logging is enabled.  The
+        true/false parameter is optional, if not specified then true is assumed.
+        If specified as false then it is the same as omitting the option with
+        the exception that omission falls back to the environment variable
+        setting whereas an explicit false overrides any environment variable.
+        --> VIA ENVIRONMENT: SENZING_API_SERVER_DEBUG
+
    --monitor-file <file-path>
         Also -monitorFile.  Specifies a file whose timestamp is monitored to
         determine when to shutdown.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_MONITOR_FILE
-
 
 [ HTTPS / SSL Options ]
    The following options pertain to HTTPS / SSL configuration.  The 
@@ -321,7 +325,6 @@ java -jar senzing-poc-server-1.0.0.jar <options>
         Also -clientKeyStorePassword.  Specifies the password for decrypting
         the key store file specified with the --client-key-store option.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_CLIENT_KEY_STORE_PASSWORD
-
 
 [ Asynchronous Info Queue Options ]
    The following options pertain to configuring an asynchronous message
@@ -394,7 +397,6 @@ java -jar senzing-poc-server-1.0.0.jar <options>
         Kafka as part of specifying a Kafka info topic.
         --> VIA ENVIRONMENT: SENZING_KAFKA_INFO_TOPIC
 
-
 [ Asynchronous Load Queue Options ]
    The following options pertain to configuring an asynchronous message
    queue on which to send record messages to be loaded by the stream loader.
@@ -466,7 +468,6 @@ java -jar senzing-poc-server-1.0.0.jar <options>
         --> VIA ENVIRONMENT: SENZING_KAFKA_LOAD_TOPIC
                              SENZING_KAFKA_TOPIC (fallback)
 
-
 [ Advanced Options ]
    --config-mgr [config manager options]...
         Also --configmgr.  Should be the first option if provided.  All
@@ -474,6 +475,4 @@ java -jar senzing-poc-server-1.0.0.jar <options>
         If this option is specified by itself then a help message on
         configuration manager options will be displayed.
         NOTE: If this option is provided, the server will not start.
-
-
 ```
