@@ -32,6 +32,7 @@ import static com.senzing.api.model.SzBulkDataStatus.COMPLETED;
 import static com.senzing.api.model.SzHttpMethod.POST;
 import static com.senzing.poc.services.StreamLoadUtilities.logFailedAsyncLoad;
 import static com.senzing.io.IOUtilities.UTF_8;
+import static com.senzing.util.LoggingUtilities.*;
 
 /**
  * Extends {@link BulkDataSupport} and {@link StreamLoadSupport} to provide
@@ -134,10 +135,7 @@ public interface BulkDataStreamSupport
 
       String charset = bulkDataSet.getCharacterEncoding();
 
-      if (LoggingUtilities.isDebugLogging()) {
-        System.out.println(
-            "[BulkDataStreamSupport] BULK DATA CHARACTER ENCODING: " + charset);
-      }
+      debugLog("Bulk data character encoding: " + charset);
 
       String loadId = (explicitLoadId == null)
           ? formatLoadId(dataCache, fileMetaData) : explicitLoadId;
@@ -158,9 +156,7 @@ public interface BulkDataStreamSupport
         bulkDataSet.setFormat(recordReader.getFormat());
 
         if (LoggingUtilities.isDebugLogging()) {
-          System.out.println(
-              "[BulkDataStreamSupport] BULK DATA FORMAT: "
-                  + bulkDataSet.getFormat());
+          System.out.println("Bulk data format: " + bulkDataSet.getFormat());
         }
 
         bulkLoadResult.setCharacterEncoding(charset);
@@ -197,11 +193,8 @@ public interface BulkDataStreamSupport
                 && (resolvedDS == null || resolvedDS.trim().length() == 0
                 || resolvedET == null || resolvedET.trim().length() == 0)) {
 
-              if (LoggingUtilities.isDebugLogging()) {
-                System.out.println(
-                    "[BulkDataStreamSupport] INCOMPLETE RECORD NOT SENT: "
-                        + JsonUtils.toJsonText(record));
-              }
+              debugLog("Incomplete record not set: "
+                           + JsonUtils.toJsonText(record));
 
               bulkLoadResult.trackIncompleteRecord(resolvedDS, resolvedET);
 
@@ -225,15 +218,10 @@ public interface BulkDataStreamSupport
                 trackingList.add(trackParams);
                 recordBytes = null;
 
-                if (LoggingUtilities.isDebugLogging()) {
-                  System.out.println(
-                      "[BulkDataStreamSupport] BATCHING RECORD " + batchCount
-                      + " OF " + maxBatchCount + ": " + recordText);
-                  System.out.println(
-                      "[BulkDataStreamSupport] BATCH SIZE / MAX: "
-                          + batchBytes.size() + " bytes / "
-                          + MAXIMUM_BATCH_BYTES + " bytes");
-                }
+                debugLog("Batching record " + batchCount
+                      + " of " + maxBatchCount + " (max): " + recordText,
+                         "Batch size is " + batchBytes.size() + " bytes of "
+                             + MAXIMUM_BATCH_BYTES + " bytes (max)");
               }
 
               // now check if we are sending the current batch
@@ -259,11 +247,7 @@ public interface BulkDataStreamSupport
                 // send the batch
                 this.sendingAsyncMessage(timers, LOAD_QUEUE_NAME);
                 try {
-                  if (LoggingUtilities.isDebugLogging()) {
-                    System.out.println(
-                        "[BulkDataStreamSupport] SENDING MESSAGE "
-                            + messageBody);
-                  }
+                  debugLog("Sending message: " + messageBody);
 
                   // send the info on the async queue
                   loadSink.send(message, (exception, msg) -> {
@@ -322,15 +306,11 @@ public interface BulkDataStreamSupport
                   prefix = ",";
                   String[] trackParams = {resolvedDS, resolvedET};
                   trackingList.add(trackParams);
-                  if (LoggingUtilities.isDebugLogging()) {
-                    System.out.println(
-                        "[BulkDataStreamSupport] BATCHING RECORD " + batchCount
-                            + " OF " + maxBatchCount + ": " + recordText);
-                    System.out.println(
-                        "[BulkDataStreamSupport] BATCH SIZE / MAX: "
-                            + batchBytes.size() + " bytes / "
-                            + MAXIMUM_BATCH_BYTES + " bytes");
-                  }
+
+                  debugLog("Batching record " + batchCount
+                             + " of " + maxBatchCount + " (max): " + recordText,
+                           "Batch size is " + batchBytes.size() + " bytes of "
+                             + MAXIMUM_BATCH_BYTES + " bytes (max)");
                 }
               }
             }

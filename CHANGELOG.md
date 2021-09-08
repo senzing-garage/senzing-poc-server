@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2021-09-08
+
+### Changed in 1.0.2
+
+- Updated to Senzing API Server version 2.7.4 to add improved debug logging
+  and `--debug` usage message.
+
 ## [1.0.1] - 2021-09-02
 
 ### Changed in 1.0.1
