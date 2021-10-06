@@ -810,7 +810,7 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
 
       Set<SzPocServerOption> sqsLoadOptions = Set.of(SQS_LOAD_URL);
 
-      // enforce that we only have one info queue
+      // enforce that we only have one load queue
       for (SzPocServerOption option: kafkaLoadOptions) {
         Set<CommandLineOption> conflictSet = conflictMap.get(option);
         conflictSet.addAll(rabbitLoadOptions);
@@ -818,7 +818,7 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
       }
       for (SzPocServerOption option: rabbitLoadOptions) {
         Set<CommandLineOption> conflictSet = conflictMap.get(option);
-        conflictSet.addAll(rabbitLoadOptions);
+        conflictSet.addAll(kafkaLoadOptions);
         conflictSet.addAll(sqsLoadOptions);
       }
       for (SzPocServerOption option: sqsLoadOptions) {
