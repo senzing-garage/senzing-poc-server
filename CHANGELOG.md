@@ -13,12 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated to `senzing-api-server` version 2.8.0 using `senzings-common-java`
 - Now masks the value of the Rabbit MQ password in logs
 
+## [1.0.5] - 2021-10-12
+
+### Changed in 1.0.4
+
+- Upgrade to senzing/senzing-api-server:2.7.5
+
+## [1.0.4] - 2021-10-11
+
+### Changed in 1.0.4
+
+- Upgrade to senzing/senzing-base:1.6.2
+
 ## [1.0.3] - 2021-10-06
 
 ### Changed in 1.0.3
 
 - Fixed typo causing a conflict between each Rabbit MQ command-line option and
-  every other Rabbit MQ command-line option. 
+  every other Rabbit MQ command-line option.
 
 ## [1.0.2] - 2021-09-08
 
