@@ -3,8 +3,7 @@ package com.senzing.poc.server;
 import java.util.*;
 
 import com.senzing.api.server.SzApiServerOption;
-import com.senzing.cmdline.CommandLineOption;
-import com.senzing.cmdline.ParameterProcessor;
+import com.senzing.cmdline.*;
 
 import static com.senzing.util.CollectionUtilities.recursivelyUnmodifiableMap;
 import static com.senzing.api.server.mq.KafkaEndpoint.*;
@@ -15,7 +14,8 @@ import static com.senzing.poc.server.SzPocServerConstants.*;
 /**
  * Describes the command-line options for {@link SzPocServer}.
  */
-public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
+public enum SzPocServerOption
+    implements CommandLineOption<SzPocServerOption, SzApiServerOption>
 {
   /**
    * <p>
@@ -903,6 +903,7 @@ public enum SzPocServerOption implements CommandLineOption<SzPocServerOption>
      */
     public Object process(CommandLineOption option,
                           List<String>      params)
+      throws BadOptionParametersException
     {
       // check if an instance of SzApiServerOption
       if (option instanceof SzApiServerOption) {

@@ -10,6 +10,8 @@ import com.senzing.api.services.SzMessageSink;
 import com.senzing.cmdline.CommandLineOption;
 import com.senzing.cmdline.CommandLineUtilities;
 import com.senzing.cmdline.CommandLineValue;
+import com.senzing.cmdline.CommandLineException;
+import com.senzing.cmdline.DeprecatedOptionWarning;
 import com.senzing.poc.model.SzPocMeta;
 import com.senzing.poc.model.SzPocServerInfo;
 import com.senzing.poc.model.SzPocVersionInfo;
@@ -355,12 +357,16 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
    *
    * @return The {@link Map} describing the command-line arguments.
    */
-  protected static Map<CommandLineOption, Object> parseCommandLine(String[] args) {
+  protected static Map<CommandLineOption, Object> parseCommandLine(
+      String[] args, List<DeprecatedOptionWarning> deprecationWarnings)
+      throws CommandLineException
+  {
     Map<CommandLineOption, CommandLineValue> optionValues
         = CommandLineUtilities.parseCommandLine(
         SzPocServerOption.class,
         args,
-        SzPocServerOption.PARAMETER_PROCESSOR);
+        SzPocServerOption.PARAMETER_PROCESSOR,
+        deprecationWarnings);
 
     // create a result map
     Map<CommandLineOption, Object> result = new LinkedHashMap<>();
