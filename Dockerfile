@@ -17,7 +17,7 @@ LABEL Name="senzing/senzing-poc-server-builder" \
 
 # Build arguments.
 
-ARG SENZING_API_SERVER_VERSION=2.7.5
+ARG SENZING_API_SERVER_VERSION=2.8.0
 
 # Set environment variables.
 
