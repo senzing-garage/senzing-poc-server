@@ -4,8 +4,8 @@
 
 The Senzing POC API Server serves as a backend to the Senzing POC application.
 No guarantee is made for backwards compatibility with this code base; however,
-the code provided serves as an example for how to extend the 
-[Senzing API Server](https://github.com/Senzing/senzing-api-server).  
+the code provided serves as an example for how to extend the
+[Senzing API Server](https://github.com/Senzing/senzing-api-server).
 
 The [Senzing POC API OAS specification](http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/master/senzing-poc-rest-api.yaml)
 documents the available API methods, their parameters and the response formats.
@@ -32,16 +32,16 @@ documents the available API methods, their parameters and the response formats.
 To build the Senzing POC API Server you will need Apache Maven (recommend version 3.6.1 or later)
 as well as OpenJDK version 11.0.x (recommend version 11.0.6+10 or later).
 
-You will also need the Senzing API Server installed in your Maven repository 
+You will also need the Senzing API Server installed in your Maven repository
 which can be built from the `senzing-api-server` sub-repository via `mvn install`.
 
-1. Ensure the GIT submodules are cloned (`senzing-api-server` and 
+1. Ensure the GIT submodules are cloned (`senzing-api-server` and
    `senzing-api-server/senzing-rest-api-specification`) are cloned:
 
     ```console
     git submodule update --init --recursive
     ```
-   
+
 1. First build / install the `senzing-api-server` sub-repository using the
    instructions from the [Senzing API Server README.md](https://github.com/Senzing/senzing-api-server)
 
@@ -72,7 +72,7 @@ To build simply execute:
 mvn install
 ```
 
-The JAR file will be contained in the `target` directory under the name 
+The JAR file will be contained in the `target` directory under the name
 `senzing-poc-server-[version].jar`.
 
 Where `[version]` is the version number from the `pom.xml` file.
@@ -98,7 +98,7 @@ For example:
 ```console
 $ java -jar senzing-poc-server-1.0.2.jar <options>
 
-<options> includes: 
+<options> includes:
 
 [ Standard Options ]
    --help
@@ -156,7 +156,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         --> VIA ENVIRONMENT: SENZING_API_SERVER_ALLOWED_ORIGINS
 
    --concurrency <thread-count>
-        Also -concurrency.  Sets the number of threads available for executing 
+        Also -concurrency.  Sets the number of threads available for executing
         Senzing API functions (i.e.: the number of engine threads).
         If not specified, then this defaults to 8.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_CONCURRENCY
@@ -283,7 +283,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         --> VIA ENVIRONMENT: SENZING_API_SERVER_MONITOR_FILE
 
 [ HTTPS / SSL Options ]
-   The following options pertain to HTTPS / SSL configuration.  The 
+   The following options pertain to HTTPS / SSL configuration.  The
    --key-store and --key-store-password options are the minimum required
    options to enable HTTPS / SSL communication.  If HTTPS / SSL communication
    is enabled, then HTTP communication is disabled UNLESS the --http-port
