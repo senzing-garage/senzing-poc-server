@@ -2,22 +2,16 @@
 # It should match <artifactId> in pom.xml
 PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
 
-# Information from git.
+# Git variables
 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 GIT_REPOSITORY_NAME := $(shell basename `git rev-parse --show-toplevel`)
 GIT_SHA := $(shell git log --pretty=format:'%H' -n 1)
-GIT_TAG ?= $(shell git describe --always --tags | awk -F "-" '{print $$1}')
-GIT_TAG_END ?= HEAD
 GIT_VERSION := $(shell git describe --always --tags --long --dirty | sed -e 's/\-0//' -e 's/\-g.......//')
 GIT_VERSION_LONG := $(shell git describe --always --tags --long --dirty)
 
-# Docker.
+# Docker variables
 
-BASE_IMAGE ?= senzing/senzing-base:1.6.3
-BASE_BUILDER_IMAGE ?= senzing/base-image-debian:1.0.4
-DOCKER_IMAGE_PACKAGE := $(GIT_REPOSITORY_NAME)-package:$(GIT_VERSION)
-DOCKER_IMAGE_TAG ?= $(GIT_REPOSITORY_NAME):$(GIT_VERSION)
 DOCKER_IMAGE_NAME := senzing/senzing-poc-server
 
 # Misc.
@@ -37,34 +31,26 @@ default: help
 
 .PHONY: package
 package:
-
 	mvn package \
-		-DskipTests \
-		-Dproject.version=$(GIT_VERSION) \
 		-Dgit.branch=$(GIT_BRANCH) \
 		-Dgit.repository.name=$(GIT_REPOSITORY_NAME) \
 		-Dgit.sha=$(GIT_SHA) \
-		-Dgit.version.long=$(GIT_VERSION_LONG)
+		-Dgit.version.long=$(GIT_VERSION_LONG) \
+		-Dproject.version=$(GIT_VERSION) \
+		-DskipTests=True
 
 # -----------------------------------------------------------------------------
 # Docker-based package
 # -----------------------------------------------------------------------------
 
 .PHONY: docker-package
-docker-package: docker-rmi-for-package
-	# Make docker image.
-
-	mkdir -p $(TARGET)
-	docker build \
-		--tag $(DOCKER_IMAGE_PACKAGE) \
-		--file Dockerfile-package \
-		.
+docker-package: docker-build
 
 	# Run docker image which creates a docker container.
 	# Then, copy the maven output from the container to the local workstation.
 	# Finally, remove the docker container.
 
-	PID=$$(docker create $(DOCKER_IMAGE_PACKAGE) /bin/bash); \
+	PID=$$(docker create $(DOCKER_IMAGE_NAME) /bin/bash); \
 	docker cp $$PID:/git-repository/$(TARGET) .; \
 	docker rm -v $$PID
 
@@ -74,9 +60,8 @@ docker-package: docker-rmi-for-package
 
 .PHONY: docker-build
 docker-build:
+	git submodule update
 	docker build \
-		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
-		--build-arg BASE_BUILDER_IMAGE=$(BASE_BUILDER_IMAGE) \
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(GIT_VERSION) \
 		.
@@ -91,16 +76,12 @@ docker-rmi-for-build:
 		$(DOCKER_IMAGE_NAME):$(GIT_VERSION) \
 		$(DOCKER_IMAGE_NAME)
 
-.PHONY: docker-rmi-for-package
-docker-rmi-for-packagae:
-	-docker rmi --force $(DOCKER_IMAGE_PACKAGE)
-
 .PHONY: rm-target
 rm-target:
 	-rm -rf $(TARGET)
 
 .PHONY: clean
-clean: docker-rmi-for-build docker-rmi-for-package rm-target
+clean: docker-rmi-for-build rm-target
 
 # -----------------------------------------------------------------------------
 # Help
