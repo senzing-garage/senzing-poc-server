@@ -60,11 +60,19 @@ docker-package: docker-build
 
 .PHONY: docker-build
 docker-build:
-	git submodule update
 	docker build \
+		--no-cache \
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(GIT_VERSION) \
 		.
+
+# -----------------------------------------------------------------------------
+# Submodule management 
+# -----------------------------------------------------------------------------
+
+.PHONY: submodule-update
+submodule-update:
+	git submodule update --remote --recursive
 
 # -----------------------------------------------------------------------------
 # Clean up targets

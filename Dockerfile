@@ -25,31 +25,24 @@ ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 COPY senzing-api-server /senzing-api-server
 WORKDIR /senzing-api-server
 
-RUN export SENZING_API_SERVER_JAR_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
+RUN export SENZING_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
  && make package \
- && cp /senzing-api-server/target/senzing-api-server-${SENZING_API_SERVER_JAR_VERSION}.jar "/app/senzing-api-server.jar"
-
-# Install senzing-api-server.jar into maven repository.
-
-RUN mvn install:install-file \
-      -Dfile=/app/senzing-api-server.jar  \
+ && cp /senzing-api-server/target/senzing-api-server-${SENZING_API_SERVER_VERSION}.jar "/senzing-api-server.jar" \
+ && mvn install:install-file \
+      -Dfile=/senzing-api-server.jar  \
       -DgroupId=com.senzing \
       -DartifactId=senzing-api-server \
       -Dversion=${SENZING_API_SERVER_VERSION} \
       -Dpackaging=jar
 
-# Copy Repo files to Builder step.
+# Build "senzing-poc-server.jar"
 
 COPY . /poc-api-server
-
-# Run the "make" command to create the artifacts.
-
 WORKDIR /poc-api-server
 
-RUN export POC_API_SERVER_JAR_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
- && make \
-     package \
- && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_JAR_VERSION}.jar "/senzing-poc-server.jar"
+RUN export POC_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
+ && make package \
+ && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_VERSION}.jar "/senzing-poc-server.jar"
 
 # -----------------------------------------------------------------------------
 # Stage: Final
