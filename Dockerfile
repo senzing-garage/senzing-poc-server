@@ -20,22 +20,13 @@ ENV SENZING_G2_DIR=${SENZING_ROOT}/g2
 ENV PYTHONPATH=${SENZING_ROOT}/g2/python
 ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 
-# Build "senzing-api-server.jar"
+# Build "senzing-api-server.jar".
 
 COPY senzing-api-server /senzing-api-server
 WORKDIR /senzing-api-server
+RUN mvn install
 
-RUN export SENZING_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
- && make package \
- && cp /senzing-api-server/target/senzing-api-server-${SENZING_API_SERVER_VERSION}.jar "/senzing-api-server.jar" \
- && mvn install:install-file \
-      -Dfile=/senzing-api-server.jar  \
-      -DgroupId=com.senzing \
-      -DartifactId=senzing-api-server \
-      -Dversion=${SENZING_API_SERVER_VERSION} \
-      -Dpackaging=jar
-
-# Build "senzing-poc-server.jar"
+# Build "senzing-poc-server.jar".
 
 COPY . /poc-api-server
 WORKDIR /poc-api-server
@@ -76,6 +67,10 @@ RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | a
  && apt update \
  && apt install -y adoptopenjdk-11-hotspot \
  && rm -rf /var/lib/apt/lists/*
+
+# Copy files from repository.
+
+COPY ./rootfs /
 
 # Service exposed on port 8080.
 
