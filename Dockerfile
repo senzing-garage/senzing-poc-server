@@ -24,7 +24,7 @@ ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 
 COPY senzing-api-server /senzing-api-server
 WORKDIR /senzing-api-server
-RUN mvn install
+RUN make install
 
 # Build "senzing-poc-server.jar".
 
