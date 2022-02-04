@@ -9,7 +9,7 @@ import com.senzing.io.RecordReader;
 import com.senzing.io.TemporaryDataCache;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.util.AccessToken;
-import com.senzing.util.JsonUtils;
+import com.senzing.util.JsonUtilities;
 import com.senzing.util.LoggingUtilities;
 import com.senzing.util.Timers;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -186,20 +186,20 @@ public interface BulkDataStreamSupport
 
             // check if we have a data source and entity type
             String resolvedDS = (done) ? null
-                : JsonUtils.getString(record, "DATA_SOURCE");
+                : JsonUtilities.getString(record, "DATA_SOURCE");
             String resolvedET = (done) ? null
-                : JsonUtils.getString(record, "ENTITY_TYPE");
+                : JsonUtilities.getString(record, "ENTITY_TYPE");
             if ((!done)
                 && (resolvedDS == null || resolvedDS.trim().length() == 0
                 || resolvedET == null || resolvedET.trim().length() == 0)) {
 
               debugLog("Incomplete record not set: "
-                           + JsonUtils.toJsonText(record));
+                           + JsonUtilities.toJsonText(record));
 
               bulkLoadResult.trackIncompleteRecord(resolvedDS, resolvedET);
 
             } else {
-              String recordText = (done) ? null : JsonUtils.toJsonText(record);
+              String recordText = (done) ? null : JsonUtilities.toJsonText(record);
               byte[] recordBytes = (done) ? null : recordText.getBytes(UTF_8);
               int byteCount = (done) ? 0 : recordBytes.length + 3;
 

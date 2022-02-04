@@ -8,7 +8,7 @@ import com.senzing.poc.model.SzQueueInfo;
 import com.senzing.poc.model.SzQueueInfoResponse;
 import com.senzing.poc.model.impl.SzQueueInfoResponseImpl;
 import com.senzing.poc.server.SzPocProvider;
-import com.senzing.util.JsonUtils;
+import com.senzing.util.JsonUtilities;
 import com.senzing.util.Timers;
 
 import javax.json.Json;
@@ -159,8 +159,8 @@ public class EntityStreamServices extends EntityDataServices
           Collections.singletonMap("ENTITY_TYPE", "GENERIC"));
 
       // cleanup the record ID and load ID in the JSON text
-      JsonObject recordJson   = JsonUtils.parseJsonObject(recordText);
-      String     jsonRecordId = JsonUtils.getString(recordJson, "RECORD_ID");
+      JsonObject recordJson   = JsonUtilities.parseJsonObject(recordText);
+      String     jsonRecordId = JsonUtilities.getString(recordJson, "RECORD_ID");
       if ((jsonRecordId != null && jsonRecordId.trim().length() == 0)
           || (loadId != null && loadId.trim().length() > 0))
       {
@@ -179,7 +179,7 @@ public class EntityStreamServices extends EntityDataServices
 
         // reconstitute the JSON text
         recordJson = jsonBuilder.build();
-        recordText = JsonUtils.toJsonText(recordJson);
+        recordText = JsonUtilities.toJsonText(recordJson);
       }
 
       // check that the data source code is valid
@@ -262,7 +262,7 @@ public class EntityStreamServices extends EntityDataServices
 
       // check if the load ID needs to be added on
       if (loadId != null && loadId.trim().length() > 0) {
-        JsonObject        recordJson  = JsonUtils.parseJsonObject(recordText);
+        JsonObject        recordJson  = JsonUtilities.parseJsonObject(recordText);
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder(recordJson);
 
         jsonBuilder.remove("SOURCE_ID");
@@ -270,7 +270,7 @@ public class EntityStreamServices extends EntityDataServices
 
         // reconstitute the JSON text
         recordJson = jsonBuilder.build();
-        recordText = JsonUtils.toJsonText(recordJson);
+        recordText = JsonUtilities.toJsonText(recordJson);
       }
 
       // check that the data source code is valid
