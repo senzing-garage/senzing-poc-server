@@ -6,13 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2022-02-04
+
+### Changed in 1.2.0
+
+- Updated to `senzing-api-server` version 2.8.3 for dependency on the release
+  version 2.x of `senzing-commons-java`
+- Changed references to `com.senzing.util.JsonUtils` to
+  `com.senzing.util.JsonUtilities`
+
 ## [1.1.1] - 2022-01-19
 
 ### Changed in 1.1.1
 
 - Updated to `senzing-api-server` version 2.8.1 to reduce repo size
 - Updated POC REST API spec to fix bulk-data examples
-- Updated spring framework dependencies in `pom.xml` tp address security 
+- Updated spring framework dependencies in `pom.xml` tp address security
   vulnerabilities.
 
 ## [1.1.0] - 2021-12-01

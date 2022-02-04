@@ -2,7 +2,7 @@ package com.senzing.poc.services;
 
 import com.senzing.api.services.SzMessage;
 import com.senzing.util.ErrorLogSuppressor;
-import com.senzing.util.JsonUtils;
+import com.senzing.util.JsonUtilities;
 
 import javax.json.JsonObject;
 import java.util.Date;
@@ -43,7 +43,7 @@ public class StreamLoadUtilities {
     sb.append(": FAILED TO ENQUEUE RECORD FOR LOAD");
 
     try {
-      JsonObject  jsonRecord  = JsonUtils.parseJsonObject(record);
+      JsonObject  jsonRecord  = JsonUtilities.parseJsonObject(record);
       String      prefix      = ": ";
       String      dataSource  = jsonRecord.getString("DATA_SOURCE");
       String      recordId    = jsonRecord.getString("RECORD_ID");
