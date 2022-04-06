@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=senzing/senzing-base:1.6.4
+ARG BASE_IMAGE=debian:11.3-slim@sha256:78fd65998de7a59a001d792fe2d3a6d2ea25b6f3f068e5c84881250373577414
 ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.7
 
 # -----------------------------------------------------------------------------
@@ -7,11 +7,11 @@ ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.7
 
 FROM ${BASE_BUILDER_IMAGE} as builder
 
-ENV REFRESHED_AT=2022-01-06
+ENV REFRESHED_AT=2022-04-01
 
 LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
-      Version="1.0.0"
+      Version="3.0.0"
 
 # Set environment variables.
 
@@ -35,17 +35,21 @@ RUN export POC_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.ver
  && make package \
  && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_VERSION}.jar "/senzing-poc-server.jar"
 
+# Grab a gpg key for our final stage to install the JDK
+
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public > /gpg.key
+
 # -----------------------------------------------------------------------------
 # Stage: Final
 # -----------------------------------------------------------------------------
 
 FROM ${BASE_IMAGE}
 
-ENV REFRESHED_AT=2022-01-06
+ENV REFRESHED_AT=2022-04-01
 
 LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
-      Version="1.2.0"
+      Version="3.0.0"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
@@ -57,20 +61,38 @@ USER root
 
 RUN apt update \
  && apt -y install \
+      gnupg2 \
+      jq \
+      postgresql-client \
       software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Java-11.
 
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - \
+COPY --from=builder "/gpg.key" "gpg.key"
+
+RUN cat gpg.key | apt-key add - \
  && add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ \
  && apt update \
  && apt install -y adoptopenjdk-11-hotspot \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -f gpg.key
 
 # Copy files from repository.
 
 COPY ./rootfs /
+
+# Downgrade to TLSv1.1
+
+RUN sed -i 's/TLSv1.2/TLSv1.1/g' /etc/ssl/openssl.cnf
+
+# Set environment variables for root.
+
+ENV LD_LIBRARY_PATH=/opt/senzing/g2/lib:/opt/senzing/g2/lib/debian:/opt/IBM/db2/clidriver/lib
+ENV ODBCSYSINI=/etc/opt/senzing
+ENV PATH=${PATH}:/opt/senzing/g2/python:/opt/IBM/db2/clidriver/adm:/opt/IBM/db2/clidriver/bin
+ENV PYTHONPATH=/opt/senzing/g2/python
+ENV SENZING_ETC_PATH=/etc/opt/senzing
 
 # Service exposed on port 8080.
 
@@ -80,11 +102,25 @@ EXPOSE 8080
 
 COPY --from=builder "/senzing-poc-server.jar" "/app/senzing-poc-server.jar"
 
+# Copy files from other docker containers.
+
+COPY --from=senzing/senzing-poc-server:1.3.0 "/app/senzing-poc-server.jar" "/appV2/senzing-poc-server.jar"
+
 # Make non-root container.
 
 USER 1001
 
+# Set environment variables for USER 1001.
+
+ENV LD_LIBRARY_PATH=/opt/senzing/g2/lib:/opt/senzing/g2/lib/debian:/opt/IBM/db2/clidriver/lib
+ENV ODBCSYSINI=/etc/opt/senzing
+ENV PATH=${PATH}:/opt/senzing/g2/python:/opt/IBM/db2/clidriver/adm:/opt/IBM/db2/clidriver/bin
+ENV PYTHONPATH=/opt/senzing/g2/python
+ENV SENZING_ETC_PATH=/etc/opt/senzing
+
 # Runtime execution.
 
 WORKDIR /app
-ENTRYPOINT ["java", "-jar", "senzing-poc-server.jar"]
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["java", "-jar", "senzing-poc-server.jar"]
