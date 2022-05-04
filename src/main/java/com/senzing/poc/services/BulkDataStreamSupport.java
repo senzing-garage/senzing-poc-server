@@ -84,9 +84,6 @@ public interface BulkDataStreamSupport
       String                      dataSource,
       String                      mapDataSources,
       List<String>                mapDataSourceList,
-      String                      entityType,
-      String                      mapEntityTypes,
-      List<String>                mapEntityTypeList,
       String                      explicitLoadId,
       int                         maxBatchCount,
       int                         maxFailures,
@@ -113,18 +110,13 @@ public interface BulkDataStreamSupport
 
     // populate the entity type and data source maps
     Map<String, String> dataSourceMap = new HashMap<>();
-    Map<String, String> entityTypeMap = new HashMap<>();
     this.prepareBulkDataMappings(provider,
                                  uriInfo,
                                  timers,
                                  dataSource,
                                  mapDataSources,
                                  mapDataSourceList,
-                                 entityType,
-                                 mapEntityTypes,
-                                 mapEntityTypeList,
-                                 dataSourceMap,
-                                 entityTypeMap);
+                                 dataSourceMap);
 
     ProgressState progressState = new ProgressState();
 
@@ -151,7 +143,6 @@ public interface BulkDataStreamSupport
         RecordReader recordReader = new RecordReader(bulkDataSet.getFormat(),
                                                      br,
                                                      dataSourceMap,
-                                                     entityTypeMap,
                                                      loadId);
         bulkDataSet.setFormat(recordReader.getFormat());
 
@@ -187,16 +178,13 @@ public interface BulkDataStreamSupport
             // check if we have a data source and entity type
             String resolvedDS = (done) ? null
                 : JsonUtilities.getString(record, "DATA_SOURCE");
-            String resolvedET = (done) ? null
-                : JsonUtilities.getString(record, "ENTITY_TYPE");
             if ((!done)
-                && (resolvedDS == null || resolvedDS.trim().length() == 0
-                || resolvedET == null || resolvedET.trim().length() == 0)) {
-
+                && (resolvedDS == null || resolvedDS.trim().length() == 0))
+            {
               debugLog("Incomplete record not set: "
                            + JsonUtilities.toJsonText(record));
 
-              bulkLoadResult.trackIncompleteRecord(resolvedDS, resolvedET);
+              bulkLoadResult.trackIncompleteRecord(resolvedDS);
 
             } else {
               String recordText = (done) ? null : JsonUtilities.toJsonText(record);
@@ -214,7 +202,7 @@ public interface BulkDataStreamSupport
                 batchBytes.write(prefix.getBytes(UTF_8));
                 batchBytes.write(recordBytes);
                 prefix = ",";
-                String[] trackParams = {resolvedDS, resolvedET};
+                String[] trackParams = {resolvedDS};
                 trackingList.add(trackParams);
                 recordBytes = null;
 
@@ -256,9 +244,8 @@ public interface BulkDataStreamSupport
                       failedMsg[0] = message;
                       for (String[] trackParams : batchTrackingList) {
                         String trackDS = trackParams[0];
-                        String trackET = trackParams[1];
                         bulkLoadResult.trackFailedRecord(
-                            trackDS, trackET, this.newError(exception));
+                            trackDS, this.newError(exception));
                       }
                     }
                   });
@@ -266,8 +253,7 @@ public interface BulkDataStreamSupport
                   // track that we successfully enqueued the record
                   for (String[] trackParams : batchTrackingList) {
                     String trackDS = trackParams[0];
-                    String trackET = trackParams[1];
-                    bulkLoadResult.trackLoadedRecord(trackDS, trackET);
+                    bulkLoadResult.trackLoadedRecord(trackDS);
                   }
 
                 } catch (Exception e) {
@@ -278,9 +264,8 @@ public interface BulkDataStreamSupport
 
                     for (String[] trackParams : batchTrackingList) {
                       String trackDS = trackParams[0];
-                      String trackET = trackParams[1];
                       bulkLoadResult.trackFailedRecord(
-                          trackDS, trackET, this.newError(e));
+                          trackDS, this.newError(e));
                     }
                   }
 
@@ -294,7 +279,7 @@ public interface BulkDataStreamSupport
                 // check if the individual message is simply too large to send
                 if ((byteCount + 2) >= MAXIMUM_BATCH_BYTES) {
                   bulkLoadResult.trackFailedRecord(
-                      resolvedDS, resolvedET,
+                      resolvedDS,
                       this.newError("Maximum message size ("
                                         + MAXIMUM_BATCH_BYTES + ") exceeded: "
                                         + byteCount));
@@ -304,7 +289,7 @@ public interface BulkDataStreamSupport
                   batchBytes.write(prefix.getBytes(UTF_8));
                   batchBytes.write(recordBytes);
                   prefix = ",";
-                  String[] trackParams = {resolvedDS, resolvedET};
+                  String[] trackParams = {resolvedDS};
                   trackingList.add(trackParams);
 
                   debugLog("Batching record " + batchCount
