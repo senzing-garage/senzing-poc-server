@@ -66,6 +66,7 @@ RUN apt update \
       libodbc1 \
       postgresql-client \
       software-properties-common \
+      unixodbc \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Java-11.
