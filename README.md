@@ -7,7 +7,7 @@ No guarantee is made for backwards compatibility with this code base; however,
 the code provided serves as an example for how to extend the
 [Senzing API Server](https://github.com/Senzing/senzing-api-server).
 
-The [Senzing POC API OAS specification](http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/master/senzing-poc-rest-api.yaml)
+The [Senzing POC API OAS specification](http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/main/senzing-poc-rest-api.yaml)
 documents the available API methods, their parameters and the response formats.
 
 ### Contents
