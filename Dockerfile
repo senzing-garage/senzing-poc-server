@@ -7,7 +7,7 @@ ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.9
 
 FROM ${BASE_BUILDER_IMAGE} as builder
 
-ENV REFRESHED_AT=2022-07-01
+ENV REFRESHED_AT=2022-07-06
 
 LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
@@ -46,7 +46,7 @@ RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public > /
 
 FROM ${BASE_IMAGE}
 
-ENV REFRESHED_AT=2022-07-01
+ENV REFRESHED_AT=2022-07-06
 
 LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
