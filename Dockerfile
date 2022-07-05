@@ -18,7 +18,7 @@ LABEL Name="senzing/senzing-poc-server-builder" \
 # ENV LD_LIBRARY_PATH=/opt/senzing/g2/lib:/opt/senzing/g2/lib/debian
 ENV SENZING_ROOT=/opt/senzing
 ENV SENZING_G2_DIR=${SENZING_ROOT}/g2
-ENV PYTHONPATH=${SENZING_ROOT}/g2/python
+ENV PYTHONPATH=${SENZING_ROOT}/g2/sdk/python
 ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 
 # Build "senzing-api-server.jar".
