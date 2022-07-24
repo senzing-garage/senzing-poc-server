@@ -17,5 +17,7 @@ jobs:
         run: printenv
       - name: Git Merge With Main
         run: git merge origin/main
+      - name: Git Update submodules
+        run: git submodule update --init --recursive
       - name: Build Docker container
         run: make docker-build
