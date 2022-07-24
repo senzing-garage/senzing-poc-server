@@ -16,7 +16,7 @@ jobs:
       - name: git config
         run: |
           git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.email support@senzing.com
       - name: Print environment variables
         run: printenv
       - name: Git Merge With Main
