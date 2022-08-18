@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/bash -v
 
-echo "hooks/post_checkout: Populating submodules"
+# hooks/post_checkout: Populating submodules
 
-git submodule update --init
+git submodule update --init --recursive
