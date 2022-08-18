@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2022-08-18
+
+### Changed in 3.2.0
+
+- Updated to `senzing-api-server` version `3.3.0` including all changes provided
+  by that:
+  - Adds support for `SENZING_ENGINE_CONFIGURATION_JSON` environment variable
+    per Issue #61
+  - Adds "how entity" support (both by record ID and entity ID)
+  - Adds "get virtual entity" support
+  - Adds `detailLevel` support
+  - Adds `SzFeatureMode.ATTRIBUTED` support
+  - See `CHANGELOG.md` from `Senzing/senzing-api-server` for further details
+- Updated dependencies to match the `senzing-api-server` dependency versions
+
 ## [3.1.1] - 2022-07-20
 
 ### Changed in 3.1.1
