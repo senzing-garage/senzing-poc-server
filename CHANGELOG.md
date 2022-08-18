@@ -16,10 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     per Issue #61
   - Adds "how entity" support (both by record ID and entity ID)
   - Adds "get virtual entity" support
-  - Adds `detailLevel` support.
-  - Adds `SzFeatureMode.ATTRIBUTED` support.
-  - See `CHANGELOG.md` from `Senzing/senzing-api-server` for further details.
-- Updated dependency 
+  - Adds `detailLevel` support
+  - Adds `SzFeatureMode.ATTRIBUTED` support
+  - See `CHANGELOG.md` from `Senzing/senzing-api-server` for further details
+- Updated dependencies to match the `senzing-api-server` dependency versions
 
 ## [3.1.1] - 2022-07-20
 
