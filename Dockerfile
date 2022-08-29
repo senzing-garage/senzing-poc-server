@@ -7,11 +7,11 @@ ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.10
 
 FROM ${BASE_BUILDER_IMAGE} as builder
 
-ENV REFRESHED_AT=2022-08-25
+ENV REFRESHED_AT=2022-08-29
 
 LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
-      Version="3.2.2"
+      Version="3.2.3"
 
 # Set environment variables.
 
@@ -45,11 +45,11 @@ RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public > /
 
 FROM ${BASE_IMAGE}
 
-ENV REFRESHED_AT=2022-08-25
+ENV REFRESHED_AT=2022-08-29
 
 LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
-      Version="3.2.2"
+      Version="3.2.3"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
@@ -117,4 +117,3 @@ ENV PATH=${PATH}:/opt/senzing/g2/python:/opt/IBM/db2/clidriver/adm:/opt/IBM/db2/
 WORKDIR /app
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["java", "-jar", "senzing-poc-server.jar"]
