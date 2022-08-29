@@ -4,7 +4,7 @@
   <groupId>com.senzing</groupId>
   <artifactId>senzing-poc-server</artifactId>
   <packaging>jar</packaging>
-  <version>3.2.2</version>
+  <version>3.2.3</version>
   <name>senzing-poc-server</name>
   <url>http://maven.apache.org</url>
   <dependencies>
