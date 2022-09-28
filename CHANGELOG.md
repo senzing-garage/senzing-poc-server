@@ -6,13 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.1] - 2022-09-28
+
+### Changed in 3.3.1
+
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.3.0`
+
 ## [3.3.0] - 2022-09-26
 
 ### Changed in 3.3.0
 
-- Updated to version `3.4.0` of the `senzing-api-server` which changes the 
+- Updated to version `3.4.0` of the `senzing-api-server` which changes the
   default HTTP and HTTPS ports to 8250 and 8263, respectively.  In addition to
-  adding support for 2 new `SzDetailLevel` values and one new `SzFeatureMode` 
+  adding support for 2 new `SzDetailLevel` values and one new `SzFeatureMode`
   value.
 
 ## [3.2.3] - 2022-08-30
