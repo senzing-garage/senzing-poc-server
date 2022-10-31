@@ -4,14 +4,14 @@
   <groupId>com.senzing</groupId>
   <artifactId>senzing-poc-server</artifactId>
   <packaging>jar</packaging>
-  <version>3.3.2</version>
+  <version>3.3.3</version>
   <name>senzing-poc-server</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-api-server</artifactId>
-      <version>[3.4.0, 3.999.999]</version>
+      <version>[3.4.4, 3.999.999]</version>
     </dependency>
     <dependency>
      <groupId>org.xerial</groupId>
