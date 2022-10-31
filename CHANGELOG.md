@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.3.1`
 - In `pom.xml`,
   - Updated `software.amazon.awssdk` to 2.17.285
+  - Updated `senzing-api-server` to 3.4.4
 
 ## [3.3.1] - 2022-09-28
 
