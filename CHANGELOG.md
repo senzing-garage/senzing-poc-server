@@ -6,11 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.5] - 2023-01-12
+
+### Changed in 3.3.5
+
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.4.0`
+
 ## [3.3.4] - 2023-01-05
 
 ### Changed in 3.3.4
 
-- Updated dependency versions to newer versions along with `senzing-api-server` 
+- Updated dependency versions to newer versions along with `senzing-api-server`
   version to `3.4.7`.
 
 ## [3.3.3] - 2022-10-27
