@@ -11,7 +11,7 @@ ENV REFRESHED_AT=2022-10-27
 
 LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
-      Version="3.3.4"
+      Version="3.3.5"
 
 # Set environment variables.
 
@@ -49,7 +49,7 @@ ENV REFRESHED_AT=2022-10-27
 
 LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
-      Version="3.3.4"
+      Version="3.3.5"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
