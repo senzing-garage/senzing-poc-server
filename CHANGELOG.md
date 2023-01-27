@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.7] - 2023-01-23
+
+### Changed in 3.3.7
+
+- Updated `senzing-api-server` dependency to version `3.4.10`
+- Modified bulk-data API to allow JSON-lines (`application/x-jsonlines`)
+  content when JSON (`application/json`) Content-Type header is provided.
+
 ## [3.3.6] - 2023-01-13
 
 ### Changed in 3.3.6
@@ -17,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 3.3.5
 
 - In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.4.0`
+>>>>>>> main
 
 ## [3.3.4] - 2023-01-05
 

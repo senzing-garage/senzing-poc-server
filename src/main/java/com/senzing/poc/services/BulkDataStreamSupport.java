@@ -96,6 +96,8 @@ public interface BulkDataStreamSupport
       Sse                         sse,
       Session                     webSocketSession)
   {
+    MediaType specifiedMediaType = mediaType;
+
     // check if the maximum batch count is less-than or equal to zero
     if (maxBatchCount <= 0) maxBatchCount = Integer.MAX_VALUE;
 
@@ -140,10 +142,18 @@ public interface BulkDataStreamSupport
            BufferedReader     br  = new BufferedReader(isr))
       {
         // if format is null then RecordReader will auto-detect
-        RecordReader recordReader = new RecordReader(bulkDataSet.getFormat(),
+        RecordReader recordReader = new RecordReader(null,
                                                      br,
                                                      dataSourceMap,
                                                      loadId);
+
+        this.verifyBulkDataFormat(specifiedMediaType,
+                                  bulkDataSet.getFormat(),
+                                  recordReader.getFormat(),
+                                  uriInfo,
+                                  timers);
+
+        // override the format accordingly
         bulkDataSet.setFormat(recordReader.getFormat());
 
         if (LoggingUtilities.isDebugLogging()) {

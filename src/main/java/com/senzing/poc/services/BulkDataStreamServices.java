@@ -86,7 +86,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                         null,
                                         null);
 
-    } catch (ForbiddenException e) {
+    } catch (ClientErrorException e) {
       throw e;
 
     } catch (RuntimeException e) {
@@ -165,7 +165,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                         null,
                                         null);
 
-    } catch (ForbiddenException e) {
+    } catch (ClientErrorException e) {
       throw e;
 
     } catch (RuntimeException e) {
@@ -249,7 +249,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                  sse,
                                  null);
 
-    } catch (ForbiddenException e) {
+    } catch (ClientErrorException e) {
       throw e;
 
     } catch (RuntimeException e) {
@@ -335,7 +335,7 @@ public class BulkDataStreamServices implements BulkDataStreamSupport {
                                  sse,
                                  null);
 
-    } catch (ForbiddenException e) {
+    } catch (ClientErrorException e) {
       throw e;
 
     } catch (RuntimeException e) {
