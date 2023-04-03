@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated `senzing-api-server` dependency to version `3.5.0`
 - Updated third-party dependency versions to newer versions
+- Updated underlying Docker images.
+
 
 ## [3.3.9] - 2023-03-10
 
