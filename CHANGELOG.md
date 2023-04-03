@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2023-04-03
+
+### Changed in 3.4.0
+
+- Updated `senzing-api-server` dependency to version `3.5.0`
+- Updated third-party dependency versions to newer versions
+
 ## [3.3.9] - 2023-03-10
 
 ### Changed in 3.3.9
