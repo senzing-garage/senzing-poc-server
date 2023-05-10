@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.1] - 2023-05-10
+
+### Changed in 3.4.1
+
+- Upgraded `senzing-api-server` dependency to version `3.5.1`
+- Upgraded "Jackson" libraries to version `2.15.0`
+- Upgraded `junit-jupiter` to version `5.9.3`
+- Upgraded `swagger-annotations` to version `2.2.9`
+- Upgraded `maven-resources-plugin` to version `3.3.1`
+- Updated POC REST API specification to version `3.3.0`
+- Updated `BuildInfo` to reflect REST API spec version `3.3.0`
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.5.2`
+
 ## [3.4.0] - 2023-04-03
 
 ### Changed in 3.4.0
