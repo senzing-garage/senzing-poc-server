@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Senzing POC REST API
-  version: "3.2.3"
+  version: "3.3.0"
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
@@ -2024,8 +2024,7 @@ paths:
         schema:
           type: integer
           format: int8
-          minimum: 0
-          maximum: 100
+          minimum: 1
           default: 3
       - name: x
         description: >-
@@ -2292,7 +2291,6 @@ paths:
           type: integer
           format: int8
           minimum: 0
-          maximum: 100
           default: 3
       - name: buildOut
         description: >-
@@ -3951,6 +3949,14 @@ components:
         controlled by `featureMode`, `withInternalFeatures`, and
         `withFeatureStats`.  If not specified the value defaults to `VERBOSE`.
         Possible values are:
+          * `BARE_MINIMAL` - The entities returned will include only their
+                             entity ID's.  No record information is returned
+                             and if related entities are included, they too will
+                             only be described by their entity ID's and will
+                             **not** include any matching info.
+          * `NETWORK_MINIMAL` - Identical to `BARE_MINIMAL` except in the case
+                                of related entities being included they will
+                                also include related matching info.
           * `MINIMAL` - The entities returned will include at most their
                         entity ID's as well as identifiers for their
                         constituent records (i.e.: data source code and record
@@ -4736,6 +4742,9 @@ components:
           * `NONE` - Do not include any feature values -- this is the fastest
                      option from a performance perspective because feature
                      values do not have to be retrieved.
+          * `ENTITY_NAME_ONLY` - Same as `NONE` in that no "features" are
+                                 returned, but the singular entity name value
+                                 is determined will be determined and returned.
           * `REPRESENTATIVE` - Include only a single representative value per
                                "unique" value of a feature.  If there are
                                multiple values that are near duplicates then
@@ -4752,6 +4761,7 @@ components:
       type: string
       enum:
         - NONE
+        - ENTITY_NAME_ONLY
         - REPRESENTATIVE
         - WITH_DUPLICATES
         - ATTRIBUTED
@@ -4816,6 +4826,14 @@ components:
         the various endpoints that return entity data.  Details for features of
         entities as well as the related entities of entities are controlled by
         other flags.  Possible values are:
+          * `BARE_MINIMAL` - The entities returned will include only their
+                             entity ID's.  No record information is returned
+                             and if related entities are included, they too will
+                             only be described by their entity ID's and will
+                             **not** include any matching info.
+          * `NETWORK_MINIMAL` - Identical to `BARE_MINIMAL` except in the case
+                                of related entities being included they will
+                                also include related matching info.
           * `MINIMAL` - The entities returned will include at most their
                         entity ID's as well as identifiers for their
                         constituent records (i.e.: data source code and record
@@ -4844,6 +4862,8 @@ components:
                         expected to a user).
       type: string
       enum:
+        - BARE_MINIMAL
+        - NETWORK_MINIMAL
         - MINIMAL
         - BRIEF
         - SUMMARY
