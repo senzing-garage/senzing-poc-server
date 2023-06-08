@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.2] - 2023-06-08
+
+### Changed in 3.4.2
+
+- Upgraded `senzing-api-server` dependency to version `3.5.2`
+- Upgraded "Jackson" libraries to version `2.15.2`
+- Upgraded "icu4J" to version `73.1`
+- Upgraded various maven plugin dependencies for building.
+
 ## [3.4.1] - 2023-05-10
 
 ### Changed in 3.4.1
