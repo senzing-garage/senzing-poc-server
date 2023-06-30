@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `pom.xml` to POC Server version `3.4.5`
 - Updated `Dockerfile` to version `3.4.5`
 - Updated `sqlite-jdbc` to version `3.42.0.0`
+- Updated `senzing-api-server` to version `3.5.5`
 - Updated Jersey dependencies to version `2.40`
 - Updated `icu4j` to version `73.2`
 - Updated `sqs` to version `2.20.94`
