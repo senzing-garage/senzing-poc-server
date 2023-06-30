@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.4.3] - 2023-06-30
+## [3.4.5] - 2023-06-30
 
-### Changed in 3.4.3
+### Changed in 3.4.5
 
+- Updated `pom.xml` to POC Server version `3.4.5`
+- Updated `Dockerfile` to version `3.4.5`
 - Updated `sqlite-jdbc` to version `3.42.0.0`
 - Updated Jersey dependencies to version `2.40`
 - Updated `icu4j` to version `73.2`
@@ -17,7 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `amqp-client` to version `5.18.0`
 - Updated `kafka-clients` to version `3.5.0`
 
-## [3.4.1] - 2023-05-10
+### Changed in 3.4.4
+
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.6.0`
+
+## [3.4.3] - 2023-06-15
+
+### Changed in 3.4.3
+
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.5.3`
 
 ## [3.4.2] - 2023-06-08
 
