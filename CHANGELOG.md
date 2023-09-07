@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.6] - 2023-09-06
+
+### Changed in 3.4.6
+
+- Updated `senzing-api-server` dependency to version `3.5.6`
+- Updated remaining `2.39` Jersey dependencies to version `2.40`
+- Updated pom.xml dependencies for Jetty, Swagger, and Amazon SQS
+
 ## [3.4.5] - 2023-06-30
 
 ### Changed in 3.4.5

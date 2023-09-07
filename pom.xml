@@ -4,70 +4,70 @@
   <groupId>com.senzing</groupId>
   <artifactId>senzing-poc-server</artifactId>
   <packaging>jar</packaging>
-  <version>3.4.5</version>
+  <version>3.4.6</version>
   <name>senzing-poc-server</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-api-server</artifactId>
-      <version>[3.5.5, 3.999.999]</version>
+      <version>[3.5.6, 3.999.999]</version>
     </dependency>
     <dependency>
      <groupId>org.xerial</groupId>
      <artifactId>sqlite-jdbc</artifactId>
-       <version>3.42.0.0</version>
+       <version>3.43.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlets -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlets</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-rewrite</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-proxy</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-server</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-common</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-servlet</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>javax-websocket-server-impl</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-api</artifactId>
-      <version>9.4.51.v20230217</version>
+      <version>9.4.52.v20230823</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
@@ -169,7 +169,7 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>sqs</artifactId>
-      <version>2.20.94</version>
+      <version>2.20.140</version>
     </dependency>
     <dependency>
       <groupId>com.rabbitmq</groupId>
@@ -237,7 +237,7 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>2.2.9</version>
+      <version>2.2.15</version>
       <scope>test</scope>
     </dependency>
 </dependencies>
@@ -380,6 +380,7 @@
                   <filtering>true</filtering>
                 </resource>
               </resources>
+              <propertiesEncoding>ISO-8859-1</propertiesEncoding>
             </configuration>
           </execution>
         </executions>
