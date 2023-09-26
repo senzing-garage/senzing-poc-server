@@ -35,10 +35,6 @@ RUN export POC_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.ver
  && make package \
  && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_VERSION}.jar "/senzing-poc-server.jar"
 
-# Grab a gpg key for our final stage to install the JDK
-
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public > /gpg.key
-
 # -----------------------------------------------------------------------------
 # Stage: Final
 # -----------------------------------------------------------------------------
@@ -70,16 +66,14 @@ RUN apt update \
 
 # Install Java-11.
 
-COPY --from=builder "/gpg.key" "gpg.key"
+RUN mkdir -p /etc/apt/keyrings \
+ && wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public > /etc/apt/keyrings/adoptium.asc
 
-RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ bullseye main" >> /etc/apt/sources.list \
-    echo "# deb-src https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ bullseye main" >> /etc/apt/sources.list
+RUN echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >> /etc/apt/sources.list
 
-RUN cat gpg.key | apt-key add - \
- && apt update \
- && apt install -y adoptopenjdk-11-hotspot \
- && rm -rf /var/lib/apt/lists/* \
- && rm -f gpg.key
+RUN apt update \
+ && apt install -y temurin-11-jdk \
+ && rm -rf /var/lib/apt/lists/*
 
 # Copy files from repository.
 
