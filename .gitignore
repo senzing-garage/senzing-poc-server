@@ -69,3 +69,7 @@ target-v*
 
 .bash_history
 .history
+
+# VS Code
+.project
+.vscode/
