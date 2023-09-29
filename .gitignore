@@ -71,5 +71,4 @@ target-v*
 .history
 
 # VS Code
-.project
 .vscode/

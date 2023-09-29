@@ -1,0 +1,25 @@
+name: docker-push-containers-to-dockerhub.yaml
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  docker-push-containers-to-dockerhub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Git Update submodules
+        run: git submodule update --init --recursive
+      - name: Build docker image and push to DockerHub
+        uses: Senzing/github-action-docker-buildx-build@latest
+        with:
+          build-options: "--push"
+          image-repository: senzing/senzing-poc-server
+          image-tag: ${{ github.ref_name }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
