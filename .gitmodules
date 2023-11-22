@@ -1,3 +1,6 @@
 [submodule "senzing-api-server"]
 	path = senzing-api-server
 	url = https://github.com/Senzing/senzing-api-server.git
+[submodule "data-mart-replicator"]
+	path = data-mart-replicator
+	url = git@github.com:Senzing/data-mart-replicator.git
