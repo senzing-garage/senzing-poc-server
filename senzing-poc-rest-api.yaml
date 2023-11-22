@@ -2824,6 +2824,170 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
+  /statistics/counts:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity and record counts in total and by data source from the
+        data mart.
+      description: >-
+        Gets the entity and record counts in total and by data source from the
+        data mart.  *NOTE*: Data mart statistics may be slightly delayed from 
+        the entity repository.
+      operationId: getCountStatistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/counts/entities:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity counts in total and by data source from the data mart.
+      description: >-
+        Gets the entity counts in total and by data source from the data mart.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.
+      operationId: getEntityCountStatistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/counts/records:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the record counts in total and by data source from the data mart.
+      description: >-
+        Gets the record counts in total and by data source from the data mart.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.
+      operationId: getRecordCountStatistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/counts/data-sources/{dataSourceCode}:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity and record counts for a specific data source from the
+        data mart.
+      description: >-
+        Gets the entity and record counts for a specific data source from the
+        data mart.  *NOTE*: Data mart statistics may be slightly delayed from 
+        the entity repository.
+      operationId: getSourceCountStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/counts/data-sources/{dataSourceCode}/entities:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity counts for a specific data source from the data mart.
+      description: >-
+        Gets the entity counts for a specific data source from the data mart.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.
+      operationId: getSourceEntityCountStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/counts/data-sources/{dataSourceCode}/records:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the records counts for a specific data source from the data mart.
+      description: >-
+        Gets the record counts for a specific data source from the data mart.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.
+      operationId: getSourceRecordCountStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
   /load-queue:
     get:
       tags:
@@ -2832,6 +2996,7 @@ paths:
         Gets the properties of the configured load queue.
       description: >-
         Obtains the properties of the configured load queue
+      deprecated: true
       operationId: getLoadQueueInfo
       responses:
         '200':
@@ -2880,6 +3045,7 @@ paths:
 
         **NOTE:** The actual loading of the record must be handled externally
         by a consumer of the messages on the configured load queue.
+      deprecated: true
       operationId: postRecordToLoadQueue
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
@@ -2997,6 +3163,7 @@ paths:
         **NOTE:** The actual loading of the record must be handled externally
         by a consumer of the messages on the configured load queue.
       operationId: putRecordOnLoadQueue
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/recordIdPathParam'
@@ -3146,6 +3313,7 @@ paths:
         number of seconds specified by the `eofSendTimeout` query parameter have
         elapsed without a new message being received.
       operationId: streamLoadBulkRecords
+      deprecated: true
       parameters:
         - name: dataSource
           description: |
@@ -4655,6 +4823,86 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/SzEntityData'
+    SzCountStatsResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        counts of entities and records in total and by data source.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzCountStats` containing the statistics.
+              $ref: '#/components/schemas/SzCountStats'
+    SzSourceCountStatsResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        counts of entities and records for a specific data source.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzSourceCountStats` containing the statistics.
+              $ref: '#/components/schemas/SzSourceCountStats'
+    SzCountStats:
+      description: >-
+        Encapsulates the statistics pertaining to counts of entities and records
+        both in total and by data source.
+      type: object
+      required:
+        - dataSourceCounts
+      properties:
+        totalRecordCount:
+          description: >-
+            The total number of records that have been loaded.
+          type: integer
+          format: int64
+          nullable: false
+        totalEntityCount:
+          description: >-
+            The total number of entities that have been resolved from 
+            the loaded records.
+          type: integer
+          format: int64
+          nullable: false
+        dataSourceCounts:
+          description: >-
+            An array of `SzSourceCountStats` describing the entity and record
+            counts by data source.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzSourceCountStats'
+    SzSourceCountStats:
+      description: >-
+        Encapsulates the statistics pertaining to counts of entities and records
+        for a specific data source.
+      type: object
+      required:
+        - dataSourceCode
+      properties:
+        dataSourceCode:
+          description: >-
+            The data source code identifying the data source to which the statistics
+            are associated.
+          type: string
+          nullable: false
+        recordCount:
+          description: >-
+            The total number of records that have been loaded for the associated
+            data source.
+          type: integer
+          format: int64
+          nullable: false
+        entityCount:
+          description: >-
+            The number of entities that have at least one record from the 
+            associated data source.
+          type: integer
+          format: int64
+          nullable: false
     SzError:
       description: >-
         Describes an error.

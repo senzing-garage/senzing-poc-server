@@ -11,8 +11,23 @@
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-api-server</artifactId>
-      <version>[3.5.6, 3.999.999]</version>
+      <version>[3.5.9, 3.999.999]</version>
     </dependency>
+    <dependency>
+      <groupId>com.senzing</groupId>
+      <artifactId>senzing-commons</artifactId>
+      <version>[3.1.4, 3.999.999]</version>
+    </dependency>
+    <dependency>
+      <groupId>com.senzing</groupId>
+      <artifactId>senzing-listener</artifactId>
+      <version>0.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.senzing</groupId>
+      <artifactId>data-mart-replicator</artifactId>
+      <version>1.0.0</version>
+    </dependency>    
     <dependency>
      <groupId>org.xerial</groupId>
      <artifactId>sqlite-jdbc</artifactId>
@@ -251,49 +266,6 @@
   <build>
     <directory>${buildDirectory}</directory>
     <plugins>
-      <!-- plugin>
-        <groupId>io.swagger.codegen.v3</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <version>3.0.19</version>
-        <executions>
-          <execution>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <inputSpec>${project.basedir}/senzing-rest-api-specification/senzing-rest-api.yaml</inputSpec>
-              <language>java</language>
-              <configOptions>
-                <dateLibrary>joda</dateLibrary>
-                <library>resttemplate</library>
-                <sourceFolder>src/gen/java/test</sourceFolder>
-              </configOptions>
-              <output>${project.build.directory}/generated-test-sources/swagger</output>
-              <modelPackage>com.senzing.gen.api.model</modelPackage>
-              <apiPackage>com.senzing.gen.api.services</apiPackage>
-              <invokerPackage>com.senzing.gen.api.invoker</invokerPackage>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin -->
-      <!-- plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>generate-test-sources</phase>
-              <goals>
-                <goal>add-test-source</goal>
-              </goals>
-              <configuration>
-                <sources>
-                  <source>${project.build.directory}/generated-test-sources/swagger/src/gen/java/test</source>
-                </sources>
-              </configuration>
-          </execution>
-        </executions>
-      </plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -301,39 +273,37 @@
         <executions>
           <execution>
             <phase>process-test-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
             <configuration>
-
               <target>
-                <property name="maven.classpath" refid="maven.compile.classpath"></property>
+                <property name="maven.classpath" refid="maven.compile.classpath"/>
                 <property environment="env"/>
                 <condition property="senzing.install.dir"
-                           value="${env.SENZING_DIR}"
-                           else="">
+                          value="${env.SENZING_DIR}"
+                          else="">
                   <isset property="env.SENZING_DIR"/>
                 </condition>
-                <mkdir dir="${project.build.directory}/test-classes/"></mkdir>
+                <mkdir dir="${project.build.directory}/test-classes/"/>
                 <javac includeantruntime="false"
-                       srcdir="senzing-api-server/src/test/java"
-                       destdir="${project.build.directory}/test-classes/"
-                       includes="com/senzing/api/GenerateTestJVMScript.java"
-                       classpath="${maven.classpath}" />
+                      srcdir="senzing-api-server/src/test/java"
+                      destdir="${project.build.directory}/test-classes/"
+                      includes="com/senzing/api/GenerateTestJVMScript.java"
+                      classpath="${maven.classpath}" />
 
                 <java classname="com.senzing.api.GenerateTestJVMScript">
                   <classpath>
-                    <pathelement path="${maven.classpath}"></pathelement>
+                    <pathelement path="${maven.classpath}"/>
                     <pathelement location="${project.build.directory}/test-classes/"/>
                     <pathelement location="${project.build.directory}/classes/"/>
                   </classpath>
                   <sysproperty key="senzing.install.dir"
-                               value="${senzing.install.dir}"/>
+                              value="${senzing.install.dir}"/>
                   <arg value="${project.build.directory}/java-wrapper/bin/java-wrapper.bat"/>
                 </java>
               </target>
-
             </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -400,7 +370,7 @@
                 <exclude>META-INF/*.RSA</exclude>
               </excludes>
             </filter>
-           <filter>
+          <filter>
               <artifact>com.senzing:senzing-api-server*</artifact>
               <excludes>
                 <exclude>com/ibm/icu/**</exclude>
