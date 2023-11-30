@@ -38,15 +38,12 @@ public interface SzSourceCountStats {
 
   /**
    * Gets the total number of records that have been loaded for the 
-   * associated data source.  This returns <code>null</code> if the record
-   * count was not requested and has not been initialized.
+   * associated data source.
    *
    * @return The total number of records that have been loaded for the 
-   *         associated data source, or <code>null</code> if the record
-   *         count was not requested and has not been initialized.
+   *         associated data source.
    */
-  @JsonInclude(NON_NULL)
-  Long getRecordCount();
+  long getRecordCount();
 
   /**
    * Sets the the total number of records that have been loaded for the 
@@ -59,15 +56,12 @@ public interface SzSourceCountStats {
 
   /**
    * Gets the total number of entities that have at least one record from
-   * the associated data source.  This returns <code>null</code> if the 
-   * entity count was not requested and has not been initialized.
+   * the associated data source.
    *
    * @return The total number of entities that have at least one record from
-   *         the associated data source, or <code>null</code> if the entity
-   *         count was not requested and has not been initialized.
+   *         the associated data source.
    */
-  @JsonInclude(NON_NULL)
-  Long getEntityCount();
+  long getEntityCount();
 
   /**
    * Sets total number of entities that have at least one record from
@@ -77,6 +71,29 @@ public interface SzSourceCountStats {
    *                    for the associated data source.
    */
   void setEntityCount(long entityCount);
+
+  /**
+   * Gets the total number of entities that have at least one record from
+   * the associated data source.  This value doubles as the number of
+   * entities having a record from the associated data source where that
+   * record is single <b>only</b> record in the entity.
+   *
+   * @return The total number of entities that have at least one record from
+   *         the associated data source.
+   */
+  long getUnmatchedRecordCount();
+
+  /**
+   * Sets total number of records that have been loaded for the associated 
+   * data source that did <b>not</b> match against any other record.  This
+   * value doubles as the number of entities having a record from the 
+   * associated data source where that record is single <b>only</b> record
+   * in the entity.
+   *
+   * @param entityCount The total number of entities that have been loaded
+   *                    for the associated data source.
+   */
+  void setUnmatchedRecordCount(long entityCount);
 
   /**
    * A {@link ModelProvider} for instances of {@link SzSourceCountStats}.

@@ -15,17 +15,22 @@ import com.senzing.poc.model.SzSourceCountStats;
 @JsonDeserialize
 public class SzCountStatsImpl implements SzCountStats {
   /**
-   * The total number of records loaded in the entity repository.  This
-   * is initialized to <code>null</code> if it has not yet been set.
+   * The total number of records loaded in the entity repository.
    */
-  private Long totalRecordCount = null;
+  private long totalRecordCount = 0L;
 
   /**
    * The total number of entities that have been resolved in the entity
-   * repository.  This is initialized to <code>null</code> if it has not
-   * yet been set.
+   * repository.
    */
-  private Long totalEntityCount = null;
+  private long totalEntityCount = 0L;
+
+  /**
+   * The total number of records loaded in the entity repository that
+   * failed to match against any other record.  This is also the number
+   * of entities in the repository that only have a single record.
+   */
+  private long totalUnmatchedRecordCount = 0L;
 
   /**
    * The {@link Map} of {@link String} data source code keys to {@link
@@ -38,13 +43,14 @@ public class SzCountStatsImpl implements SzCountStats {
    * Default constructor
    */
   public SzCountStatsImpl() {
-    this.totalRecordCount   = null;
-    this.totalEntityCount   = null;
-    this.dataSourceCounts   = new LinkedHashMap<>();
+    this.totalRecordCount           = 0L;
+    this.totalEntityCount           = 0L;
+    this.totalUnmatchedRecordCount  = 0L;
+    this.dataSourceCounts           = new LinkedHashMap<>();
   }
 
   @Override
-  public Long getTotalRecordCount() {
+  public long getTotalRecordCount() {
     return this.totalRecordCount;
   }
 
@@ -54,13 +60,23 @@ public class SzCountStatsImpl implements SzCountStats {
   }
 
   @Override
-  public Long getTotalEntityCount() {
+  public long getTotalEntityCount() {
     return this.totalEntityCount;
   }
 
   @Override
   public void setTotalEntityCount(long entityCount) {
     this.totalEntityCount = entityCount;
+  }
+
+  @Override
+  public long getTotalUnmatchedRecordCount() {
+    return this.totalUnmatchedRecordCount;
+  }
+
+  @Override
+  public void setTotalUnmatchedRecordCount(long recordCount) {
+    this.totalUnmatchedRecordCount = recordCount;
   }
 
   @Override

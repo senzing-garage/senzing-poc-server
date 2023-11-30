@@ -18,15 +18,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public interface SzCountStats {
   /**
    * Gets the total number of records that have been loaded to the 
-   * entity repository.  This returns <code>null</code> if the record
-   * count was not requested and has not been initialized.
+   * entity repository.
    *
    * @return The total number of records that have been loaded to the
-   *         entity repository, or <code>null</code> if the record
-   *         count was not requested and has not been initialized.
+   *         entity repository.
    */
-  @JsonInclude(NON_NULL)
-  Long getTotalRecordCount();
+  long getTotalRecordCount();
 
   /**
    * Sets the the total number of records that have been loaded to the
@@ -39,15 +36,12 @@ public interface SzCountStats {
 
   /**
    * Gets the total number of entities that have been resolved in the
-   * entity repository.  This returns <code>null</code> if the entity
-   * count was not requested and has not been initialized.
+   * entity repository.
    *
    * @return The total number of entities that have been resolved in the
-   *         entity repository, or <code>null</code> if the entity count
-   *         was not requested and has not been initialized.
+   *         entity repository.
    */
-  @JsonInclude(NON_NULL)
-  Long getTotalEntityCount();
+  long getTotalEntityCount();
 
   /**
    * Sets total number of entities that have at least one record from
@@ -57,6 +51,28 @@ public interface SzCountStats {
    *                    for the associated data source.
    */
   void setTotalEntityCount(long entityCount);
+
+  /**
+   * Gets the total number of records that have been loaded to the 
+   * entity repository that did <b>not</b> match against any other
+   * records.   This is also the total number of entities that only
+   * have a single record.
+   *
+   * @return The total number of records that have been loaded to the
+   *         entity repository.
+   */
+  long getTotalUnmatchedRecordCount();
+
+  /**
+   * Sets the the total number of records that have been loaded to the
+   * entity repository that did <b>not</b> match against any other
+   * record.  This is also the total number of entities that only have
+   * a single record.
+   *
+   * @param recordCount The total number of records that have been loaded
+   *                    to the entity repository.
+   */
+  void setTotalUnmatchedRecordCount(long recordCount);
 
   /**
    * Gets the {@link List} of {@link SzSourceCountStats} describing the 

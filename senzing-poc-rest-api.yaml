@@ -2851,58 +2851,6 @@ paths:
                 $ref: '#/components/schemas/SzCountStatsResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/counts/entities:
-    get:
-      tags:
-        - Statistics
-      summary: >-
-        Gets the entity counts in total and by data source from the data mart.
-      description: >-
-        Gets the entity counts in total and by data source from the data mart.
-        *NOTE*: Data mart statistics may be slightly delayed from the entity
-        repository.
-      operationId: getEntityCountStatistics
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json; charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-            default:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /statistics/counts/records:
-    get:
-      tags:
-        - Statistics
-      summary: >-
-        Gets the record counts in total and by data source from the data mart.
-      description: >-
-        Gets the record counts in total and by data source from the data mart.
-        *NOTE*: Data mart statistics may be slightly delayed from the entity
-        repository.
-      operationId: getRecordCountStatistics
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json; charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-            default:
-              schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
-        '500':
-          $ref: '#/components/responses/ServerError'
   /statistics/counts/data-sources/{dataSourceCode}:
     get:
       tags:
@@ -2932,60 +2880,98 @@ paths:
                 $ref: '#/components/schemas/SzSourceCountStatsResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/counts/data-sources/{dataSourceCode}/entities:
+  /statistics/entity-sizes/counts:
     get:
       tags:
         - Statistics
       summary: >-
-        Gets the entity counts for a specific data source from the data mart.
+        Gets the entity counts by entity size (Entity Size Breakdown).
       description: >-
-        Gets the entity counts for a specific data source from the data mart.
-        *NOTE*: Data mart statistics may be slightly delayed from the entity
-        repository.
-      operationId: getSourceEntityCountStatistics
-      parameters:
-        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        Gets the number of entities in the repository for each entity size 
+        that exists.  *NOTE*: Data mart statistics may be slightly delayed
+        from the entity repository.
+      operationId: getEntitySizeBreakdown
       responses:
         '200':
           description: Successful response
           content:
             application/json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeBreakdownResponse'
             application/json:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeBreakdownResponse'
             default:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeBreakdownResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/counts/data-sources/{dataSourceCode}/records:
+  /statistics/entity-sizes/{entitySize}/count:
     get:
       tags:
         - Statistics
       summary: >-
-        Gets the records counts for a specific data source from the data mart.
+        Gets the count of entities having the specific number of records.
       description: >-
-        Gets the record counts for a specific data source from the data mart.
+        Gets the count of entities having the specific number of records.
+        If there are NO entities having the specified number of records then
+        this will return a 200 OK response with the result indicating a count
+        of zero entities rather than giving a 404 Not Found response.
         *NOTE*: Data mart statistics may be slightly delayed from the entity
         repository.
-      operationId: getSourceRecordCountStatistics
+      operationId: getEntitySizeCount
       parameters:
-        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/entitySizePathParam'
       responses:
         '200':
           description: Successful response
           content:
             application/json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeCountResponse'
             application/json:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeCountResponse'
             default:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzEntitySizeCountResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/entity-sizes/{entitySize}/entities:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity ID's of the entities having the specific number of records.
+      description: >-
+        Gets the entity ID's of the entities having the number of records for the
+        specified entity size.  If no entities have the specified number of records
+        then this will return a 200 OK response that will have an empty array of
+        entity ID's rather than giving a 404 Not Found response.  Further, if there
+        are no entity ID's having the specified number of records that are greater
+        than the specified minimum entity ID then similarly a 200 OK response is 
+        returned but the array of ID's contained in the response will be empty.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.        
+      operationId: getSourceRecordCountStatistics
+      parameters:
+        - $ref: '#/components/parameters/entitySizePathParam'
+        - $ref: '#/components/parameters/entityIdBoundQueryParam'
+        - $ref: '#/components/parameters/boundTypeQueryParam'
+        - $ref: '#/components/parameters/pageSizeQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
         '500':
           $ref: '#/components/responses/ServerError'
   /load-queue:
@@ -4271,6 +4257,72 @@ components:
       schema:
         type: boolean
         default: false
+    entityIdBoundQueryParam:
+      in: query
+      name: bound
+      required: false
+      description: >-
+        The optional parameter to provide for "paging" through entity ID's
+        associated with a statistic.  The value is specified as bound on the
+        entity ID values returned.  The type of bound is given by the 
+        `boundType` parameter.  For example, by default the `boundType` is
+        `EXCLUSIVE_LOWER` so the returned entity ID values must satisfy the
+        condition that they are strictly greater than the entity ID bound value.
+        To move to the "next page" of entity ID's specify the greatest entity ID
+        value from the current page and use `boundType` of `EXCLUSIVE_LOWER`.
+        To move to the "previous page" of entity ID's specify the least entity ID
+        value on the current page and use `boundType` of `EXCLUSIVE_UPPER`.  To
+        change the number of results shown on the current page specify the least
+        entity ID value on the current page and specify a `boundType` of 
+        `INCLUSIVE_LOWER` with a new `pageSize` value.
+      schema:
+        type: integer
+        format: int64
+        default: 0
+    boundTypeQueryParam:
+      in: query
+      name: boundType
+      required: false
+      description: >-
+        The optional parameter to provide for "paging" through entity ID's
+        associated with a statistic.  The value is specified as an `SzBoundType`
+        and the entity ID bound value is given by the `bound` parameter.  For
+        example, by default the `boundType` is `EXCLUSIVE_LOWER` so the returned
+        entity ID values must satisfy the condition that they are strictly greater
+        than the entity ID bound value.  To move to the "next page" of entity ID's
+        specify the greatest entity ID value from the current page and use
+        `boundType` of `EXCLUSIVE_LOWER`.  To move to the "previous page" of 
+        entity ID's specify the least entity ID value on the current page and use
+        a `boundType` of `EXCLUSIVE_UPPER`.  To change the number of results shown
+        on the current page specify the least entity ID value on the current page
+        and specify a `boundType` of `INCLUSIVE_LOWER` with a new `pageSize` value.
+        Possible values are:
+          * `INCLUSIVE_LOWER` - The bound represents an inclusive lower bound whereby
+                                values satisifying the bound will be greater-than or equal
+                                to the value associated with the bound.
+          * `EXCLUSIVE_LOWER` - The bound represents an exclusive lower bound whereby 
+                                values satisfying the bound will be strictly greater-than 
+                                the value associated with the bound.
+          * `INCLUSIVE_UPPER` - The bound represents an inclusive upper bound whereby
+                                values satisifying the bound will be less-than or equal
+                                to the value associated with the bound.
+          * `EXCLUSIVE_UPPER` - The bound represents an exclusive upper bound whereby 
+                                values satisfying the bound will be strictly less-than 
+                                the value associated with the bound.
+      schema:
+        default: EXCLUSIVE_LOWER
+        $ref: '#/components/schemas/SzBoundType'
+    pageSizeQueryParam:
+      in: query
+      name: pageSize
+      required: false
+      description: >-
+        The optional parameter to limit the number of returned results per page.
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
     dataSourceCodePathParam:
       in: path
       name: dataSourceCode
@@ -4327,6 +4379,24 @@ components:
         type: integer
         format: int32
         default: 3
+    entitySizePathParam:
+      in: path
+      name: entitySize
+      required: true
+      description: >-
+        The number of records for the entities of interest.
+      schema:
+        type: integer
+        format: int32
+    relationCountPathParam:
+      in: path
+      name: relationCount
+      required: true
+      description: >-
+        The number of relationships for the entities of interest.
+      schema:
+        type: integer
+        format: int32
   responses:
     ServerError:
       description: Unexpected server error occurred.
@@ -4823,6 +4893,66 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/SzEntityData'
+    SzPagedEntitiesResponse:
+      description: >-
+        Extends the BaseResponse to add the fields describing a list of
+        entity ID's that is "paged" with a boundary, a page size and a 
+        total entity count.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzEntitiesPage` containing the entity ID's
+                and paging statistics.
+              $ref: '#/components/schemas/SzEntitiesPage'
+    SzEntitiesPage:
+      description: >-
+        Encapsulates a paged list of entity ID's identifying the entities
+        pertaining to a specific statistic.
+      type: object
+      required:
+        - bound
+        - boundType
+        - pageSize
+        - totalEntityCount
+        - entityCount
+        - entityIds
+      properties:
+        bound:
+          description: >-
+            The entity ID bound value that bounds the returned entity ID's.
+          type: integer
+          format: int64
+          nullable: false
+        boundType:
+          description: >-
+            The `SzBoundType` associated with the `bound` value to describe
+            how the bound was applied.
+          $ref: '#/components/schemas/SzBoundType'
+          nullable: false
+        pageSize:
+          description: >-
+            The requested page size representing the maximum number of 
+            entity ID's that were requested to be returned.
+          type: integer
+          format: int32
+          nullable: false
+        totalEntityCount:
+          description: >-
+            The total number of entities representing the set of all 
+            possible results across all pages.
+          type: integer
+          format: int64
+          nullable: false
+        entityIds:
+          description: >-
+            An array of entity ID's identifying the entities for the page.
+          type: array
+          items:
+            type: integer
+            format: int64
     SzCountStatsResponse:
       description: >-
         Extends the BaseResponse to add the fields for statistics representing
@@ -4853,6 +4983,9 @@ components:
         both in total and by data source.
       type: object
       required:
+        - totalRecordCount
+        - totalEntityCount
+        - totalUnmatchedRecordCount
         - dataSourceCounts
       properties:
         totalRecordCount:
@@ -4865,6 +4998,14 @@ components:
           description: >-
             The total number of entities that have been resolved from 
             the loaded records.
+          type: integer
+          format: int64
+          nullable: false
+        totalUnmatchedRecordCount:
+          description: >-
+            The total number of records that did not match against any 
+            other records and belong to singleton entities.  This doubles
+            as the count of all entities that only contain a single record.
           type: integer
           format: int64
           nullable: false
@@ -4882,6 +5023,8 @@ components:
       type: object
       required:
         - dataSourceCode
+        - recordCount
+        - entityCount
       properties:
         dataSourceCode:
           description: >-
@@ -4903,6 +5046,76 @@ components:
           type: integer
           format: int64
           nullable: false
+        unmatchedRecordCount:
+          description: >-
+            The total number of records that have been loaded for the associated
+            data source that did *NOT* match against any other records.  This 
+            represents the number of entities having a record from this data source
+            where that is the *ONLY* (single) record in the entity.
+          type: integer
+          format: int64
+          nullable: false
+    SzEntitySizeCountResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        the number of entities having a specific composite record count.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzEntitySizeCount` containing the
+                statistics.
+              $ref: '#/components/schemas/SzEntitySizeCount'
+    SzEntitySizeBreakdownResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        counts of entities having each distinct composite number of records.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzEntitySizeBreakdown` containing the
+                statistics.
+              $ref: '#/components/schemas/SzEntitySizeBreakdown'
+    SzEntitySizeCount:
+      description: >-
+        Describes the number of entities that have a specific number of
+        records.
+      type: object
+      required:
+        - recordCount
+        - entityCount
+      properties:
+        recordCount:
+          description: The number of records that the entities have.
+          type: integer
+          format: int32
+          nullable: false
+        entityCount:
+          description: >-
+            The number of entities having the associated number of records.
+          type: integer
+          format: int64
+          nullable: false
+    SzEntitySizeBreakdown:
+      description: >-
+        Describes the Entity Size Breakdown which gives the number of
+        entities having each entity size (i.e.: number of composite
+        records).
+      type: object
+      required:
+        - entitySizeCounts
+      properties:
+        entitySizeCounts:
+          description: >-
+            The array of `EntitySizeCount` instances describing the number
+            of entities having each number of composite records.  If there
+            are no entities having a specific composite record count then 
+            no entry is included in the array for that entity size.
     SzError:
       description: >-
         Describes an error.
@@ -5116,6 +5329,28 @@ components:
         - BRIEF
         - SUMMARY
         - VERBOSE
+    SzBoundType:
+      description: >-
+        Describes the type of bound for a range.
+        Possible values are:
+          * `INCLUSIVE_LOWER` - The bound represents an inclusive lower bound whereby
+                                values satisifying the bound will be greater-than or equal
+                                to the value associated with the bound.
+          * `EXCLUSIVE_LOWER` - The bound represents an exclusive lower bound whereby 
+                                values satisfying the bound will be strictly greater-than 
+                                the value associated with the bound.
+          * `INCLUSIVE_UPPER` - The bound represents an inclusive upper bound whereby
+                                values satisifying the bound will be less-than or equal
+                                to the value associated with the bound.
+          * `EXCLUSIVE_UPPER` - The bound represents an exclusive upper bound whereby 
+                                values satisfying the bound will be strictly less-than 
+                                the value associated with the bound.
+      type: string
+      enum:
+        - INCLUSIVE_LOWER
+        - EXCLUSIVE_LOWER
+        - INCLUSIVE_UPPER
+        - EXCLUSIVE_UPPER
     SzAttributeType:
       description: >-
         Describes an attribute type that partially (or fully) describes a

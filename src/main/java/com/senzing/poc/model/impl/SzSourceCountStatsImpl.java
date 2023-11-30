@@ -16,17 +16,21 @@ public class SzSourceCountStatsImpl implements SzSourceCountStats {
   private String dataSourceCode;
 
   /**
-   * The number of records loaded for the data source.  This is initialized
-   * to <code>null</code> if it has not yet been set.
+   * The number of records loaded for the data source.
    */
-  private Long recordCount = null;
+  private long recordCount = 0L;
 
   /**
    * The number of entities having at least one record from the associated
-   * data source.  This is initialized
-   * to <code>null</code> if it has not yet been set.
+   * data source.
    */
-  private Long entityCount = null;
+  private long entityCount = 0L;
+
+  /**
+   * The number of records loaded for the data source that failed to
+   * match against any other record in the repository.
+   */
+  private long unmatchedRecordCount = 0L;
 
   /**
    * Constructs with the specified data source code.
@@ -42,8 +46,9 @@ public class SzSourceCountStatsImpl implements SzSourceCountStats {
   {
     Objects.requireNonNull(dataSourceCode, "Data source code cannot be null");
     this.dataSourceCode = dataSourceCode;
-    this.recordCount    = null;
-    this.entityCount    = null;
+    this.recordCount          = 0L;
+    this.entityCount          = 0L;
+    this.unmatchedRecordCount = 0L;
   }
 
   @Override
@@ -57,7 +62,7 @@ public class SzSourceCountStatsImpl implements SzSourceCountStats {
   }
 
   @Override
-  public Long getRecordCount() {
+  public long getRecordCount() {
     return this.recordCount;
   }
 
@@ -67,12 +72,22 @@ public class SzSourceCountStatsImpl implements SzSourceCountStats {
   }
 
   @Override
-  public Long getEntityCount() {
+  public long getEntityCount() {
     return this.entityCount;
   }
 
   @Override
   public void setEntityCount(long entityCount) {
     this.entityCount = entityCount;
+  }
+
+  @Override
+  public long getUnmatchedRecordCount() {
+    return this.unmatchedRecordCount;
+  }
+
+  @Override
+  public void setUnmatchedRecordCount(long recordCount) {
+    this.unmatchedRecordCount = recordCount;
   }
 }
