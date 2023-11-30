@@ -4949,6 +4949,7 @@ components:
         entityIds:
           description: >-
             An array of entity ID's identifying the entities for the page.
+            The entity ID array will be in ascending order.
           type: array
           items:
             type: integer
@@ -5087,10 +5088,10 @@ components:
         records.
       type: object
       required:
-        - recordCount
+        - entitySize
         - entityCount
       properties:
-        recordCount:
+        entitySize:
           description: The number of records that the entities have.
           type: integer
           format: int32
@@ -5115,7 +5116,8 @@ components:
             The array of `EntitySizeCount` instances describing the number
             of entities having each number of composite records.  If there
             are no entities having a specific composite record count then 
-            no entry is included in the array for that entity size.
+            no entry is included in the array for that entity size.  The
+            array will be in descending order of entity size.
     SzError:
       description: >-
         Describes an error.
