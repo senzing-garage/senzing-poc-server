@@ -296,6 +296,9 @@ public class CountStatsServices implements DataMartServicesSupport {
     ResultSet           rs      = null;
     SzSourceCountStats  result  = SzSourceCountStats.FACTORY.create(dataSource);
     try {
+      // get the connection to the data mart database
+      conn = this.getConnection(httpMethod, uriInfo, timers, provider);
+      
       this.queryingDatabase(timers, "selectCountsForSource");
       try {
         // prepare the statement

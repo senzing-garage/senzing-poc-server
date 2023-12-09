@@ -90,7 +90,7 @@ public interface SzCountStats {
    * count statistics for each data source.  This clears any existing 
    * data source counts before setting with those specified.   The specified
    * {@link List} should contain only one element for each data source, but
-   * uf duplicates are encountered then later values in the {@link List}
+   * if duplicates are encountered then later values in the {@link List}
    * take precedence, overwriting prior values from the {@link List}.
    * Specifying a <code>null</code> {@link List} is equivalent to specifying
    * an empty {@link List}.

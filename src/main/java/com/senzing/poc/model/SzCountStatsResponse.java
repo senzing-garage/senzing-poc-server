@@ -4,7 +4,7 @@ import com.senzing.api.model.*;
 import com.senzing.poc.model.impl.SzCountStatsResponseImpl;
 
 /**
- * Describes a response when queue info is requested.
+ * Describes a response when count statistics are requested.
  */
 public interface SzCountStatsResponse extends SzBasicResponse {
   /**

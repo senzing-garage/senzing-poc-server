@@ -10,7 +10,7 @@ import com.senzing.poc.model.SzCountStats;
 import com.senzing.poc.model.SzSourceCountStats;
 
 /**
- * Provides a default implementation of {@link SzSourceCountStats}.
+ * Provides a default implementation of {@link SzCountStats}.
  */
 @JsonDeserialize
 public class SzCountStatsImpl implements SzCountStats {

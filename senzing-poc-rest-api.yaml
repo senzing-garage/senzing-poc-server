@@ -4946,6 +4946,20 @@ components:
           type: integer
           format: int64
           nullable: false
+        beforeEntityCount:
+          description: >-
+            The number of entities in the set that exist on pages before 
+            this page.
+          type: integer
+          format: int64
+          nullable: false
+        afterEntityCount:
+          description: >-
+            The number of entities in the set that exist on pages after
+            this page.
+          type: integer
+          format: int64
+          nullable: false
         entityIds:
           description: >-
             An array of entity ID's identifying the entities for the page.
