@@ -31,9 +31,9 @@ import static com.senzing.api.model.SzHttpMethod.GET;
 /**
  * Count Statistics REST services.
  */
-@Path("/statistics/counts")
+@Path("/statistics/loaded")
 @Produces(APPLICATION_JSON)
-public class CountStatsServices implements DataMartServicesSupport {
+public class LoadedStatsServices implements DataMartServicesSupport {
   /**
    * Gets all the count stats including total record count, total entity
    * count and total unmatched record count along with a breakdown of 

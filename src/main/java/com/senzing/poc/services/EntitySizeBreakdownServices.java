@@ -34,9 +34,11 @@ import static com.senzing.api.model.SzHttpMethod.GET;
 /**
  * Count Statistics REST services.
  */
-@Path("/statistics/entity-sizes")
+@Path("/statistics/sizes")
 @Produces(APPLICATION_JSON)
-public class EntitySizeServices implements DataMartServicesSupport {
+public class EntitySizeBreakdownServices
+  implements DataMartServicesSupport 
+{
   /**
    * Gets an {@link SzEntitySizeBreakdownResponse} describing the 
    * entity size breakdown which is the number of entities in the
@@ -46,7 +48,7 @@ public class EntitySizeServices implements DataMartServicesSupport {
    * @param uriInfo The {@link UriInfo} for the request.
    */
   @GET
-  @Path("/counts")
+  @Path("/")
   public SzEntitySizeBreakdownResponse getEntitySizeBreakdown(
     @Context UriInfo uriInfo)
   {
@@ -155,7 +157,7 @@ public class EntitySizeServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/{entitySize}/count")
+  @Path("/{entitySize}")
   public SzEntitySizeCountResponse getEntitySizeCount(
     @PathParam("entitySize")  int     entitySize,
     @Context                  UriInfo uriInfo)

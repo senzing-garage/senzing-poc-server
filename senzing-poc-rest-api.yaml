@@ -2824,7 +2824,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/counts:
+  /statistics/loaded:
     get:
       tags:
         - Statistics
@@ -2851,7 +2851,7 @@ paths:
                 $ref: '#/components/schemas/SzCountStatsResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/counts/data-sources/{dataSourceCode}:
+  /statistics/loaded/data-sources/{dataSourceCode}:
     get:
       tags:
         - Statistics
@@ -2880,7 +2880,7 @@ paths:
                 $ref: '#/components/schemas/SzSourceCountStatsResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/entity-sizes/counts:
+  /statistics/sizes:
     get:
       tags:
         - Statistics
@@ -2906,7 +2906,7 @@ paths:
                 $ref: '#/components/schemas/SzEntitySizeBreakdownResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/entity-sizes/{entitySize}/count:
+  /statistics/sizes/{entitySize}:
     get:
       tags:
         - Statistics
@@ -2937,7 +2937,7 @@ paths:
                 $ref: '#/components/schemas/SzEntitySizeCountResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/entity-sizes/{entitySize}/entities:
+  /statistics/sizes/{entitySize}/entities:
     get:
       tags:
         - Statistics
@@ -2953,7 +2953,7 @@ paths:
         returned but the array of ID's contained in the response will be empty.
         *NOTE*: Data mart statistics may be slightly delayed from the entity
         repository.        
-      operationId: getSourceRecordCountStatistics
+      operationId: getEntityIdsForEntitySize
       parameters:
         - $ref: '#/components/parameters/entitySizePathParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
