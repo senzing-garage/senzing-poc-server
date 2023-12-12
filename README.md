@@ -90,7 +90,7 @@ native API.  This is done through one of: `--init-file`, `--init-env-var` or the
 Other command-line options may be useful to you as well.  Execute
 
 ```console
-java -jar target/senzing-poc-server-1.0.2.jar --help
+java -jar target/senzing-poc-server-3.5.0.jar --help
 ```
 
 to obtain a help message describing all available options.
