@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2023-12-12
+
+### Changed in 3.5.0
+
+- Added integration with embedded Data Mart Replicator
+  - Added `data-mart-replicator` submodule
+  - Added options to configure data mart database connection 
+  - Added initial REST operations for data mart statistics
+- Deprecated stream loader integration
+  - Marked all command-line options deprecated
+  - Stream loader integration to be removed in version 4.0
+  - Removed startup requirement for load queue configuration
+
 ## [3.4.7] - 2023-09-29
 
 ### Changed in 3.4.7
