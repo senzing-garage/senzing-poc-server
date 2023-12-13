@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Stream loader integration to be removed in version 4.0
   - Removed startup requirement for load queue configuration
 
+## [3.4.8] - 2023-11-14
+
+### Changed in 3.4.8
+
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.8.0
+- In `pom.xml`, updated:
+  - sqs 2.20.162
+  - kafka-clients 3.6.0
+- Updated `senzing-api-server` dependency to version `3.5.8`
+
 ## [3.4.7] - 2023-09-29
 
 ### Changed in 3.4.7
