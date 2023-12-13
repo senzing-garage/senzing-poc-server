@@ -90,16 +90,18 @@ native API.  This is done through one of: `--init-file`, `--init-env-var` or the
 Other command-line options may be useful to you as well.  Execute
 
 ```console
-java -jar target/senzing-poc-server-1.0.2.jar --help
+java -jar target/senzing-poc-server-3.5.0.jar --help
 ```
 
 to obtain a help message describing all available options.
 For example:
 
 ```console
-$ java -jar senzing-poc-server-1.0.2.jar <options>
 
-<options> includes:
+java -jar senzing-poc-server-3.5.0.jar <options>
+
+<options> includes: 
+
 
 [ Standard Options ]
    --help
@@ -126,17 +128,19 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
 
    --enable-admin [true|false]
         Also -enableAdmin.  Enables administrative functions via the API
-        server.  The true/false parameter is optional, if not specified then
-        true is assumed.  If specified as false then it is the same as omitting
-        the option with the exception that omission falls back to the
-        environment variable setting whereas an explicit false overrides any
-        environment variable.  If not specified then administrative functions
-        will return a 403 Forbidden response.
+        server.  Administrative functions include those that would modify
+        the active configuration (e.g.: adding data sources, entity types,
+        or entity classes).  The true/false parameter is optional, if not
+        specified then true is assumed.  If specified as false then it is
+        the same as omitting the option with the exception that omission
+        falls back to the environment variable setting whereas an explicit
+        false overrides any environment variable.  If not specified then
+        administrative functions will return a 403 Forbidden response.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_ENABLE_ADMIN
 
    --http-port <port-number>
         Also -httpPort.  Sets the port for HTTP communication.  If not
-        specified, then the default port (2080) is used.
+        specified, then the default port (8250) is used.
         Specify 0 for a randomly selected available port number.  This
         option cannot be specified if SSL client authentication is configured.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_PORT
@@ -157,7 +161,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         --> VIA ENVIRONMENT: SENZING_API_SERVER_ALLOWED_ORIGINS
 
    --concurrency <thread-count>
-        Also -concurrency.  Sets the number of threads available for executing
+        Also -concurrency.  Sets the number of threads available for executing 
         Senzing API functions (i.e.: the number of engine threads).
         If not specified, then this defaults to 8.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_CONCURRENCY
@@ -200,6 +204,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         then it may be visible to other users via process monitoring.
         EXAMPLE: -initJson "{"PIPELINE":{ ... }}"
         --> VIA ENVIRONMENT: SENZING_API_SERVER_INIT_JSON
+                             SENZING_ENGINE_CONFIGURATION_JSON (fallback)
 
    --config-id <config-id>
         Also -configId.  Use with the -iniFile, -initFile, -initEnvVar or
@@ -283,8 +288,44 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         determine when to shutdown.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_MONITOR_FILE
 
+
+[ Data Mart Database Connectivity Options ]
+   The following options pertain to configuring the connection to the data-mart
+   database.  Exactly one such database must be configured.
+
+   --sqlite-database-file <url>
+        Specifies an SQLite database file to open (or create) to use as the
+        data-mart database.  NOTE: SQLite may be used for testing, but because
+        only one connection may be made, it will not scale for production use.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_SQLITE_DATABASE_FILE
+
+   --postgresql-host <hostname>
+        Used to specify the hostname for connecting to PostgreSQL as the 
+        data-mart database.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_HOST
+
+   --postgresql-port <port>
+        Used to specify the port number for connecting to PostgreSQL as the 
+        data-mart database.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_PORT
+
+   --postgresql-database <database>
+        Used to specify the database name for connecting to PostgreSQL as the 
+        data-mart database.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_DATABASE
+
+   --postgresql-user <user name>
+        Used to specify the user name for connecting to PostgreSQL as the 
+        data-mart database.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_USER
+
+   --postgresql-password <password>
+        Used to specify the password for connecting to PostgreSQL as the 
+        data-mart database.
+        --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_PASSWORD
+
 [ HTTPS / SSL Options ]
-   The following options pertain to HTTPS / SSL configuration.  The
+   The following options pertain to HTTPS / SSL configuration.  The 
    --key-store and --key-store-password options are the minimum required
    options to enable HTTPS / SSL communication.  If HTTPS / SSL communication
    is enabled, then HTTP communication is disabled UNLESS the --http-port
@@ -294,7 +335,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
 
    --https-port <port-number>
         Also -httpsPort.  Sets the port for secure HTTPS communication.
-        While the default HTTPS port is 2443 if not specified,
+        While the default HTTPS port is 8263 if not specified,
         HTTPS is only enabled if the --key-store option is specified.
         Specify 0 for a randomly selected available port number.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_SECURE_PORT
@@ -326,6 +367,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         Also -clientKeyStorePassword.  Specifies the password for decrypting
         the key store file specified with the --client-key-store option.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_CLIENT_KEY_STORE_PASSWORD
+
 
 [ Asynchronous Info Queue Options ]
    The following options pertain to configuring an asynchronous message
@@ -398,76 +440,94 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         Kafka as part of specifying a Kafka info topic.
         --> VIA ENVIRONMENT: SENZING_KAFKA_INFO_TOPIC
 
-[ Asynchronous Load Queue Options ]
+
+[ *** DEPRECATED *** Asynchronous Load Queue Options ]
    The following options pertain to configuring an asynchronous message
    queue on which to send record messages to be loaded by the stream loader.
    At most one such queue can be configured.  If a "load" queue is
    configured then endpoints that leverage the load queue become available.
+   *** NOTE ***: These options are DEPRECATED since the Senzing stream
+   loader is being deprecated.  Loading records via the stream loader will
+   only update the data mart if the stream loader is publishing INFO messages
+   to a queue that are being consumed by a separate Data Mart Replicator
+   configured for the same data mart database
 
    --sqs-load-url <url>
+        *** DEPRECATED: See deprecation note above ***
         Also -sqsLoadUrl.  Specifies an Amazon SQS queue URL as the load queue.
         --> VIA ENVIRONMENT: SENZING_SQS_LOAD_QUEUE_URL
                              SENZING_SQS_QUEUE_URL (fallback)
 
    --rabbit-load-host <hostname>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadHost.  Used to specify the hostname for connecting to
         RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_HOST
                              SENZING_RABBITMQ_HOST (fallback)
 
    --rabbit-load-port <port>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadPort.  Used to specify the port number for connecting
         to RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_PORT
                              SENZING_RABBITMQ_PORT (fallback)
 
    --rabbit-load-user <user name>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadUser.  Used to specify the user name for connecting to
         RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_USERNAME
                              SENZING_RABBITMQ_USERNAME (fallback)
 
    --rabbit-load-password <password>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadPassword.  Used to specify the password for connecting
         to RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_PASSWORD
                              SENZING_RABBITMQ_PASSWORD (fallback)
 
    --rabbit-load-virtual-host <virtual host>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadVirtualHost.  Used to specify the virtual host for
         connecting to RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_VIRTUAL_HOST
                              SENZING_RABBITMQ_VIRTUAL_HOST (fallback)
 
    --rabbit-load-exchange <exchange>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadExchange.  Used to specify the exchange for connecting
         to RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_EXCHANGE
                              SENZING_RABBITMQ_EXCHANGE (fallback)
 
    --rabbit-load-routing-key <routing key>
+        *** DEPRECATED: See deprecation note above ***
         Also -rabbitLoadRoutingKey.  Used to specify the routing key for
         connecting to RabbitMQ as part of specifying a RabbitMQ load queue.
         --> VIA ENVIRONMENT: SENZING_RABBITMQ_LOAD_ROUTING_KEY
                              SENZING_RABBITMQ_ROUTING_KEY (fallback)
 
    --kafka-load-bootstrap-server <bootstrap servers>
+        *** DEPRECATED: See deprecation note above ***
         Also -kafkaLoadBootstrapServer.  Used to specify the bootstrap servers
         for connecting to Kafka as part of specifying a Kafka load topic.
         --> VIA ENVIRONMENT: SENZING_KAFKA_LOAD_BOOTSTRAP_SERVER
                              SENZING_KAFKA_BOOTSTRAP_SERVER (fallback)
 
    --kafka-load-group <group id>
+        *** DEPRECATED: See deprecation note above ***
         Also -kafkaLoadGroupId.  Used to specify the group ID for connecting to
         Kafka as part of specifying a Kafka load topic.
         --> VIA ENVIRONMENT: SENZING_KAFKA_LOAD_GROUP
                              SENZING_KAFKA_GROUP (fallback)
 
    --kafka-load-topic <topic>
+        *** DEPRECATED: See deprecation note above ***
         Also -kafkaLoadTopic.  Used to specify the topic name for connecting to
         Kafka as part of specifying a Kafka load topic.
         --> VIA ENVIRONMENT: SENZING_KAFKA_LOAD_TOPIC
                              SENZING_KAFKA_TOPIC (fallback)
+
 
 [ Advanced Options ]
    --config-mgr [config manager options]...
@@ -476,6 +536,7 @@ $ java -jar senzing-poc-server-1.0.2.jar <options>
         If this option is specified by itself then a help message on
         configuration manager options will be displayed.
         NOTE: If this option is provided, the server will not start.
+
 ```
 
 ## License

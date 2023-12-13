@@ -11,7 +11,7 @@ ENV REFRESHED_AT=2023-11-14
 
 LABEL Name="senzing/senzing-poc-server-builder" \
       Maintainer="support@senzing.com" \
-      Version="3.4.8"
+      Version="3.5.0"
 
 # Set environment variables.
 
@@ -24,6 +24,12 @@ ENV LD_LIBRARY_PATH=${SENZING_ROOT}/g2/lib:${SENZING_ROOT}/g2/lib/debian
 
 COPY senzing-api-server /senzing-api-server
 WORKDIR /senzing-api-server
+RUN make install
+
+# Build "data-mart-replicator.jar".
+
+COPY data-mart-replicator /data-mart-replicator
+WORKDIR /data-mart-replicator
 RUN make install
 
 # Build "senzing-poc-server.jar".
@@ -45,7 +51,7 @@ ENV REFRESHED_AT=2023-11-14
 
 LABEL Name="senzing/senzing-poc-server" \
       Maintainer="support@senzing.com" \
-      Version="3.4.8"
+      Version="3.5.0"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 

@@ -1,9 +1,34 @@
 package com.senzing.poc.server;
 
 import com.senzing.api.services.SzApiProvider;
+import com.senzing.datamart.SzReplicationProvider;
 import com.senzing.api.services.SzMessageSink;
 
+/**
+ * The {@link SzPocProvider} used by the service operations to
+ * interact with the server context.
+ */
 public interface SzPocProvider extends SzApiProvider {
+  /**
+   * Checks if this instance has a configured {@link SzMessageSink} for handling
+   * INFO messages in addition to the default sql-based data mart INFO message sync
+   * that all POC server's have for handling INFO messages via its embedded data 
+   * mart replicator.
+   * 
+   * @return <code>true</code> if there is an actual {@link SzMessageSink} configured
+   *         in addition to data mart message queue, otherwise <code>false</code>
+   */
+  boolean hasConfiguredInfoSink();
+
+  /**
+   * Return the {@link SzReplicationProvider} to use for interacting with the data
+   * mart replicator context.
+   * 
+   * @return The {@link SzReplicationProvider} to use for interacting with the 
+   *         data mart replicator context.
+   */
+  SzReplicationProvider getReplicationProvider();
+  
   /**
    * Checks if there is a load message sink configured for asynchronous loading.
    *

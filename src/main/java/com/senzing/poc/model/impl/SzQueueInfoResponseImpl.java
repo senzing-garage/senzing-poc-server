@@ -39,8 +39,7 @@ public class SzQueueInfoResponseImpl extends SzBasicResponseImpl
   }
 
   /**
-   * Constructs with only the meta data and links, leaving the queue info
-   * data to be initialized later.
+   * Constructs with only the meta data, links, and the queue info data.
    *
    * @param meta The response meta data.
    *
@@ -69,7 +68,7 @@ public class SzQueueInfoResponseImpl extends SzBasicResponseImpl
   /**
    * Sets the data associated with this response with an {@link SzQueueInfo}.
    *
-   * @param info The {@link SzQueueInfo} describing the license.
+   * @param info The {@link SzQueueInfo} describing the queue.
    */
   public void setData(SzQueueInfo info) {
     this.queueInfo = info;

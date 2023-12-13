@@ -73,6 +73,7 @@ docker-package: docker-build
 docker-build:
 	docker build \
 		--no-cache \
+		--progress=plain \
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(GIT_VERSION) \
 		.

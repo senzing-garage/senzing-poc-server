@@ -1,10 +1,12 @@
 package com.senzing.poc.server;
 
 import java.util.*;
+import java.io.File;
 
 import com.senzing.api.server.SzApiServerOption;
 import com.senzing.cmdline.*;
 
+import static com.senzing.api.server.SzApiServerOption.*;
 import static com.senzing.util.CollectionUtilities.recursivelyUnmodifiableMap;
 import static com.senzing.api.server.mq.KafkaEndpoint.*;
 import static com.senzing.api.server.mq.SqsEndpoint.*;
@@ -36,7 +38,8 @@ public enum SzPocServerOption
   SQS_LOAD_URL(
       "--sqs-load-url", Set.of("-sqsLoadUrl"),
       "SENZING_SQS_LOAD_QUEUE_URL",
-      List.of("SENZING_SQS_QUEUE_URL"), 1,
+      List.of("SENZING_SQS_QUEUE_URL"), 
+      false, 1, true,
       SQS_LOAD_QUEUE_GROUP, URL_PROPERTY_KEY, false),
 
   /**
@@ -60,7 +63,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_USER(
       "--rabbit-load-user", Set.of("-rabbitLoadUser"),
       "SENZING_RABBITMQ_LOAD_USERNAME",
-      List.of("SENZING_RABBITMQ_USERNAME"), 1,
+      List.of("SENZING_RABBITMQ_USERNAME"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, USER_PROPERTY_KEY, false),
 
   /**
@@ -84,7 +88,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_PASSWORD(
       "--rabbit-load-password", Set.of("-rabbitLoadPassword"),
       "SENZING_RABBITMQ_LOAD_PASSWORD",
-      List.of("SENZING_RABBITMQ_PASSWORD"), 1,
+      List.of("SENZING_RABBITMQ_PASSWORD"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, PASSWORD_PROPERTY_KEY, false),
 
   /**
@@ -108,7 +113,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_HOST(
       "--rabbit-load-host", Set.of("-rabbitLoadHost"),
       "SENZING_RABBITMQ_LOAD_HOST",
-      List.of("SENZING_RABBITMQ_HOST"), 1,
+      List.of("SENZING_RABBITMQ_HOST"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, HOST_PROPERTY_KEY, false),
 
   /**
@@ -132,7 +138,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_PORT(
       "--rabbit-load-port", Set.of("-rabbitLoadPort"),
       "SENZING_RABBITMQ_LOAD_PORT",
-      List.of("SENZING_RABBITMQ_PORT"), 1,
+      List.of("SENZING_RABBITMQ_PORT"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, PORT_PROPERTY_KEY, false),
 
   /**
@@ -156,7 +163,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_VIRTUAL_HOST(
       "--rabbit-load-virtual-host", Set.of("-rabbitLoadVirtualHost"),
       "SENZING_RABBITMQ_LOAD_VIRTUAL_HOST",
-      List.of("SENZING_RABBITMQ_VIRTUAL_HOST"), 1,
+      List.of("SENZING_RABBITMQ_VIRTUAL_HOST"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, VIRTUAL_HOST_PROPERTY_KEY, false),
 
   /**
@@ -180,7 +188,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_EXCHANGE(
       "--rabbit-load-exchange", Set.of("-rabbitLoadExchange"),
       "SENZING_RABBITMQ_LOAD_EXCHANGE",
-      List.of("SENZING_RABBITMQ_EXCHANGE"), 1,
+      List.of("SENZING_RABBITMQ_EXCHANGE"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, EXCHANGE_PROPERTY_KEY, false),
 
   /**
@@ -203,7 +212,8 @@ public enum SzPocServerOption
   RABBIT_LOAD_ROUTING_KEY(
       "--rabbit-load-routing-key", Set.of("-rabbitLoadRoutingKey"),
       "SENZING_RABBITMQ_LOAD_ROUTING_KEY",
-      List.of("SENZING_RABBITMQ_ROUTING_KEY"), 1,
+      List.of("SENZING_RABBITMQ_ROUTING_KEY"),
+      false, 1, true,
       RABBITMQ_LOAD_QUEUE_GROUP, ROUTING_KEY_PROPERTY_KEY, false),
 
   /**
@@ -229,7 +239,8 @@ public enum SzPocServerOption
   KAFKA_LOAD_BOOTSTRAP_SERVER(
       "--kafka-load-bootstrap-server", Set.of("-kafkaLoadBootstrapServer"),
       "SENZING_KAFKA_LOAD_BOOTSTRAP_SERVER",
-      List.of("SENZING_KAFKA_BOOTSTRAP_SERVER"), 1,
+      List.of("SENZING_KAFKA_BOOTSTRAP_SERVER"),
+      false, 1, true,
       KAFKA_LOAD_QUEUE_GROUP, BOOTSTRAP_SERVERS_PROPERTY_KEY, false),
 
   /**
@@ -254,8 +265,9 @@ public enum SzPocServerOption
   KAFKA_LOAD_GROUP(
       "--kafka-load-group", Set.of("-kafkaLoadGroup"),
       "SENZING_KAFKA_LOAD_GROUP",
-      List.of("SENZING_KAFKA_GROUP"), 1, KAFKA_LOAD_QUEUE_GROUP,
-      GROUP_ID_PROPERTY_KEY, true),
+      List.of("SENZING_KAFKA_GROUP"),
+      false, 1, true,
+      KAFKA_LOAD_QUEUE_GROUP, GROUP_ID_PROPERTY_KEY, true),
 
   /**
    * <p>
@@ -277,8 +289,159 @@ public enum SzPocServerOption
   KAFKA_LOAD_TOPIC(
       "--kafka-load-topic", Set.of("-kafkaLoadTopic"),
       "SENZING_KAFKA_LOAD_TOPIC",
-      List.of("SENZING_KAFKA_TOPIC"), 1,
-      KAFKA_LOAD_QUEUE_GROUP, TOPIC_PROPERTY_KEY, false);
+      List.of("SENZING_KAFKA_TOPIC"),
+      false, 1, true,
+      KAFKA_LOAD_QUEUE_GROUP, TOPIC_PROPERTY_KEY, false),
+
+  /**
+   * <p>
+   * This option is used to specify the SQLite database file to connect to for
+   * the data mart.  The single parameter to this option is the file path to
+   * the SQLite database file to use.  If this option is specified the database
+   * options for other database types cannot be specified.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--sqlite-database-file {file-path}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_SQLITE_DATABASE_FILE="{file-path}"</code></li>
+   * </ul>
+   */
+  SQLITE_DATABASE_FILE(
+      "--sqlite-database-file",
+      Set.of("-sqliteDatabaseFile"),
+      "SENZING_DATA_MART_SQLITE_DATABASE_FILE",
+      null, 1),
+
+  /**
+   * <p>
+   * This option is used to specify the PostgreSQL database server host to
+   * connect to for the data mart.  The single parameter to this option is
+   * server host name or IP address for the PostgreSQL database server.  If
+   * this option is specified the database options for other database types
+   * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
+   * PostgreSQL options (e.g.: {@link #POSTGRESQL_PORT}) are required.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--postgresql-host {host-name|ip-address}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_HOST="{host-name|ip-address}"</code></li>
+   * </ul>
+   *
+   * @see #POSTGRESQL_PORT
+   * @see #POSTGRESQL_DATABASE
+   * @see #POSTGRESQL_USER
+   * @see #POSTGRESQL_PORT
+   */
+  POSTGRESQL_HOST(
+      "--postgresql-host",
+      Set.of("-postgresqlHost"),
+      "SENZING_DATA_MART_POSTGRESQL_HOST",
+      null, 1),
+
+  /**
+   * <p>
+   * This option is used to specify the PostgreSQL database server port to
+   * connect to for the data mart.  The single parameter to this option is the
+   * port number for the PostgreSQL database server.  If this option is
+   * specified the database options for other database types (e.g.: {@link
+   * #SQLITE_DATABASE_FILE}) cannot be specified and the other PostgreSQL
+   * options (e.g.: {@link #POSTGRESQL_PORT}) are required.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--postgresql-port {port-number}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_PORT="{port-number}"</code></li>
+   * </ul>
+   *
+   * @see #POSTGRESQL_HOST
+   * @see #POSTGRESQL_DATABASE
+   * @see #POSTGRESQL_USER
+   * @see #POSTGRESQL_PORT
+   */
+  POSTGRESQL_PORT(
+      "--postgresql-port",
+      Set.of("-postgresqlPort"),
+      "SENZING_DATA_MART_POSTGRESQL_PORT",
+      null, 1),
+
+  /**
+   * <p>
+   * This option is used to specify the PostgreSQL database name for the data
+   * mart.  The single parameter to this option is the PostgreSQL database name
+   * for the data mart.  If this option is specified the database options for
+   * other database types (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be
+   * specified and the other PostgreSQL options (e.g.: {@link
+   * #POSTGRESQL_HOST}) are required.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--postgresql-database {database-name}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_DATABASE="{database-name}"</code></li>
+   * </ul>
+   *
+   * @see #POSTGRESQL_HOST
+   * @see #POSTGRESQL_PORT
+   * @see #POSTGRESQL_USER
+   * @see #POSTGRESQL_PORT
+   *
+   */
+  POSTGRESQL_DATABASE(
+      "--postgresql-database",
+      Set.of("-postgresqlDatabase"),
+      "SENZING_DATA_MART_POSTGRESQL_DATABASE",
+      null, 1),
+
+  /**
+   * <p>
+   * This option is used to specify the PostgreSQL database user name to login
+   * to the PostgreSQL database server for the data mart.  The single parameter
+   * to this option is the user name for the PostgreSQL database server.  If
+   * this option is specified the database options for other database types
+   * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
+   * PostgreSQL options (e.g.: {@link #POSTGRESQL_HOST}) are required.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--postgresql-user {user-name}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_USER="{user-name}"</code></li>
+   * </ul>
+   *
+   * @see #POSTGRESQL_HOST
+   * @see #POSTGRESQL_PORT
+   * @see #POSTGRESQL_DATABASE
+   * @see #POSTGRESQL_PORT
+   */
+  POSTGRESQL_USER(
+      "--postgresql-user",
+      Set.of("-postgresqlUser"),
+      "SENZING_DATA_MART_POSTGRESQL_USER",
+      null, 1),
+
+  /**
+   * <p>
+   * This option is used to specify the PostgreSQL database user password to
+   * login to the PostgreSQL database server for the data mart.  The single
+   * parameter to this option is the password for the PostgreSQL database user.
+   * If this option is specified the database options for other database types
+   * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
+   * PostgreSQL options (e.g.: {@link #POSTGRESQL_HOST}) are required.
+   * <p>
+   * This option can be specified in the following ways:
+   * <ul>
+   *   <li>Command Line: <code>--postgresql-password {password}</code></li>
+   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_PASSWORD="{password}"</code></li>
+   * </ul>
+   *
+   * @see #POSTGRESQL_HOST
+   * @see #POSTGRESQL_PORT
+   * @see #POSTGRESQL_DATABASE
+   * @see #POSTGRESQL_USER
+   */
+  POSTGRESQL_PASSWORD(
+      "--postgresql-password",
+      Set.of("-postgresqlPassword"),
+      "SENZING_DATA_MART_POSTGRESQL_PASSWORD",
+      null, 1);
 
   /**
    * The {@link Map} of {@link SzPocServerOption} keys to unmodifiable
@@ -381,7 +544,7 @@ public enum SzPocServerOption
          null,
          true);
   }
-
+  
   SzPocServerOption(String        cmdLineFlag,
                     Set<String>   synonymFlags,
                     String        envVariable,
@@ -774,11 +937,14 @@ public enum SzPocServerOption
 
   static {
     try {
+      Map<SzPocServerOption, Set<Set<CommandLineOption>>> dependencyMap
+          = new LinkedHashMap<>();
       Map<SzPocServerOption,Set<CommandLineOption>> conflictMap = new LinkedHashMap<>();
       Map<SzPocServerOption,Set<SzPocServerOption>> altMap = new LinkedHashMap<>();
       Map<String, SzPocServerOption> lookupMap = new LinkedHashMap<>();
 
       for (SzPocServerOption option : SzPocServerOption.values()) {
+        dependencyMap.put(option, new LinkedHashSet<>());
         conflictMap.put(option, new LinkedHashSet<>());
         altMap.put(option, new LinkedHashSet<>());
         lookupMap.put(option.getCommandLineFlag().toLowerCase(), option);
@@ -839,8 +1005,55 @@ public enum SzPocServerOption
         conflicts.add(SzApiServerOption.READ_ONLY);
       }
 
-      Map<SzPocServerOption, Set<Set<CommandLineOption>>> dependencyMap
-          = new LinkedHashMap<>();
+      // create a set of SQLite options
+      Set<CommandLineOption> sqliteOptions = Set.of(SQLITE_DATABASE_FILE);
+
+      // create the set of PostgreSQL options
+      Set<CommandLineOption> postgreSqlOptions = Set.of(POSTGRESQL_HOST,
+                                                        POSTGRESQL_PORT,
+                                                        POSTGRESQL_DATABASE,
+                                                        POSTGRESQL_USER,
+                                                        POSTGRESQL_PASSWORD);
+
+      Set<CommandLineOption> requiredPostgreSQL = Set.of(POSTGRESQL_HOST,
+                                                         POSTGRESQL_DATABASE,
+                                                         POSTGRESQL_USER,
+                                                         POSTGRESQL_PASSWORD);
+
+      // setup dependencies and conflicts for the PostgreSQL options
+      for (CommandLineOption option: postgreSqlOptions) {
+        // get the set of dependency sets
+        Set<Set<CommandLineOption>> dependencySets = dependencyMap.get(option);
+
+        // create a new set
+        Set<CommandLineOption> dependSet = new LinkedHashSet<>();
+
+        // add all required PostgreSQL options to the set
+        dependSet.addAll(requiredPostgreSQL);
+
+        // remove the current option
+        dependSet.remove(option);
+
+        // add the dependency set
+        if (dependSet.size() > 0) {
+          dependencySets.add(Collections.unmodifiableSet(dependSet));
+        }
+
+        // now set the conflicts
+        conflictMap.put((SzPocServerOption) option, sqliteOptions);
+      }
+
+      // setup conflicts for the database options
+      conflictMap.put(SQLITE_DATABASE_FILE, postgreSqlOptions);
+
+      List<Set<CommandLineOption>> baseDependSets = new LinkedList<>();
+      Set<CommandLineOption> dependSet = new LinkedHashSet<>();
+      dependSet.add(SQLITE_DATABASE_FILE);
+      baseDependSets.add(Collections.unmodifiableSet(dependSet));
+
+      dependSet = new LinkedHashSet<>();
+      dependSet.addAll(requiredPostgreSQL);
+      baseDependSets.add(Collections.unmodifiableSet(dependSet));
 
       // handle dependencies for groups of options that go together
       Map<String, Set<SzPocServerOption>> groups = new LinkedHashMap<>();
@@ -930,16 +1143,24 @@ public enum SzPocServerOption
         case RABBIT_LOAD_EXCHANGE:
         case RABBIT_LOAD_ROUTING_KEY:
         case SQS_LOAD_URL:
+        case POSTGRESQL_HOST:
+        case POSTGRESQL_DATABASE:
+        case POSTGRESQL_USER:
+        case POSTGRESQL_PASSWORD:
           return params.get(0);
 
+        case POSTGRESQL_PORT:
         case RABBIT_LOAD_PORT: {
           int port = Integer.parseInt(params.get(0));
           if (port < 0) {
             throw new IllegalArgumentException(
-                "Negative RabbitMQ port numbers are not allowed: " + port);
+                "Negative port numbers are not allowed: " + port);
           }
           return port;
         }
+
+        case SQLITE_DATABASE_FILE:
+          return new File(params.get(0));
 
         default:
           throw new IllegalArgumentException(

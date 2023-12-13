@@ -24,6 +24,7 @@ public class PocAdminServices extends AdminServices {
     SzPocServerInfo serverInfo = (SzPocServerInfo)
         super.newServerInfo(provider, activeConfigId);
     serverInfo.setLoadQueueConfigured(pocProvider.hasLoadSink());
+    serverInfo.setInfoQueueConfigured(pocProvider.hasConfiguredInfoSink());
     return serverInfo;
   }
 }

@@ -4,6 +4,7 @@ import com.senzing.api.model.SzMeta;
 import com.senzing.api.model.SzServerInfo;
 import com.senzing.api.model.SzVersionInfo;
 import com.senzing.api.server.SzApiServer;
+import com.senzing.api.server.SzApiServerOption;
 import com.senzing.api.server.mq.SzMessagingEndpoint;
 import com.senzing.api.server.mq.SzMessagingEndpointFactory;
 import com.senzing.api.services.SzMessageSink;
@@ -11,11 +12,18 @@ import com.senzing.cmdline.CommandLineOption;
 import com.senzing.cmdline.CommandLineUtilities;
 import com.senzing.cmdline.CommandLineValue;
 import com.senzing.cmdline.CommandLineException;
+import com.senzing.cmdline.MissingDependenciesException;
 import com.senzing.cmdline.DeprecatedOptionWarning;
 import com.senzing.poc.model.SzPocMeta;
 import com.senzing.poc.model.SzPocServerInfo;
 import com.senzing.poc.model.SzPocVersionInfo;
 import com.senzing.util.AccessToken;
+import com.senzing.datamart.SzReplicator;
+import com.senzing.listener.communication.sql.SQLConsumer;
+import com.senzing.datamart.SzReplicator;
+import com.senzing.datamart.SzReplicationProvider;
+import com.senzing.datamart.SzReplicatorOption;
+import com.senzing.datamart.SzReplicatorOptions;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,12 +32,13 @@ import java.util.*;
 
 import com.senzing.poc.BuildInfo;
 import com.senzing.util.LoggingUtilities;
+import com.senzing.util.JsonUtilities;
 
 import javax.json.Json;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-import static com.senzing.api.server.SzApiServerOption.HELP;
-import static com.senzing.api.server.SzApiServerOption.VERSION;
+import static com.senzing.api.server.SzApiServerOption.*;
 import static com.senzing.cmdline.CommandLineUtilities.getJarName;
 import static com.senzing.poc.server.SzPocServerConstants.*;
 import static com.senzing.poc.server.SzPocServerOption.*;
@@ -54,6 +63,35 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
   public static final String SERVER_DESCRIPTION = "Senzing POC API Server";
 
   /**
+   * The {@link Map} to convert {@link SzPocServerOption} instances to 
+   * {@link SzReplicatorOption} instances for initialization of the
+   * contained {@link SzReplicator}.
+   */
+  private static final Map<CommandLineOption, SzReplicatorOption> DATA_MART_OPTION_MAP;
+
+  static {
+    Map<CommandLineOption, SzReplicatorOption> map = new LinkedHashMap<>();
+    try {
+      map.put(SzApiServerOption.INI_FILE, SzReplicatorOption.INI_FILE);
+      map.put(SzApiServerOption.INIT_FILE, SzReplicatorOption.INIT_FILE);
+      map.put(SzApiServerOption.INIT_JSON, SzReplicatorOption.INIT_JSON);
+      map.put(SzApiServerOption.MODULE_NAME, SzReplicatorOption.MODULE_NAME);
+      map.put(SzApiServerOption.VERBOSE, SzReplicatorOption.VERBOSE);
+      map.put(SzPocServerOption.SQLITE_DATABASE_FILE, 
+              SzReplicatorOption.SQLITE_DATABASE_FILE);
+      map.put(SzPocServerOption.POSTGRESQL_HOST, SzReplicatorOption.POSTGRESQL_HOST);
+      map.put(SzPocServerOption.POSTGRESQL_PORT, SzReplicatorOption.POSTGRESQL_PORT);
+      map.put(SzPocServerOption.POSTGRESQL_DATABASE, 
+              SzReplicatorOption.POSTGRESQL_DATABASE);
+      map.put(SzPocServerOption.POSTGRESQL_USER, SzReplicatorOption.POSTGRESQL_USER);
+      map.put(SzPocServerOption.POSTGRESQL_PASSWORD, 
+              SzReplicatorOption.POSTGRESQL_PASSWORD);
+    } finally {
+      DATA_MART_OPTION_MAP = Collections.unmodifiableMap(map);
+    }
+  }
+
+  /**
    * The JAR file name for starting the {@link SzPocServer}.
    */
   private static final String JAR_FILE_NAME = getJarName(SzPocServer.class);
@@ -68,6 +106,17 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
    * path endpoints.
    */
   private Map<Class, String> webSocketClasses = null;
+
+  /**
+   * The {@link SzReplicator} to use for populating the data mart.
+   */
+  private SzReplicator replicator = null;
+
+  /**
+   * The {@link SQLConsumer.MessageQueue} for logging the INFO messages 
+   * for consumption by the {@link SzReplicator}.
+   */
+  private SQLConsumer.MessageQueue sqlMessageQueue = null;
 
   /**
    * Constructs with the specified {@link SzPocServerOptions} instance.
@@ -123,6 +172,47 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
       throws Exception {
     super(accessToken, options, false);
 
+    Map<SzReplicatorOption, Object> dataMartOptionMap = new LinkedHashMap<>();
+    options.forEach((pocOption, value) -> {
+      SzReplicatorOption dataMartOption = DATA_MART_OPTION_MAP.get(pocOption);
+      if (dataMartOption != null) {
+        dataMartOptionMap.put(DATA_MART_OPTION_MAP.get(pocOption), value);
+      }
+    });
+
+    // check for INIT_ENV_VAR option
+    if (options.containsKey(INIT_ENV_VAR)) {
+      String envVar = (String) options.get(INIT_ENV_VAR);
+      String initJson = System.getenv(envVar);
+      if (initJson == null) {
+        throw new IllegalArgumentException(
+          "Failed to find Senzing INIT JSON via specified "
+          + "environment variable: " + envVar);
+      }
+      JsonObject initObj = JsonUtilities.parseJsonObject(initJson);
+      dataMartOptionMap.put(SzReplicatorOption.INIT_JSON, initObj);
+    }
+
+    // determine the data mart concurrency (1 or 2)
+    Integer pocConcurrency = (Integer) options.get(SzApiServerOption.CONCURRENCY);
+    int concurrency = 1;
+    System.err.println("POC CONCURRENCY: " + pocConcurrency);
+    if (pocConcurrency != null && pocConcurrency > 1) {
+      concurrency = 2;
+    }
+    dataMartOptionMap.put(SzReplicatorOption.CONCURRENCY, concurrency);
+    dataMartOptionMap.put(SzReplicatorOption.DATABASE_INFO_QUEUE, true);
+
+    SzReplicatorOptions replicatorOptions 
+      = SzReplicatorOptions.build(dataMartOptionMap);
+
+    System.err.println();
+    System.err.println(replicatorOptions.toJson());
+    System.err.println();
+
+    this.replicator       = new SzReplicator(replicatorOptions);
+    this.sqlMessageQueue  = this.replicator.getDatabaseMessageQueue();
+
     Map<String, Map<String, Object>> optionGroups = new LinkedHashMap<>();
 
     // organize options into option groups
@@ -156,6 +246,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
                                                     this.getConcurrency());
 
     this.startHttpServer(options);
+    this.replicator.start();
   }
 
   /**
@@ -186,19 +277,70 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
   }
 
   /**
+   * Prints the data-mart database connectivity options usage to the specified
+   * {@link PrintWriter}.
+   *
+   * @param pw The {@link PrintWriter} to write the data-mart database
+   *           connectivity options usage.
+   */
+  protected static void printDatabaseOptionsUsage(PrintWriter pw) {
+    pw.println(multilineFormat(
+        "[ Data Mart Database Connectivity Options ]",
+        "   The following options pertain to configuring the connection to the data-mart",
+        "   database.  Exactly one such database must be configured.",
+        "",
+        "   --sqlite-database-file <url>",
+        "        Specifies an SQLite database file to open (or create) to use as the",
+        "        data-mart database.  NOTE: SQLite may be used for testing, but because",
+        "        only one connection may be made, it will not scale for production use.",
+        "        --> VIA ENVIRONMENT: " + SQLITE_DATABASE_FILE.getEnvironmentVariable(),
+        "",
+        "   --postgresql-host <hostname>",
+        "        Used to specify the hostname for connecting to PostgreSQL as the ",
+        "        data-mart database.",
+        "        --> VIA ENVIRONMENT: " + POSTGRESQL_HOST.getEnvironmentVariable(),
+        "",
+        "   --postgresql-port <port>",
+        "        Used to specify the port number for connecting to PostgreSQL as the ",
+        "        data-mart database.",
+        "        --> VIA ENVIRONMENT: " + POSTGRESQL_PORT.getEnvironmentVariable(),
+        "",
+        "   --postgresql-database <database>",
+        "        Used to specify the database name for connecting to PostgreSQL as the ",
+        "        data-mart database.",
+        "        --> VIA ENVIRONMENT: " + POSTGRESQL_DATABASE.getEnvironmentVariable(),
+        "",
+        "   --postgresql-user <user name>",
+        "        Used to specify the user name for connecting to PostgreSQL as the ",
+        "        data-mart database.",
+        "        --> VIA ENVIRONMENT: " + POSTGRESQL_USER.getEnvironmentVariable(),
+        "",
+        "   --postgresql-password <password>",
+        "        Used to specify the password for connecting to PostgreSQL as the ",
+        "        data-mart database.",
+        "        --> VIA ENVIRONMENT: " + POSTGRESQL_PASSWORD.getEnvironmentVariable()));
+  }
+
+  /**
    * Prints the load-queue options usage to the specified {@link PrintWriter}.
    *
    * @param pw The {@link PrintWriter} to write the load-queue options usage.
    */
   protected static void printLoadQueueOptionsUsage(PrintWriter pw) {
     pw.println(multilineFormat(
-        "[ Asynchronous Load Queue Options ]",
+        "[ *** DEPRECATED *** Asynchronous Load Queue Options ]",
         "   The following options pertain to configuring an asynchronous message",
         "   queue on which to send record messages to be loaded by the stream loader.",
         "   At most one such queue can be configured.  If a \"load\" queue is",
         "   configured then endpoints that leverage the load queue become available.",
+        "   *** NOTE ***: These options are DEPRECATED since the Senzing stream",
+        "   loader is being deprecated.  Loading records via the stream loader will",
+        "   only update the data mart if the stream loader is publishing INFO messages",
+        "   to a queue that are being consumed by a separate Data Mart Replicator",
+        "   configured for the same data mart database",
         "",
         "   --sqs-load-url <url>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -sqsLoadUrl.  Specifies an Amazon SQS queue URL as the load queue.",
         "        --> VIA ENVIRONMENT: " + SQS_LOAD_URL.getEnvironmentVariable(),
         "                             "
@@ -206,6 +348,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-host <hostname>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadHost.  Used to specify the hostname for connecting to",
         "        RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_HOST.getEnvironmentVariable(),
@@ -214,6 +357,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-port <port>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadPort.  Used to specify the port number for connecting",
         "        to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_PORT.getEnvironmentVariable(),
@@ -222,6 +366,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-user <user name>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadUser.  Used to specify the user name for connecting to",
         "        RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_USER.getEnvironmentVariable(),
@@ -230,6 +375,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-password <password>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadPassword.  Used to specify the password for connecting",
         "        to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_PASSWORD.getEnvironmentVariable(),
@@ -238,6 +384,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-virtual-host <virtual host>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadVirtualHost.  Used to specify the virtual host for",
         "        connecting to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_VIRTUAL_HOST.getEnvironmentVariable(),
@@ -246,6 +393,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-exchange <exchange>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadExchange.  Used to specify the exchange for connecting",
         "        to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_EXCHANGE.getEnvironmentVariable(),
@@ -254,6 +402,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --rabbit-load-routing-key <routing key>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -rabbitLoadRoutingKey.  Used to specify the routing key for",
         "        connecting to RabbitMQ as part of specifying a RabbitMQ load queue.",
         "        --> VIA ENVIRONMENT: " + RABBIT_LOAD_ROUTING_KEY.getEnvironmentVariable(),
@@ -262,6 +411,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --kafka-load-bootstrap-server <bootstrap servers>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -kafkaLoadBootstrapServer.  Used to specify the bootstrap servers",
         "        for connecting to Kafka as part of specifying a Kafka load topic.",
         "        --> VIA ENVIRONMENT: " + KAFKA_LOAD_BOOTSTRAP_SERVER.getEnvironmentVariable(),
@@ -270,6 +420,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --kafka-load-group <group id>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -kafkaLoadGroupId.  Used to specify the group ID for connecting to",
         "        Kafka as part of specifying a Kafka load topic.",
         "        --> VIA ENVIRONMENT: " + KAFKA_LOAD_GROUP.getEnvironmentVariable(),
@@ -278,6 +429,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
             + " (fallback)",
         "",
         "   --kafka-load-topic <topic>",
+        "        *** DEPRECATED: See deprecation note above ***",
         "        Also -kafkaLoadTopic.  Used to specify the topic name for connecting to",
         "        Kafka as part of specifying a Kafka load topic.",
         "        --> VIA ENVIRONMENT: " + KAFKA_LOAD_TOPIC.getEnvironmentVariable(),
@@ -299,6 +451,7 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
     pw.println();
     printUsageIntro(pw);
     printStandardOptionsUsage(pw);
+    printDatabaseOptionsUsage(pw);
     printSslOptionsUsage(pw);
     printInfoQueueOptionsUsage(pw);
     printLoadQueueOptionsUsage(pw);
@@ -368,6 +521,40 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
         SzPocServerOption.PARAMETER_PROCESSOR,
         deprecationWarnings);
 
+    // check for the INI_FILE, INIT_FILE and INIT_JSON options
+    SzApiServerOption[] initOptions = { INI_FILE, INIT_FILE, INIT_JSON };
+    SzApiServerOption   initOption  = null;
+    for (SzApiServerOption option : initOptions) {
+      if (optionValues.containsKey(option)) {
+        initOption = option;
+        break;
+      }
+    }
+
+    // check for the database options
+    if (initOption != null) {
+      if (!optionValues.containsKey(SQLITE_DATABASE_FILE)
+          && !optionValues.containsKey(POSTGRESQL_HOST)) 
+      {
+        // get the command-line value for the init option
+        CommandLineValue initValue = optionValues.get(initOption);
+
+        Set<CommandLineOption> sqliteOptions = Set.of(SQLITE_DATABASE_FILE);
+        Set<CommandLineOption> postgresqlOptions = Set.of(
+          POSTGRESQL_HOST, POSTGRESQL_PORT, POSTGRESQL_DATABASE, 
+          POSTGRESQL_USER, POSTGRESQL_PASSWORD);
+
+        Set<Set<CommandLineOption>> dependencySets
+          = Set.of(sqliteOptions, postgresqlOptions);
+
+        throw new MissingDependenciesException(initValue.getSource(),
+                                               initValue.getOption(),
+                                               dependencySets,
+                                               initValue.getSpecifier(),
+                                               optionValues.keySet());
+      }
+    }
+    
     // create a result map
     Map<CommandLineOption, Object> result = new LinkedHashMap<>();
 
@@ -412,6 +599,37 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
   @Override
   public String getDescription() {
     return SERVER_DESCRIPTION;
+  }
+
+  @Override
+  public boolean hasConfiguredInfoSink() {
+    return super.hasInfoSink();
+  }
+
+  @Override
+  public SzReplicationProvider getReplicationProvider() {
+    return this.replicator.getReplicationProvider();
+  }
+
+  @Override
+  public boolean hasInfoSink() {
+    return true;
+  }
+
+  @Override
+  public SzMessageSink acquireInfoSink() {
+    SzMessageSink baseSink = super.acquireInfoSink();
+    return new SzDataMartMessageSink(this.sqlMessageQueue, baseSink);
+  }
+
+  @Override
+  public void releaseInfoSink(SzMessageSink sink) {
+    SzDataMartMessageSink dataMartSink  = (SzDataMartMessageSink) sink;
+    SzMessageSink         backingSink   = dataMartSink.getBackingSink();
+
+    if (backingSink == null) return;
+
+    super.releaseInfoSink(backingSink);
   }
 
   @Override
@@ -503,4 +721,14 @@ public class SzPocServer extends SzApiServer implements SzPocProvider {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Overridden to shutdown the embedded data mart replicator.
+   */
+  @Override
+  protected void shutdown() {
+    this.replicator.shutdown();
+    super.shutdown();
+  }
 }
