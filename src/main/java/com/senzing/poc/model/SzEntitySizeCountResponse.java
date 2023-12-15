@@ -42,12 +42,12 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
      *
      * @param links The links for the response.
      *
-     * @param countStats The {@link SzEntitySizeCount} describing the data for this 
-     *                  instance.
+     * @param stats The {@link SzEntitySizeCount} describing the data for 
+     *              this instance.
      */
     SzEntitySizeCountResponse create(SzMeta                 meta,
-                                         SzLinks                links,
-                                         SzEntitySizeCount  countStats);
+                                         SzLinks            links,
+                                         SzEntitySizeCount  stats);
   }
   
   /**
@@ -74,9 +74,9 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
     @Override
     public SzEntitySizeCountResponse create(SzMeta            meta,
                                             SzLinks           links,
-                                            SzEntitySizeCount countStats)
+                                            SzEntitySizeCount stats)
     {
-      return new SzEntitySizeCountResponseImpl(meta, links, countStats);
+      return new SzEntitySizeCountResponseImpl(meta, links, stats);
     }
   }
 
@@ -118,21 +118,19 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
     /**
      * Creates an instance of {@link SzEntitySizeCountResponse} with the
      * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
-     * SzEntitySizeCount} describing the bulk records.
+     * SzEntitySizeCount} describing the statistics.
      *
      * @param meta The response meta data.
      *
      * @param links The links for the response.
      *
-     * @param CountStats The {@link SzEntitySizeCount} describing the
-     *                     bulk records.
+     * @param stats The {@link SzEntitySizeCount} describing the statistics.
      */
-    public SzEntitySizeCountResponse create(
-        SzMeta                meta,
-        SzLinks               links,
-        SzEntitySizeCount     countStats)
+    public SzEntitySizeCountResponse create(SzMeta            meta,
+                                            SzLinks           links,
+                                            SzEntitySizeCount stats)
     {
-      return this.getProvider().create(meta, links, countStats);
+      return this.getProvider().create(meta, links, stats);
     }
   }
 

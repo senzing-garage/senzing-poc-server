@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
-import com.senzing.poc.model.impl.SzSourceCountStatsImpl;
+import com.senzing.poc.model.impl.SzSourceLoadedStatsImpl;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * Describes the count statistics for a specific data source.
  */
-@JsonDeserialize(using = SzSourceCountStats.Factory.class)
-public interface SzSourceCountStats {
+@JsonDeserialize(using = SzSourceLoadedStats.Factory.class)
+public interface SzSourceLoadedStats {
   /**
    * Gets the data source code identifying the data source to which the
    * statistics are associated.
@@ -96,56 +96,56 @@ public interface SzSourceCountStats {
   void setUnmatchedRecordCount(long entityCount);
 
   /**
-   * A {@link ModelProvider} for instances of {@link SzSourceCountStats}.
+   * A {@link ModelProvider} for instances of {@link SzSourceLoadedStats}.
    */
-  interface Provider extends ModelProvider<SzSourceCountStats> {
+  interface Provider extends ModelProvider<SzSourceLoadedStats> {
     /**
-     * Creates a new instance of {@link SzSourceCountStats} with the
+     * Creates a new instance of {@link SzSourceLoadedStats} with the
      * specified data source code.
      * 
      * @param dataSourceCode The non-null data source code identifying the 
      *                       data source to which the statistics are associated.
      *
-     * @return The new instance of {@link SzSourceCountStats}
+     * @return The new instance of {@link SzSourceLoadedStats}
      * 
      * @throws NullPointerException If the specified data source code is 
      *                              <code>null</code>.
      */
-    SzSourceCountStats create(String dataSourceCode);
+    SzSourceLoadedStats create(String dataSourceCode);
   }
 
   /**
    * Provides a default {@link Provider} implementation for
-   * {@link SzSourceCountStats} that produces instances of
-   * {@link SzSourceCountStatsImpl}.
+   * {@link SzSourceLoadedStats} that produces instances of
+   * {@link SzSourceLoadedStatsImpl}.
    */
-  class DefaultProvider extends AbstractModelProvider<SzSourceCountStats>
+  class DefaultProvider extends AbstractModelProvider<SzSourceLoadedStats>
     implements Provider
   {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
-      super(SzSourceCountStats.class, SzSourceCountStatsImpl.class);
+      super(SzSourceLoadedStats.class, SzSourceLoadedStatsImpl.class);
     }
 
     @Override
-    public SzSourceCountStats create(String dataSourceCode) {
-      return new SzSourceCountStatsImpl(dataSourceCode);
+    public SzSourceLoadedStats create(String dataSourceCode) {
+      return new SzSourceLoadedStatsImpl(dataSourceCode);
     }
   }
 
   /**
-   * Provides a {@link ModelFactory} implementation for {@link SzSourceCountStats}.
+   * Provides a {@link ModelFactory} implementation for {@link SzSourceLoadedStats}.
    */
-  class Factory extends ModelFactory<SzSourceCountStats, Provider> {
+  class Factory extends ModelFactory<SzSourceLoadedStats, Provider> {
     /**
      * Default constructor.  This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
     public Factory() {
-      super(SzSourceCountStats.class);
+      super(SzSourceLoadedStats.class);
     }
 
     /**
@@ -158,18 +158,18 @@ public interface SzSourceCountStats {
     }
 
     /**
-     * Creates a new instance of {@link SzSourceCountStats} with the
+     * Creates a new instance of {@link SzSourceLoadedStats} with the
      * specified data source code.
      * 
      * @param dataSourceCode The non-null data source code identifying the 
      *                       data source to which the statistics are associated.
      *
-     * @return The new instance of {@link SzSourceCountStats}
+     * @return The new instance of {@link SzSourceLoadedStats}
      * 
      * @throws NullPointerException If the specified data source code is 
      *                              <code>null</code>.
      */
-    public SzSourceCountStats create(String dataSourceCode)
+    public SzSourceLoadedStats create(String dataSourceCode)
     {
       return this.getProvider().create(dataSourceCode);
     }

@@ -42,12 +42,12 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
      *
      * @param links The links for the response.
      *
-     * @param countStats The {@link SzEntitySizeBreakdown} describing the data for this 
-     *                  instance.
+     * @param stats The {@link SzEntitySizeBreakdown} describing the data
+     *              for this instance.
      */
     SzEntitySizeBreakdownResponse create(SzMeta                 meta,
                                          SzLinks                links,
-                                         SzEntitySizeBreakdown  countStats);
+                                         SzEntitySizeBreakdown  stats);
   }
   
   /**
@@ -72,11 +72,11 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
     }
 
     @Override
-    public SzEntitySizeBreakdownResponse create(SzMeta       meta,
-                                       SzLinks      links,
-                                       SzEntitySizeBreakdown countStats)
+    public SzEntitySizeBreakdownResponse create(SzMeta                meta,
+                                                SzLinks               links,
+                                                SzEntitySizeBreakdown stats)
     {
-      return new SzEntitySizeBreakdownResponseImpl(meta, links, countStats);
+      return new SzEntitySizeBreakdownResponseImpl(meta, links, stats);
     }
   }
 
@@ -124,15 +124,14 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
      *
      * @param links The links for the response.
      *
-     * @param CountStats The {@link SzEntitySizeBreakdown} describing the
-     *                     bulk records.
+     * @param stats The {@link SzEntitySizeBreakdown} describing the statistics.
      */
     public SzEntitySizeBreakdownResponse create(
         SzMeta                meta,
         SzLinks               links,
-        SzEntitySizeBreakdown countStats)
+        SzEntitySizeBreakdown stats)
     {
-      return this.getProvider().create(meta, links, countStats);
+      return this.getProvider().create(meta, links, stats);
     }
   }
 

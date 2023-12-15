@@ -43,7 +43,7 @@ public class SzEntitySizeBreakdownImpl implements SzEntitySizeBreakdown {
     this.entitySizeCounts.clear();
     if (sizeCountList != null) {
         sizeCountList.forEach( sizeCount -> {
-            if (sizeCount != null) {
+            if (sizeCount != null && sizeCount.getEntityCount() > 0) {
                 this.entitySizeCounts.put(
                     sizeCount.getEntitySize(), sizeCount);
             }
@@ -54,7 +54,11 @@ public class SzEntitySizeBreakdownImpl implements SzEntitySizeBreakdown {
   @Override
   public void addEntitySizeCount(SzEntitySizeCount sizeCount) {
     if (sizeCount == null) return;
-    this.entitySizeCounts.put(sizeCount.getEntitySize(), sizeCount);
+    if (sizeCount.getEntityCount() > 0) {
+      this.entitySizeCounts.put(sizeCount.getEntitySize(), sizeCount);
+    } else {
+      this.entitySizeCounts.remove(sizeCount.getEntitySize());
+    }
   }
 
 }

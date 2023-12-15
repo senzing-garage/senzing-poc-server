@@ -47,8 +47,8 @@ public class SzEntitySizeBreakdownResponseImpl extends SzBasicResponseImpl
    *
    * @param links The links for the response.
    * 
-   * @param EntitySizeBreakdown The {@link SzEntitySizeBreakdown} describing the data
-   *                   for this instance.
+   * @param sizeBreakdown The {@link SzEntitySizeBreakdown} describing
+   *                      the data for this instance.
    */
   public SzEntitySizeBreakdownResponseImpl(
     SzMeta                meta,
@@ -60,20 +60,12 @@ public class SzEntitySizeBreakdownResponseImpl extends SzBasicResponseImpl
     this.sizeBreakdown = sizeBreakdown;
   }
 
-  /**
-   * Returns the {@link SzEntitySizeBreakdown} associated with this response.
-   *
-   * @return The data associated with this response.
-   */
+  @Override
   public SzEntitySizeBreakdown getData() {
     return this.sizeBreakdown;
   }
 
-  /**
-   * Sets the data associated with this response with an {@link SzEntitySizeBreakdown}.
-   *
-   * @param sizeBreakdown The {@link SzEntitySizeBreakdown} describing the statistics.
-   */
+  @Override
   public void setData(SzEntitySizeBreakdown sizeBreakdown) {
     this.sizeBreakdown = sizeBreakdown;
   }

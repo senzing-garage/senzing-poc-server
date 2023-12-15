@@ -7,15 +7,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
-import com.senzing.poc.model.impl.SzCountStatsImpl;
+import com.senzing.poc.model.impl.SzLoadedStatsImpl;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * Describes a count statistics for the repository.
  */
-@JsonDeserialize(using = SzCountStats.Factory.class)
-public interface SzCountStats {
+@JsonDeserialize(using = SzLoadedStats.Factory.class)
+public interface SzLoadedStats {
   /**
    * Gets the total number of records that have been loaded to the 
    * entity repository.
@@ -75,18 +75,18 @@ public interface SzCountStats {
   void setTotalUnmatchedRecordCount(long recordCount);
 
   /**
-   * Gets the {@link List} of {@link SzSourceCountStats} describing the 
+   * Gets the {@link List} of {@link SzSourceLoadedStats} describing the 
    * count statistics for each data source.  The returned value list sould
    * contain only one element for each data source.
    * 
-   * @return The {@link List} of {@link SzSourceCountStats} describing the 
+   * @return The {@link List} of {@link SzSourceLoadedStats} describing the 
    *         count statistics for each data source.  The returned {@link List}
    *         sould contain only one element for each data source.
    */
-  List<SzSourceCountStats> getDataSourceCounts();
+  List<SzSourceLoadedStats> getDataSourceCounts();
 
   /**
-   * Sets the {@link List} of {@link SzSourceCountStats} describing the 
+   * Sets the {@link List} of {@link SzSourceLoadedStats} describing the 
    * count statistics for each data source.  This clears any existing 
    * data source counts before setting with those specified.   The specified
    * {@link List} should contain only one element for each data source, but
@@ -95,66 +95,66 @@ public interface SzCountStats {
    * Specifying a <code>null</code> {@link List} is equivalent to specifying
    * an empty {@link List}.
    * 
-   * @param statsList The {@link List} of {@link SzSourceCountStats} 
+   * @param statsList The {@link List} of {@link SzSourceLoadedStats} 
    *                  describing the count statistics for each data source.
    */
-  void setDataSourceCounts(List<SzSourceCountStats> statsList);
+  void setDataSourceCounts(List<SzSourceLoadedStats> statsList);
 
   /**
-   * Adds the specified {@link SzSourceCountStats} describing count statistics
-   * for a data source to the existing {@link SzSourceCountStats} for this 
-   * instance.  If the specified {@link SzSourceCountStats} has the same 
-   * data source code as an existing {@link SzSourceCountStats} instance then
+   * Adds the specified {@link SzSourceLoadedStats} describing count statistics
+   * for a data source to the existing {@link SzSourceLoadedStats} for this 
+   * instance.  If the specified {@link SzSourceLoadedStats} has the same 
+   * data source code as an existing {@link SzSourceLoadedStats} instance then
    * the specified value replaces the existing one for that data source code.
    * 
-   * @param stats The {@link SzSourceCountStats} describing count statistics
+   * @param stats The {@link SzSourceLoadedStats} describing count statistics
    *              for a specific data source.
    */
-  void addDataSourceCount(SzSourceCountStats stats);
+  void addDataSourceCount(SzSourceLoadedStats stats);
 
   /**
-   * A {@link ModelProvider} for instances of {@link SzCountStats}.
+   * A {@link ModelProvider} for instances of {@link SzLoadedStats}.
    */
-  interface Provider extends ModelProvider<SzCountStats> {
+  interface Provider extends ModelProvider<SzLoadedStats> {
     /**
-     * Creates a new instance of {@link SzCountStats}.
+     * Creates a new instance of {@link SzLoadedStats}.
      * 
-     * @return The new instance of {@link SzCountStats}
+     * @return The new instance of {@link SzLoadedStats}
      */
-    SzCountStats create();
+    SzLoadedStats create();
   }
 
   /**
-   * Provides a default {@link Provider} implementation for {@link SzCountStats}
-   * that produces instances of {@link SzCountStatsImpl}.
+   * Provides a default {@link Provider} implementation for {@link SzLoadedStats}
+   * that produces instances of {@link SzLoadedStatsImpl}.
    */
-  class DefaultProvider extends AbstractModelProvider<SzCountStats>
+  class DefaultProvider extends AbstractModelProvider<SzLoadedStats>
     implements Provider
   {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
-      super(SzCountStats.class, SzCountStatsImpl.class);
+      super(SzLoadedStats.class, SzLoadedStatsImpl.class);
     }
 
     @Override
-    public SzCountStats create() {
-      return new SzCountStatsImpl();
+    public SzLoadedStats create() {
+      return new SzLoadedStatsImpl();
     }
   }
 
   /**
-   * Provides a {@link ModelFactory} implementation for {@link SzCountStats}.
+   * Provides a {@link ModelFactory} implementation for {@link SzLoadedStats}.
    */
-  class Factory extends ModelFactory<SzCountStats, Provider> {
+  class Factory extends ModelFactory<SzLoadedStats, Provider> {
     /**
      * Default constructor.  This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
     public Factory() {
-      super(SzCountStats.class);
+      super(SzLoadedStats.class);
     }
 
     /**
@@ -167,11 +167,11 @@ public interface SzCountStats {
     }
 
     /**
-     * Creates a new instance of {@link SzCountStats}.
+     * Creates a new instance of {@link SzLoadedStats}.
      * 
-     * @return The new instance of {@link SzCountStats}
+     * @return The new instance of {@link SzLoadedStats}
      */
-    public SzCountStats create()
+    public SzLoadedStats create()
     {
       return this.getProvider().create();
     }
