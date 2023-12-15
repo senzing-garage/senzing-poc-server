@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Senzing POC REST API
-  version: "3.4.0"
+  version: "3.5.1"
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
@@ -2835,7 +2835,7 @@ paths:
         Gets the entity and record counts in total and by data source from the
         data mart.  *NOTE*: Data mart statistics may be slightly delayed from 
         the entity repository.
-      operationId: getCountStatistics
+      operationId: getLoadedStatistics
       responses:
         '200':
           description: Successful response
@@ -2862,7 +2862,7 @@ paths:
         Gets the entity and record counts for a specific data source from the
         data mart.  *NOTE*: Data mart statistics may be slightly delayed from 
         the entity repository.
-      operationId: getSourceCountStatistics
+      operationId: getSourceLoadedStatistics
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
       responses:
@@ -2956,6 +2956,101 @@ paths:
       operationId: getEntityIdsForEntitySize
       parameters:
         - $ref: '#/components/parameters/entitySizePathParam'
+        - $ref: '#/components/parameters/entityIdBoundQueryParam'
+        - $ref: '#/components/parameters/boundTypeQueryParam'
+        - $ref: '#/components/parameters/pageSizeQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzPagedEntitiesResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/relations:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity counts by the number of entity relations (Entity 
+        Relation Breakdown).
+      description: >-
+        Gets the number of entities in the repository for each number of entity
+        relations that exists for those entities.  *NOTE*: Data mart statistics
+        may be slightly delayed from the entity repository.
+      operationId: getEntityRelationsBreakdown
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsBreakdownResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsBreakdownResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsBreakdownResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/relations/{relationsCount}:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the count of entities having the specific number of entity relations.
+      description: >-
+        Gets the count of entities having the specific number of entity relations.
+        If there are NO entities having the specified number of entity relations
+        then this will return a 200 OK response with the result indicating a count
+        of zero entities rather than giving a 404 Not Found response.  *NOTE*: Data
+        mart statistics may be slightly delayed from the entity repository.
+      operationId: getEntityRelationsCount
+      parameters:
+        - $ref: '#/components/parameters/relationsCountPathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsCountResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsCountResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzEntityRelationsCountResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/relations/{relationsCount}/entities:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the entity ID's of the entities having the specific number of entity
+        relationships.
+      description: >-
+        Gets the entity ID's of the entities having the respective number of entity
+        relations.  If no entities have the respective number of entity relations
+        then this will return a 200 OK response that will have an empty array of
+        entity ID's rather than giving a 404 Not Found response.  Further, if there
+        are no entity ID's having the specified number of entity relations that are
+        greater than the specified minimum entity ID then similarly a 200 OK response
+        is returned but the array of ID's contained in the response will be empty.
+        *NOTE*: Data mart statistics may be slightly delayed from the entity
+        repository.        
+      operationId: getEntityIdsForEntityRelations
+      parameters:
+        - $ref: '#/components/parameters/relationsCountPathParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4388,9 +4483,9 @@ components:
       schema:
         type: integer
         format: int32
-    relationCountPathParam:
+    relationsCountPathParam:
       in: path
-      name: relationCount
+      name: relationsCount
       required: true
       description: >-
         The number of relationships for the entities of interest.
@@ -5083,6 +5178,19 @@ components:
                 The data field is the `SzEntitySizeCount` containing the
                 statistics.
               $ref: '#/components/schemas/SzEntitySizeCount'
+    SzEntityRelationsCountResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        the number of entities having a specific number of entity relations.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzEntityRelationsCount` containing the
+                statistics.
+              $ref: '#/components/schemas/SzEntityRelationsCount'
     SzEntitySizeBreakdownResponse:
       description: >-
         Extends the BaseResponse to add the fields for statistics representing
@@ -5096,6 +5204,19 @@ components:
                 The data field is the `SzEntitySizeBreakdown` containing the
                 statistics.
               $ref: '#/components/schemas/SzEntitySizeBreakdown'
+    SzEntityRelationsBreakdownResponse:
+      description: >-
+        Extends the BaseResponse to add the fields for statistics representing
+        counts of entities having each distinct number of entity relations.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzEntityRelationsBreakdown` containing
+                the statistics.
+              $ref: '#/components/schemas/SzEntityRelationsBreakdown'
     SzEntitySizeCount:
       description: >-
         Describes the number of entities that have a specific number of
@@ -5116,6 +5237,27 @@ components:
           type: integer
           format: int64
           nullable: false
+    SzEntityRelationsCount:
+      description: >-
+        Describes the number of entities that have a specific number of
+        entity relations.
+      type: object
+      required:
+        - relationsCount
+        - entityCount
+      properties:
+        relationsCount:
+          description: The number of entity relations that the entities have.
+          type: integer
+          format: int32
+          nullable: false
+        entityCount:
+          description: >-
+            The number of entities having the associated number of entity
+            relations.
+          type: integer
+          format: int64
+          nullable: false
     SzEntitySizeBreakdown:
       description: >-
         Describes the Entity Size Breakdown which gives the number of
@@ -5132,6 +5274,21 @@ components:
             are no entities having a specific composite record count then 
             no entry is included in the array for that entity size.  The
             array will be in descending order of entity size.
+    SzEntityRelationsBreakdown:
+      description: >-
+        Describes the Entity Relations Breakdown which gives the number of
+        entities having each distinct number of entity relations.
+      type: object
+      required:
+        - entityRelationsCounts
+      properties:
+        entityRelationsCounts:
+          description: >-
+            The array of `EntityRelationsCount` instances describing the number
+            of entities having each distinct number of entity relations.  If
+            there are no entities having a specific entity relations count then 
+            no entry is included in the array for that number of entity relations.
+            The array will be in descending order of number of entity relations.
     SzError:
       description: >-
         Describes an error.

@@ -12,10 +12,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import com.senzing.poc.model.SzCountStats;
-import com.senzing.poc.model.SzSourceCountStats;
-import com.senzing.poc.model.SzCountStatsResponse;
-import com.senzing.poc.model.SzSourceCountStatsResponse;
+import com.senzing.poc.model.SzLoadedStats;
+import com.senzing.poc.model.SzSourceLoadedStats;
+import com.senzing.poc.model.SzLoadedStatsResponse;
+import com.senzing.poc.model.SzSourceLoadedStatsResponse;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.api.services.ServicesSupport;
 import com.senzing.util.AccessToken;
@@ -43,17 +43,17 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    */
   @GET
   @Path("/")
-  public SzCountStatsResponse getCountStatistics(@Context UriInfo uriInfo)
+  public SzLoadedStatsResponse getLoadedStatistics(@Context UriInfo uriInfo)
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
     Timers        timers    = this.newTimers();
     try {
-        SzCountStats stats = this.getStatistics(GET, 
+        SzLoadedStats stats = this.getStatistics(GET, 
                                                 uriInfo, 
                                                 timers, 
                                                 provider);
 
-        return SzCountStatsResponse.FACTORY.create(this.newMeta(GET, 200, timers),
+        return SzLoadedStatsResponse.FACTORY.create(this.newMeta(GET, 200, timers),
                                                    this.newLinks(uriInfo),
                                                    stats);
         
@@ -77,13 +77,13 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    * @param timers The {@link Timers} associated with the request.
    * @param provider The {@link SzPocProvider} for the request context.
    * 
-   * @return The {@link SzCountStats} describing the statistics.
+   * @return The {@link SzLoadedStats} describing the statistics.
    * 
    * @throws ServiceUnavailableException If the data mart is not yet ready to 
    *                                     service a request.
    * @throws InternalServerErrorException If an internal error occurs.
    */
-  protected SzCountStats getStatistics(SzHttpMethod     httpMethod,
+  protected SzLoadedStats getStatistics(SzHttpMethod     httpMethod,
                                        UriInfo          uriInfo,
                                        Timers           timers,
                                        SzPocProvider    provider)
@@ -93,7 +93,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
     Connection    conn    = null;
     Statement     stmt    = null;
     ResultSet     rs      = null;
-    SzCountStats  result  = SzCountStats.FACTORY.create();
+    SzLoadedStats  result  = SzLoadedStats.FACTORY.create();
     try {
       // get the connection to the data mart database
       conn = this.getConnection(httpMethod, uriInfo, timers, provider);
@@ -117,7 +117,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
       }
 
       // create a map to keep track of the source stats
-      Map<String, SzSourceCountStats> sourceStatsMap = new LinkedHashMap<>();
+      Map<String, SzSourceLoadedStats> sourceStatsMap = new LinkedHashMap<>();
 
       // now get the source entity and record counts
       long totalRecordCount = 0L;
@@ -138,7 +138,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
           // increment the total record count
           totalRecordCount += recordCount;
 
-          SzSourceCountStats stats = SzSourceCountStats.FACTORY.create(dataSource);
+          SzSourceLoadedStats stats = SzSourceLoadedStats.FACTORY.create(dataSource);
           stats.setEntityCount(entityCount);
           stats.setRecordCount(recordCount);
 
@@ -172,9 +172,9 @@ public class LoadedStatsServices implements DataMartServicesSupport {
           // increment the total record count
           totalUnmatchedRecordCount += unmatchedCount;
 
-          SzSourceCountStats stats = sourceStatsMap.remove(dataSource);
+          SzSourceLoadedStats stats = sourceStatsMap.remove(dataSource);
           if (stats == null) {
-            stats = SzSourceCountStats.FACTORY.create(dataSource);
+            stats = SzSourceLoadedStats.FACTORY.create(dataSource);
             logWarning("Missing entity and record count stats for data source, "
                        + "but got unmatched record count stats: " + dataSource);
           }
@@ -227,20 +227,20 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    */
   @GET
   @Path("/data-sources/{dataSourceCode}")
-  public SzSourceCountStatsResponse getSourceCountStatistics(
+  public SzSourceLoadedStatsResponse getSourceLoadedStatistics(
     @PathParam("dataSourceCode") String dataSourceCode,
     @Context UriInfo uriInfo)
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
     Timers        timers    = this.newTimers();
     try {
-        SzSourceCountStats stats = this.getSourceStatistics(dataSourceCode, 
-                                                            GET, 
-                                                            uriInfo, 
-                                                            timers, 
-                                                            provider);
+        SzSourceLoadedStats stats = this.getSourceStatistics(dataSourceCode, 
+                                                             GET, 
+                                                             uriInfo, 
+                                                             timers, 
+                                                             provider);
 
-        return SzSourceCountStatsResponse.FACTORY.create(
+        return SzSourceLoadedStatsResponse.FACTORY.create(
           this.newMeta(GET, 200, timers),
           this.newLinks(uriInfo),
           stats);
@@ -268,14 +268,14 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    * @param timers The {@link Timers} associated with the request.
    * @param provider The {@link SzPocProvider} for the request context.
    * 
-   * @return The {@link SzCountStats} describing the statistics.
+   * @return The {@link SzLoadedStats} describing the statistics.
    * 
    * @throws NotFoundException If the specified data source is not recognized.
    * @throws ServiceUnavailableException If the data mart is not yet ready to 
    *                                     service a request.
    * @throws InternalServerErrorException If an internal error occurs.
    */
-  protected SzSourceCountStats getSourceStatistics(
+  protected SzSourceLoadedStats getSourceStatistics(
     String            dataSource,
     SzHttpMethod      httpMethod,
     UriInfo           uriInfo,
@@ -294,7 +294,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
     Connection          conn    = null;
     PreparedStatement   ps      = null;
     ResultSet           rs      = null;
-    SzSourceCountStats  result  = SzSourceCountStats.FACTORY.create(dataSource);
+    SzSourceLoadedStats  result  = SzSourceLoadedStats.FACTORY.create(dataSource);
     try {
       // get the connection to the data mart database
       conn = this.getConnection(httpMethod, uriInfo, timers, provider);

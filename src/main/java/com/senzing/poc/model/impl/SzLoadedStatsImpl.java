@@ -6,14 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.senzing.poc.model.SzCountStats;
-import com.senzing.poc.model.SzSourceCountStats;
+import com.senzing.poc.model.SzLoadedStats;
+import com.senzing.poc.model.SzSourceLoadedStats;
 
 /**
- * Provides a default implementation of {@link SzCountStats}.
+ * Provides a default implementation of {@link SzLoadedStats}.
  */
 @JsonDeserialize
-public class SzCountStatsImpl implements SzCountStats {
+public class SzLoadedStatsImpl implements SzLoadedStats {
   /**
    * The total number of records loaded in the entity repository.
    */
@@ -37,12 +37,12 @@ public class SzCountStatsImpl implements SzCountStats {
    * SzSourceCountStat} values describing the count statistics for that
    * data source.
    */
-  private Map<String, SzSourceCountStats> dataSourceCounts = null;
+  private Map<String, SzSourceLoadedStats> dataSourceCounts = null;
 
   /**
    * Default constructor
    */
-  public SzCountStatsImpl() {
+  public SzLoadedStatsImpl() {
     this.totalRecordCount           = 0L;
     this.totalEntityCount           = 0L;
     this.totalUnmatchedRecordCount  = 0L;
@@ -80,13 +80,13 @@ public class SzCountStatsImpl implements SzCountStats {
   }
 
   @Override
-  public List<SzSourceCountStats> getDataSourceCounts() {
-    Collection<SzSourceCountStats> stats = this.dataSourceCounts.values();
+  public List<SzSourceLoadedStats> getDataSourceCounts() {
+    Collection<SzSourceLoadedStats> stats = this.dataSourceCounts.values();
     return new ArrayList<>(stats);
   }
 
   @Override
-  public void setDataSourceCounts(List<SzSourceCountStats> statsList) {
+  public void setDataSourceCounts(List<SzSourceLoadedStats> statsList) {
     this.dataSourceCounts.clear();
     if (statsList != null) {
         statsList.forEach( stats -> {
@@ -99,7 +99,7 @@ public class SzCountStatsImpl implements SzCountStats {
   }
 
   @Override
-  public void addDataSourceCount(SzSourceCountStats stats) {
+  public void addDataSourceCount(SzSourceLoadedStats stats) {
     if (stats == null) return;
     this.dataSourceCounts.put(stats.getDataSourceCode(), stats);
   }

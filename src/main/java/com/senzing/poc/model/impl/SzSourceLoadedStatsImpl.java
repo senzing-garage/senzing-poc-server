@@ -3,13 +3,13 @@ package com.senzing.poc.model.impl;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.senzing.poc.model.SzSourceCountStats;
+import com.senzing.poc.model.SzSourceLoadedStats;
 
 /**
- * Provides a default implementation of {@link SzSourceCountsStats}.
+ * Provides a default implementation of {@link SzSourceLoadedsStats}.
  */
 @JsonDeserialize
-public class SzSourceCountStatsImpl implements SzSourceCountStats {
+public class SzSourceLoadedStatsImpl implements SzSourceLoadedStats {
   /**
    * The data source code 
    */
@@ -41,7 +41,7 @@ public class SzSourceCountStatsImpl implements SzSourceCountStats {
    * @throws NullPointerException If the specified data source code is
    *                              <code>null</code>.
    */
-  public SzSourceCountStatsImpl(String dataSourceCode) 
+  public SzSourceLoadedStatsImpl(String dataSourceCode) 
     throws NullPointerException
   {
     Objects.requireNonNull(dataSourceCode, "Data source code cannot be null");

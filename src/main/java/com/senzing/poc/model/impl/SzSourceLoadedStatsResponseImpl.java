@@ -6,25 +6,25 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.SzLinks;
 import com.senzing.api.model.SzMeta;
 import com.senzing.api.model.impl.SzBasicResponseImpl;
-import com.senzing.poc.model.SzCountStats;
-import com.senzing.poc.model.SzCountStatsResponse;
+import com.senzing.poc.model.SzSourceLoadedStats;
+import com.senzing.poc.model.SzSourceLoadedStatsResponse;
 
 /**
- * Provides a default implementation of {@link SzCountStatsResponse}.
+ * Provides a default implementation of {@link SzSourceLoadedStatsResponse}.
  */
 @JsonDeserialize
-public class SzCountStatsResponseImpl extends SzBasicResponseImpl
-  implements SzCountStatsResponse
+public class SzSourceLoadedStatsResponseImpl extends SzBasicResponseImpl
+  implements SzSourceLoadedStatsResponse
 {
   /**
    * The data for this instance.
    */
-  private SzCountStats countStats;
+  private SzSourceLoadedStats countStats;
 
   /**
    * Default constructor for JSON deserialization.
    */
-  protected SzCountStatsResponseImpl() {
+  protected SzSourceLoadedStatsResponseImpl() {
     this.countStats = null;
   }
 
@@ -36,7 +36,7 @@ public class SzCountStatsResponseImpl extends SzBasicResponseImpl
    *
    * @param links The links for the response.
    */
-  public SzCountStatsResponseImpl(SzMeta meta, SzLinks links) {
+  public SzSourceLoadedStatsResponseImpl(SzMeta meta, SzLinks links) {
     this(meta, links, null);
   }
 
@@ -47,33 +47,33 @@ public class SzCountStatsResponseImpl extends SzBasicResponseImpl
    *
    * @param links The links for the response.
    * 
-   * @param countStats The {@link SzCountStats} describing the data
+   * @param countStats The {@link SzSourceLoadedStats} describing the data
    *                   for this instance.
    */
-  public SzCountStatsResponseImpl(SzMeta        meta,
+  public SzSourceLoadedStatsResponseImpl(SzMeta        meta,
                                   SzLinks       links,
-                                  SzCountStats  countStats)
+                                  SzSourceLoadedStats  countStats)
   {
     super(meta, links);
-    Objects.requireNonNull(countStats, "The SzCountStats cannot be null");
+    Objects.requireNonNull(countStats, "The SzSourceLoadedStats cannot be null");
     this.countStats = countStats;
   }
 
   /**
-   * Returns the {@link SzCountStats} associated with this response.
+   * Returns the {@link SzSourceLoadedStats} associated with this response.
    *
    * @return The data associated with this response.
    */
-  public SzCountStats getData() {
+  public SzSourceLoadedStats getData() {
     return this.countStats;
   }
 
   /**
-   * Sets the data associated with this response with an {@link SzCountStats}.
+   * Sets the data associated with this response with an {@link SzSourceLoadedStats}.
    *
-   * @param countStats The {@link SzCountStats} describing the statistics.
+   * @param countStats The {@link SzSourceLoadedStats} describing the statistics.
    */
-  public void setData(SzCountStats countStats) {
+  public void setData(SzSourceLoadedStats countStats) {
     this.countStats = countStats;
   }
 }
