@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Senzing POC REST API
-  version: "3.4.0"
+  version: "3.5.1"
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
