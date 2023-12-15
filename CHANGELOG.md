@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.1] - 2023-12-15
+
+### Changed in 3.5.1
+
+- Added Entity Relation Breakdown service endpoints
+  - `GET /statistics/relations`
+  - `GET /statistics/relations/{relationsCount}`
+  - `GET /statistics/relations/{relationsCount}/entities`
+- Updated POC REST API Specification version to 3.5.1
+- Updated `BuildInfo.java` to reflect new specification version
+- Fixed various JavaDoc errors caused by copy/paste
+- Renamed model and service classes to match endpoint names
+
 ## [3.5.0] - 2023-12-12
 
 ### Changed in 3.5.0
