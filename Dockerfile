@@ -66,6 +66,7 @@ RUN apt update \
       gnupg2 \
       jq \
       libodbc1 \
+      sqlite3 \
       postgresql-client \
       unixodbc \
  && rm -rf /var/lib/apt/lists/*
