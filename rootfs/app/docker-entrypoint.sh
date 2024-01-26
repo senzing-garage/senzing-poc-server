@@ -22,5 +22,12 @@ PARAMETERS=$(
 TOKENIZED_PARAMETERS=(${PARAMETERS})
 
 # Run Java command.
+echo ""
+echo "------------------------------"
+mount | grep "tmp"
+echo "------------------------------"
+cat /etc/fstab
+echo "------------------------------"
+echo ""
 
 java -jar senzing-poc-server.jar "${TOKENIZED_PARAMETERS[@]}"

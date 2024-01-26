@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.2] - 2024-01-18
+
+### Changed in 3.5.2
+
+- Modified `Dockerfile` to add `sqlite3` dependency
+
 ## [3.5.1] - 2023-12-15
 
 ### Changed in 3.5.1
