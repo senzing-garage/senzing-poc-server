@@ -201,7 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 3.2.1
 
-- Updated dependency on `Senzing/senzing-api-server` to a minimum version of
+- Updated dependency on `senzing-garage/senzing-api-server` to a minimum version of
   `3.3.1` to resolve issue with environment variable fallbacks for primary
   options which typically lack dependencies.
 
@@ -217,7 +217,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Adds "get virtual entity" support
   - Adds `detailLevel` support
   - Adds `SzFeatureMode.ATTRIBUTED` support
-  - See `CHANGELOG.md` from `Senzing/senzing-api-server` for further details
+  - See `CHANGELOG.md` from `senzing-garage/senzing-api-server` for further details
 - Updated dependencies to match the `senzing-api-server` dependency versions
 
 ## [3.1.1] - 2022-07-20
@@ -289,7 +289,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.0.5
 
-- Upgrade to `senzing/senzing-api-server:2.7.5`
+- Upgrade to `senzing-garage/senzing-api-server:2.7.5`
 
 ## [1.0.4] - 2021-10-11
 

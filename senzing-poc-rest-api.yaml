@@ -5,7 +5,7 @@ info:
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
-    [Senzing REST API](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/Senzing/senzing-rest-api-specification/main/senzing-rest-api.yaml)
+    [Senzing REST API](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/senzing-garage/senzing-rest-api-specification/main/senzing-rest-api.yaml)
     which is maintained for backwards compatibility.  However, the Senzing
     POC API is specifically targeted at the Senzing One-Day POC application and
     no guarantees are made for support.  It can be used as example for creating
