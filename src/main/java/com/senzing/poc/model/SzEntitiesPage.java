@@ -56,22 +56,125 @@ public interface SzEntitiesPage {
 
   /**
    * Gets requested page size representing the maximum number of
-   * entity ID's that were requested to be returned.
+   * entity ID's that were requested to be included in the page.
    * 
-   * @return The equested page size representing the maximum number
-   *         of entity ID's that were requested to be returned.
+   * @return The requested page size representing the maximum number
+   *         of entity ID's that were requested to be included in 
+   *         the page.
    */
   int getPageSize();
 
   /**
    * Sets requested page size representing the maximum number of
-   * entity ID's that were requested to be returned.
+   * entity ID's that were requested to be included in the page.
    * 
-   * @param pageSize The equested page size representing the 
+   * @param pageSize The requested page size representing the 
    *                 maximum number of entity ID's that were
-   *                 requested to be returned.
+   *                 requested to be included in the page.
    */
   void setPageSize(int pageSize);
+
+  /**
+   * Gets requested sample size representing the number of entity ID's
+   * to be randmonly selected from the page of results.
+   * 
+   * @return The requested page size representing the number of entity ID's
+   *         to be randomly selected from the page of results.
+   */
+  @JsonInclude(NON_NULL)
+  Integer getSampleSize();
+
+  /**
+   * Sets requested sample size representing the number of entity ID's
+   * to be randmonly selected from the page of results.
+   * 
+   * @param pageSize The requested sample size representing the number
+   *                 of entity ID's to be randmonly selected from the
+   *                 page of results.
+   */
+  void setSampleSize(Integer sampleSize);
+
+  /**
+   * Gets the minimum entity ID of the returned results.
+   * This returns <code>null</code> if there are no results.
+   * 
+   * @return The minimum entity ID of the returned results,
+   *         or <code>null</code> if there are no results.
+   */
+  @JsonInclude(NON_NULL)
+  Long getMinimumValue();
+
+  /**
+   * Gets the maximum entity ID of the returned results.
+   * This returns <code>null</code> if there are no results.
+   * 
+   * @return The maximum entity ID of the returned results,
+   *         or <code>null</code> if there are no results.
+   */
+  @JsonInclude(NON_NULL)
+  Long getMaximumValue();
+
+  /**
+   * Gets the minimum entity ID of the entire entity page.
+   * This will be the same as the {@linkplain #getMinimumValue() 
+   * minimum value} the {@linkplain #getSampleSize() sample size}
+   * was not specified, however, if sample size was specified then
+   * this will be the minimum entity ID value of all the candidate
+   * entities on the page that were used for random sample selection
+   * even if that entity was not randomly selected.  This returns
+   * <code>null</code> if there are no results.
+   * 
+   * @return The minimum entity ID of the entire entity page, or
+   *         <code>null</code> if there are no results.
+   */
+  @JsonInclude(NON_NULL)
+  Long getPageMinimumValue();
+
+  /**
+   * Sets the minimum entity ID of the entire entity page.
+   * This will be the same as the {@linkplain #getMinimumValue() 
+   * minimum value} the {@linkplain #getSampleSize() sample size}
+   * was not specified, however, if sample size was specified then
+   * this will be the minimum entity ID value of all the candidate
+   * entities on the page that were used for random sample selection
+   * even if that entity was not randomly selected.  Set this to
+   * <code>null</code> if there are no results.
+   * 
+   * @param minValue The minimum entity ID of the entire entity page,
+   *                 or <code>null</code> if there are no results.
+   */
+  void setPageMinimumValue(Long minValue);
+
+  /**
+   * Gets the maximum entity ID of the entire entity page.
+   * This will be the same as the {@linkplain #getMaximumValue() 
+   * maximum value} the {@linkplain #getSampleSize() sample size}
+   * was not specified, however, if sample size was specified then
+   * this will be the maximum entity ID value of all the candidate
+   * entities on the page that were used for random sample selection
+   * even if that entity was not randomly selected.  This returns
+   * <code>null</code> if there are no results.
+   * 
+   * @return The maximum entity ID of the entire entity page, or
+   *         <code>null</code> if there are no results.
+   */
+  @JsonInclude(NON_NULL)
+  Long getPageMaximumValue();
+
+  /**
+   * Sets the maximum entity ID of the entire entity page.
+   * This will be the same as the {@linkplain #getMaximumValue() 
+   * maximum value} the {@linkplain #getSampleSize() sample size}
+   * was not specified, however, if sample size was specified then
+   * this will be the maximum entity ID value of all the candidate
+   * entities on the page that were used for random sample selection
+   * even if that entity was not randomly selected.  Set this to
+   * <code>null</code> if there are no results.
+   * 
+   * @param maxValue The maximum entity ID of the entire entity page,
+   *                 or <code>null</code> if there are no results.
+   */
+  void setPageMaximumValue(Long maxValue);
 
   /**
    * Gets the total number of entities in the set representing
@@ -100,7 +203,7 @@ public interface SzEntitiesPage {
    * @return The the number of entities in the set that exist
    *         on pages that occur before this page.
    */
-  long getBeforeEntityCount();
+  long getBeforePageCount();
 
   /**
    * Sets the number of entities in the set that exist on
@@ -109,7 +212,7 @@ public interface SzEntitiesPage {
    * @param count The the number of entities in the set that 
    *              exist on pages that occur before this page.
    */
-  void setBeforeEntityCount(long count);
+  void setBeforePageCount(long count);
 
   /**
    * Gets the number of entities in the set that exist on
@@ -118,7 +221,7 @@ public interface SzEntitiesPage {
    * @return The the number of entities in the set that exist
    *         on pages that occur after this page.
    */
-  long getAfterEntityCount();
+  long getAfterPageCount();
 
   /**
    * Sets the number of entities in the set that exist on
@@ -127,7 +230,7 @@ public interface SzEntitiesPage {
    * @param count The the number of entities in the set that 
    *              exist on pages that occur after this page.
    */
-  void setAfterEntityCount(long count);
+  void setAfterPageCount(long count);
 
   /**
    * Gets the {@link List} of {@link Long} entity Id's identifying the 

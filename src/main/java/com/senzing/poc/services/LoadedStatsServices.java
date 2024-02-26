@@ -12,21 +12,24 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import com.senzing.poc.model.SzBoundType;
+import com.senzing.poc.model.SzEntitiesPage;
+import com.senzing.poc.model.SzEntitiesPageResponse;
 import com.senzing.poc.model.SzLoadedStats;
 import com.senzing.poc.model.SzSourceLoadedStats;
 import com.senzing.poc.model.SzLoadedStatsResponse;
 import com.senzing.poc.model.SzSourceLoadedStatsResponse;
 import com.senzing.poc.server.SzPocProvider;
-import com.senzing.api.services.ServicesSupport;
-import com.senzing.util.AccessToken;
 import com.senzing.util.Timers;
 import com.senzing.api.model.SzHttpMethod;
+import com.senzing.datamart.model.SzReportKey;
 
 import static com.senzing.sql.SQLUtilities.*;
-import static com.senzing.api.model.SzHttpMethod.POST;
 import static com.senzing.util.LoggingUtilities.*;
 import static javax.ws.rs.core.MediaType.*;
 import static com.senzing.api.model.SzHttpMethod.GET;
+import static com.senzing.datamart.model.SzReportStatistic.*;
+import static com.senzing.datamart.model.SzReportCode.*;
 
 /**
  * Count Statistics REST services.
@@ -199,7 +202,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
       // add the source stats to the result
       sourceStatsMap.values().forEach(stats -> {
         logWarning("Missing unmatched record count stats for data source, but "
-                   + "got entity and record count stats: " + stats.getDataSourceCode());
+                   + "got entity and record count stats: " + stats.getDataSource());
         result.addDataSourceCount(stats);
       });
 
@@ -209,7 +212,6 @@ public class LoadedStatsServices implements DataMartServicesSupport {
     } catch (SQLException e) {
       throw this.newInternalServerErrorException(
         httpMethod, uriInfo, timers, e);
-
     } finally {
       rs   = close(rs);
       stmt = close(stmt);
@@ -361,7 +363,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
         }
 
       } finally {
-        this.queriedDatabase(timers, "selectCountsForSource");
+        this.queriedDatabase(timers, "selectUnmatchedCountForSource");
       }
 
       // release resources
@@ -379,6 +381,73 @@ public class LoadedStatsServices implements DataMartServicesSupport {
       rs   = close(rs);
       ps   = close(ps);
       conn = close(conn);
+    }
+  }
+
+  /**
+   * Retrieves a page of entity ID's for entities that have records loaded
+   * from the specified data source.
+   *
+   * @param dataSource The data source for which the entities are being retrieved.
+   * @param entityIdBound The bound value for the entity ID's that will be
+   *                      returned.
+   * @param boundType The {@link SzBoundType} that describes how to apply the
+   *                  specified entity ID bound.
+   * @param pageSize The maximum number of entity ID's to return.
+   * @param uriInfo The {@link UriInfo} for the request.
+   * 
+   * @throws NotFoundException If the specified entity size is less than one.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/entities")
+  public SzEntitiesPageResponse getEntityIdsForDataSource(
+    @PathParam("dataSourceCode")                                String      dataSource,
+    @QueryParam("bound")      @DefaultValue("0")                long        entityIdBound,
+    @QueryParam("boundType")  @DefaultValue("EXCLUSIVE_LOWER")  SzBoundType boundType,
+    @QueryParam("pageSize")                                     Integer     pageSize,
+    @QueryParam("sampleSize")                                   Integer     sampleSize,
+    @Context                                                    UriInfo     uriInfo)
+    throws NotFoundException
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+
+    // check the data source
+    Set<String> dataSources = provider.getDataSources(dataSource);
+    if (!dataSources.contains(dataSource)) {
+      throw new NotFoundException("Unrecognized data source: " + dataSource);
+    }
+
+    try {
+      SzReportKey reportKey = new SzReportKey(DATA_SOURCE_SUMMARY,
+                                              ENTITY_COUNT, 
+                                              dataSource, 
+                                              dataSource);
+
+      SzEntitiesPage page = this.retrieveEntitiesPage(GET, 
+                                                      uriInfo, 
+                                                      timers, 
+                                                      provider, 
+                                                      reportKey.toString(), 
+                                                      entityIdBound, 
+                                                      boundType, 
+                                                      pageSize,
+                                                      sampleSize);
+
+      return SzEntitiesPageResponse.FACTORY.create(
+        this.newMeta(GET, 200, timers),
+        this.newLinks(uriInfo),
+        page);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
     }
   }
 }

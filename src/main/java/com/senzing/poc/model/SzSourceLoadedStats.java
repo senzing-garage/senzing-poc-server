@@ -1,13 +1,11 @@
 package com.senzing.poc.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
 import com.senzing.poc.model.impl.SzSourceLoadedStatsImpl;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * Describes the count statistics for a specific data source.
@@ -21,7 +19,7 @@ public interface SzSourceLoadedStats {
    * @return The data source code identifying the data source to which the
    *         statistics are associated.
    */
-  String getDataSourceCode();
+  String getDataSource();
 
   /**
    * Sets the data source code identifying the data source to which the
@@ -33,8 +31,7 @@ public interface SzSourceLoadedStats {
    * @throws NullPointerException If the specified data source code is
    *                              <code>null</code>.
    */
-  void setDataSourceCode(String dataSourceCode)
-    throws NullPointerException;
+  void setDataSource(String dataSourceCode) throws NullPointerException;
 
   /**
    * Gets the total number of records that have been loaded for the 

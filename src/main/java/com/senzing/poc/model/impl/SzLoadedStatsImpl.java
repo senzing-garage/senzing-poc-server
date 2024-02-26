@@ -34,8 +34,8 @@ public class SzLoadedStatsImpl implements SzLoadedStats {
 
   /**
    * The {@link Map} of {@link String} data source code keys to {@link
-   * SzSourceCountStat} values describing the count statistics for that
-   * data source.
+   * SzSourceLoadedStats} values describing the count statistics for
+   * that data source.
    */
   private Map<String, SzSourceLoadedStats> dataSourceCounts = null;
 
@@ -92,7 +92,7 @@ public class SzLoadedStatsImpl implements SzLoadedStats {
         statsList.forEach( stats -> {
             if (stats != null) {
                 this.dataSourceCounts.put(
-                    stats.getDataSourceCode(), stats);
+                    stats.getDataSource(), stats);
             }
         });
     }
@@ -101,7 +101,7 @@ public class SzLoadedStatsImpl implements SzLoadedStats {
   @Override
   public void addDataSourceCount(SzSourceLoadedStats stats) {
     if (stats == null) return;
-    this.dataSourceCounts.put(stats.getDataSourceCode(), stats);
+    this.dataSourceCounts.put(stats.getDataSource(), stats);
   }
 
 }

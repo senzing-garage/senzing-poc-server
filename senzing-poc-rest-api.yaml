@@ -2842,13 +2842,13 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
+                $ref: '#/components/schemas/SzLoadedStatsResponse'
             application/json:
               schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
+                $ref: '#/components/schemas/SzLoadedStatsResponse'
             default:
               schema:
-                $ref: '#/components/schemas/SzCountStatsResponse'
+                $ref: '#/components/schemas/SzLoadedStatsResponse'
         '500':
           $ref: '#/components/responses/ServerError'
   /statistics/loaded/data-sources/{dataSourceCode}:
@@ -2874,13 +2874,13 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzSourceLoadedStatsResponse'
             application/json:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzSourceLoadedStatsResponse'
             default:
               schema:
-                $ref: '#/components/schemas/SzSourceCountStatsResponse'
+                $ref: '#/components/schemas/SzSourceLoadedStatsResponse'
         '404':
           description: >-
             If the specified data-source in the path is not configured.
@@ -2934,7 +2934,7 @@ paths:
         '400':
           description: >-
             If the `sampleSize` and `pageSize` parameter are both specified 
-            and the `pageSize` is **not** strictly greater-than the `sampleSize`.
+            and the `pageSize` is **not strictly greater-than** the `sampleSize`.
           content:
             application/json; charset=UTF-8:
               schema:
@@ -3189,6 +3189,9 @@ paths:
         data source including itsef.  *NOTE*: Data mart statistics may be
         slightly delayed from the entity repository.
       operationId: getSummaryStatistics
+      parameters:
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
       responses:
         '200':
           description: Successful response
@@ -3219,6 +3222,8 @@ paths:
       operationId: getSourceSummaryStatistics
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
       responses:
         '200':
           description: Successful response
@@ -3251,6 +3256,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
       responses:
         '200':
           description: Successful response
@@ -3287,6 +3294,8 @@ paths:
       operationId: getEntityIdsForSourceMatches
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3355,6 +3364,8 @@ paths:
       operationId: getAmbiguouslyMatchedEntityIds
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3423,6 +3434,8 @@ paths:
       operationId: getAmbiguouslyMatchedRelations
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3491,6 +3504,8 @@ paths:
       operationId: getPossiblyMatchedEntityIds
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3559,6 +3574,8 @@ paths:
       operationId: getPossiblyMatchedRelations
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3626,6 +3643,8 @@ paths:
       operationId: getPossiblyRelatedEntityIds
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3693,6 +3712,8 @@ paths:
       operationId: getPossiblyRelatedRelations
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3760,6 +3781,8 @@ paths:
       operationId: getDisclosedRelatedEntityIds
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3827,6 +3850,8 @@ paths:
       operationId: getDisclosedRelatedRelations
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3895,8 +3920,10 @@ paths:
         be slightly delayed from the entity repository.
       operationId: getEntityIdsForCrossMatches
       parameters:
-        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/dataSourceCodePathParam'        
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -3967,6 +3994,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4037,6 +4066,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4107,6 +4138,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4177,6 +4210,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4246,6 +4281,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4316,6 +4353,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4385,6 +4424,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/entityIdBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -4455,6 +4496,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyQueryParam'
+        - $ref: '#/components/parameters/principleQueryParam'
         - $ref: '#/components/parameters/relationBoundQueryParam'
         - $ref: '#/components/parameters/boundTypeQueryParam'
         - $ref: '#/components/parameters/pageSizeQueryParam'
@@ -5784,6 +5827,44 @@ components:
       schema:
         type: boolean
         default: false
+    principleQueryParam:
+      in: query
+      name: principle
+      required: false
+      description: >-
+        The optional parameter to specify a principle for which the results
+        are being requested.
+      schema:
+        type: string
+    matchKeyQueryParam:
+      in: query
+      name: matchKey
+      required: false
+      description: >-
+        The optional parameter to specify the match key for which the results
+        are being requested.
+      schema:
+        type: string
+    principleWildcardQueryParam:
+      in: query
+      name: principle
+      required: false
+      description: >-
+        The optional parameter to specify a principle for which the statistics
+        are being requested.  Specify an asterisk (`*`) if the statistics for 
+        all principles should be returned. 
+      schema:
+        type: string
+    matchKeyWildcardQueryParam:
+      in: query
+      name: matchKey
+      required: false
+      description: >-
+        The optional parameter to specify a match key for which the statistics
+        are being requested.  Specify an asterisk (`*`) if the statistics for 
+        all match keys should be returned. 
+      schema:
+        type: string
     entityIdBoundQueryParam:
       in: query
       name: bound
@@ -6531,10 +6612,55 @@ components:
         pageSize:
           description: >-
             The requested page size representing the maximum number of 
-            entity ID's that were requested to be returned.
+            entity ID's that were included in the page.
           type: integer
           format: int32
           nullable: false
+        sampleSize:
+          description: >-
+            The requested sample size representing the number of entity ID's
+            to be randmonly selected from the page of results.
+          type: integer
+          format: int32
+          nullable: true
+        minimumValue:
+          description: >-
+            The minimum entity ID of the returned results.  **NOTE:** This field
+            is absent or `null` if there are no results.
+          type: integer
+          format: int64
+          nullable: true
+        maximumValue:
+          description: >-
+            The maximum entity ID of the returned results.  **NOTE:** This field
+            is absent or `null` if there are no results.
+          type: integer
+          format: int64
+          nullable: true
+        pageMinimumValue:
+          description: >-
+            The minimum entity ID of the entire entity page.  This will 
+            be the same as `minimumValue` if `sampleSize` was not 
+            specified, however, if `sampleSize` was specified then this 
+            will be the minimum entity ID value of all the candidate
+            entities on the page that were used for random sample selection
+            even if that entity was not randomly selected.  **NOTE:** This
+            field is absent or `null` if there are no results.
+          type: integer
+          format: int64
+          nullable: true
+        pageMaximumValue:
+          description: >-
+            The maximum entity ID of the entire entity page.  This will 
+            be the same as `maximumValue` if `sampleSize` was not 
+            specified, however, if `sampleSize` was specified then this 
+            will be the maximum entity ID value of all the candidate
+            entities on the page that were used for random sample selection
+            even if that entity was not randomly selected.  **NOTE:** This
+            field is absent or `null` if there are no results.
+          type: integer
+          format: int64
+          nullable: true
         totalEntityCount:
           description: >-
             The total number of entities representing the set of all 
@@ -6610,10 +6736,72 @@ components:
         pageSize:
           description: >-
             The requested page size representing the maximum number of 
-            `SzRelation`'s that were requested to be returned.
+            `SzRelation`'s' that were included in the page.
           type: integer
           format: int32
           nullable: false
+        sampleSize:
+          description: >-
+            The requested sample size representing the number of `SzRelation`'s
+            to be randmonly selected from the page of results.
+          type: integer
+          format: int32
+          nullable: true
+        minimumValue:
+          description: >-
+            The minimum relation value of the returned results.  This is
+            encoded the same as the `bound` value with two (2) entity ID
+            values separated by a colon (e.g.: `1000:5005`).  The first
+            entity ID value identifies the least value of first entity in
+            the relationship and the second entity ID value identifies the
+            least value of those entity ID's related to the first entity.
+            **NOTE:** This field is absent or `null` if there are no results.
+          type: string
+          nullable: true
+        maximumValue:
+          description: >-
+            The maximum relation value of the returned results.  This is
+            encoded the same as the `bound` value with two (2) entity ID
+            values separated by a colon (e.g.: `1000:5005`).  The first
+            entity ID value identifies the greatest value of first entity
+            in the relationship and the second entity ID value identifies
+            the greatest value of those entity ID's related to the first 
+            entity.  **NOTE:** This field is absent or `null` if there are
+            no results.
+          type: string
+          nullable: true
+        pageMinimumValue:
+          description: >-
+            The minimum relation value of the entire relations page.  This
+            will be the same as `minimumValue` if `sampleSize` was not 
+            specified, however, if `sampleSize` was specified then this 
+            will be the minimum relation value of all the candidate
+            relations on the page that were used for random sample selection
+            even if that relation was not randomly selected.  This is
+            encoded the same as the `bound` value with two (2) entity ID
+            values separated by a colon (e.g.: `1000:5005`).  The first
+            entity ID value identifies the least value of first entity in
+            the relationship and the second entity ID value identifies the
+            least value of those entity ID's related to the first entity.
+            **NOTE:** This field is absent or `null` if there are no results.
+         type: string
+          nullable: true
+        pageMaximumValue:
+          description: >-
+            The maximum relation value of the entire relations page.  This
+            will be the same as `maximumValue` if `sampleSize` was not 
+            specified, however, if `sampleSize` was specified then this 
+            will be the maximum relation value of all the candidate
+            relations on the page that were used for random sample selection
+            even if that relation was not randomly selected.  This is
+            encoded the same as the `bound` value with two (2) entity ID
+            values separated by a colon (e.g.: `1000:5005`).  The first
+            entity ID value identifies the greatest value of first entity in
+            the relationship and the second entity ID value identifies the
+            greatest value of those entity ID's related to the first entity.
+            **NOTE:** This field is absent or `null` if there are no results.
+          type: string
+          nullable: true
         totalRelationCount:
           description: >-
             The total number of relationships representing the set of all 
@@ -6643,7 +6831,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SzRelation'
-    SzCountStatsResponse:
+    SzLoadedStatsResponse:
       description: >-
         Extends the BaseResponse to add the fields for statistics representing
         counts of entities and records in total and by data source.
@@ -6653,9 +6841,9 @@ components:
           properties:
             data:
               description: >-
-                The data field is the `SzCountStats` containing the statistics.
-              $ref: '#/components/schemas/SzCountStats'
-    SzSourceCountStatsResponse:
+                The data field is the `SzLoadedStats` containing the statistics.
+              $ref: '#/components/schemas/SzLoadedStats'
+    SzSourceLoadedStatsResponse:
       description: >-
         Extends the BaseResponse to add the fields for statistics representing
         counts of entities and records for a specific data source.
@@ -6665,9 +6853,9 @@ components:
           properties:
             data:
               description: >-
-                The data field is the `SzSourceCountStats` containing the statistics.
-              $ref: '#/components/schemas/SzSourceCountStats'
-    SzCountStats:
+                The data field is the `SzSourceLoadedStats` containing the statistics.
+              $ref: '#/components/schemas/SzSourceLoadedStats'
+    SzLoadedStats:
       description: >-
         Encapsulates the statistics pertaining to counts of entities and records
         both in total and by data source.
@@ -6701,22 +6889,22 @@ components:
           nullable: false
         dataSourceCounts:
           description: >-
-            An array of `SzSourceCountStats` describing the entity and record
+            An array of `SzSourceLoadedStats` describing the entity and record
             counts by data source.
           type: array
           items:
-            $ref: '#/components/schemas/SzSourceCountStats'
-    SzSourceCountStats:
+            $ref: '#/components/schemas/SzSourceLoadedStats'
+    SzSourceLoadedStats:
       description: >-
         Encapsulates the statistics pertaining to counts of entities and records
         for a specific data source.
       type: object
       required:
-        - dataSourceCode
+        - dataSource
         - recordCount
         - entityCount
       properties:
-        dataSourceCode:
+        dataSource:
           description: >-
             The data source code identifying the data source to which the statistics
             are associated.
@@ -6930,8 +7118,8 @@ components:
       properties:
         matchKey:
           description: >-
-            The optional principle associated with the statistics.  This may be
-            `null` or absent if the statistics are not associated with a principle.
+            The optional match key associated with the statistics.  This may be
+            `null` or absent if the statistics are not associated with a match key.
           type: string
           nullable: true
         principle:
@@ -6973,6 +7161,10 @@ components:
       description: >-
         Describes the cross-source statistics between two data sources.
       type: object
+      required:
+        - dataSource
+        - versusDataSource
+        - summaryCounts
       properties:
         dataSource:
           description: >-
@@ -6985,7 +7177,9 @@ components:
         summaryCounts:
           description: >-
             The array of summary statistic counts for each combination of match key
-            and principle including           
+            and principle that were requested.  If all were requested, this includes
+            the cases where either or both of the match key and principle are absent
+            or `null` indicating tracking across all match keys and/or principles.
           type: array
           items:
             $ref: '#/components/schemas/SzSummaryCounts'
@@ -7008,7 +7202,7 @@ components:
             The number of records loaded from the data source.
           type: integer
           format: int64
-        unmatchedCount:
+        unmatchedRecordCount:
           description: >-
             The number of records from this data source that did not match a record
             from the same data source.  This represents the number of records from
@@ -7080,7 +7274,7 @@ components:
         - entityId
         - relatedId
         - matchKey
-        - resolutionRuleCode
+        - principle
         - matchType
       properties:
         entityId:
@@ -7093,6 +7287,10 @@ components:
             The entity ID of the scond entity in the relationship.
           type: integer
           format: int64
+        matchType:
+          description: >-
+            The `SzMatchType` describing the type of the relationship.
+          $ref: '#/components/schemas/SzMatchType'
         matchKey:
           description: >-
             The match key describing what features matched between
@@ -7103,10 +7301,6 @@ components:
             The code identifying the resolution rule that related the
             entities to one another.
           type: string
-        matchType:
-          description: >-
-            The `SzMatchType` describing the type of the relationship.
-          $ref: '#/components/schemas/SzMatchType'
     SzError:
       description: >-
         Describes an error.

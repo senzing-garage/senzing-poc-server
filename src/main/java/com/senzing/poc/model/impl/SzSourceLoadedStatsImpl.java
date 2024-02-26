@@ -13,7 +13,7 @@ public class SzSourceLoadedStatsImpl implements SzSourceLoadedStats {
   /**
    * The data source code 
    */
-  private String dataSourceCode;
+  private String dataSource;
 
   /**
    * The number of records loaded for the data source.
@@ -45,20 +45,20 @@ public class SzSourceLoadedStatsImpl implements SzSourceLoadedStats {
     throws NullPointerException
   {
     Objects.requireNonNull(dataSourceCode, "Data source code cannot be null");
-    this.dataSourceCode = dataSourceCode;
+    this.dataSource           = dataSourceCode;
     this.recordCount          = 0L;
     this.entityCount          = 0L;
     this.unmatchedRecordCount = 0L;
   }
 
   @Override
-  public String getDataSourceCode() {
-    return this.dataSourceCode;
+  public String getDataSource() {
+    return this.dataSource;
   }
 
   @Override
-  public void setDataSourceCode(String dataSourceCode) {
-    this.dataSourceCode = dataSourceCode;
+  public void setDataSource(String dataSourceCode) {
+    this.dataSource = dataSourceCode;
   }
 
   @Override
