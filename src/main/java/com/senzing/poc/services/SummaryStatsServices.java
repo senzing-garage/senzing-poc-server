@@ -2,10 +2,11 @@ package com.senzing.poc.services;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,6 @@ import com.senzing.poc.model.SzSourceSummaryResponse;
 import com.senzing.poc.model.SzSummaryStats;
 import com.senzing.poc.model.SzSummaryCounts;
 import com.senzing.poc.model.SzSummaryStatsResponse;
-import com.senzing.poc.model.impl.SzSummaryStatsImpl;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.util.Timers;
 import com.senzing.api.model.SzHttpMethod;
@@ -60,20 +60,27 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    *                  (<code>"*"</code>) for all principles, or 
    *                  <code>null</code> for only retrieving statistics
    *                  that are not specific to a principle.
+   * @param onlyLoaded Set to <code>true</code> to only consider data sources
+   *                   that have loaded record, otherwise set this to
+   *                   <code>false<code> to consider all data sources.
    * @param uriInfo The {@link UriInfo} for the request.
+   * 
+   * @return The {@link SzSummaryStatsResponse} describing the response.
    */
   @GET
   @Path("/")
   public SzSummaryStatsResponse getSummaryStats(
-    @QueryParam("matchKey")   String  matchKey,
-    @QueryParam("principle")  String  principle,
-    @Context                  UriInfo uriInfo)
+    @QueryParam("matchKey")                                 String  matchKey,
+    @QueryParam("principle")                                String  principle,
+    @QueryParam("onlyLoadedSources")  @DefaultValue("true") boolean onlyLoaded,
+    @Context                                                UriInfo uriInfo)
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
     Timers        timers    = this.newTimers();
     try {
         SzSummaryStats stats = this.getSummaryStats(matchKey, 
                                                     principle,
+                                                    onlyLoaded,
                                                     GET,
                                                     uriInfo, 
                                                     timers, 
@@ -96,6 +103,66 @@ public class SummaryStatsServices implements DataMartServicesSupport {
     }
   }
 
+  /** 
+   * Gets the data sources that have loaded records.
+   * 
+   * @param httpMethod The {@link SzHttpMethod} of the request.
+   * @param uriInfo The {@link UriInfo} for the request.
+   * @param timers The {@link Timers} associated with the request.
+   * @param provider The {@link SzPocProvider} for the request context.
+   * 
+   * @return The {@link Set} of data sources that have loaded records.
+   * 
+   * @throws SQLException If a JDBC failure occurs.
+   */
+  private SortedSet<String> getLoadedDataSources(SzHttpMethod   httpMethod,
+                                                 UriInfo        uriInfo,
+                                                 Timers         timers,
+                                                 SzPocProvider  provider)
+    throws SQLException
+  {
+    // initialize resources
+    Connection        conn  = null;
+    PreparedStatement ps    = null;
+    ResultSet         rs    = null;
+    
+    try {
+        // get the connection to the data mart database
+        conn = this.getConnection(httpMethod, uriInfo, timers, provider);
+
+        // prepare the statement
+        this.queryingDatabase(timers, "selectLoadedSources");
+        ps = conn.prepareStatement(
+          "SELECT data_source1 FROM sz_dm_report "
+              + "WHERE report=? AND statistic=? AND record_count > 0 "
+              + "ORDER BY data_source1");
+      
+        // bind the parameters
+        ps.setString(1, DATA_SOURCE_SUMMARY.getCode());
+        ps.setString(2, ENTITY_COUNT.toString());
+
+        // execute the query
+        rs = ps.executeQuery();
+
+        // read the results
+        SortedSet<String> dataSources = new TreeSet<>();
+        while(rs.next()) {
+          dataSources.add(rs.getString(1));
+        }
+
+        // return the data sources
+        return dataSources;
+
+    } finally {
+        this.queriedDatabase(timers, "selectLoadedSources");
+        
+        // release resources
+        rs = close(rs);
+        ps = close(ps);
+        conn = close(conn);
+    }
+  }
+
   /**
    * Internal method for obtaining all the summary statistics.
    * 
@@ -109,6 +176,9 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    *                  (<code>"*"</code>) for all principles, or 
    *                  <code>null</code> for only retrieving statistics
    *                  that are not specific to a principle.
+   * @param onlyLoaded Set to <code>true</code> to only consider data sources
+   *                   that have loaded record, otherwise set this to
+   *                   <code>false<code> to consider all data sources.
    * @param httpMethod The {@link SzHttpMethod} of the request.
    * @param uriInfo The {@link UriInfo} for the request.
    * @param timers The {@link Timers} associated with the request.
@@ -122,23 +192,27 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    */
   protected SzSummaryStats getSummaryStats(String         matchKey,
                                            String         principle,
+                                           boolean        onlyLoaded,
                                            SzHttpMethod   httpMethod,
                                            UriInfo        uriInfo,
                                            Timers         timers,
                                            SzPocProvider  provider)
       throws ServiceUnavailableException, InternalServerErrorException
   {
-    // get the connection
-    SzSummaryStats  result  = SzSummaryStats.FACTORY.create();
+
+    // create the result
+    SzSummaryStats result = SzSummaryStats.FACTORY.create();
     try {
-      // get the data sources
-      Set<String> dataSources = provider.getDataSources();
+      Set<String> dataSources = (onlyLoaded) 
+        ? getLoadedDataSources(httpMethod, uriInfo, timers, provider) 
+        : provider.getDataSources();
       
       // iterate over the data sources
       dataSources.forEach(dataSource -> {
         result.addSourceSummary(this.getSourceSummary(dataSource, 
                                                       matchKey,
                                                       principle,
+                                                      onlyLoaded,
                                                       httpMethod,
                                                       uriInfo,
                                                       timers,
@@ -181,10 +255,11 @@ public class SummaryStatsServices implements DataMartServicesSupport {
   @GET
   @Path("/data-sources/{dataSourceCode}")
   public SzSourceSummaryResponse getSourceSummary(
-    @PathParam("dataSourceCode")  String  dataSourceCode,
-    @QueryParam("matchKey")       String  matchKey,
-    @QueryParam("principle")      String  principle,
-    @Context                      UriInfo uriInfo)
+    @PathParam("dataSourceCode")                            String  dataSourceCode,
+    @QueryParam("matchKey")                                 String  matchKey,
+    @QueryParam("principle")                                String  principle,
+    @QueryParam("onlyLoadedSources")  @DefaultValue("true") boolean onlyLoaded,
+    @Context                                                UriInfo uriInfo)
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
     Timers        timers    = this.newTimers();
@@ -192,6 +267,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
         SzSourceSummary summary = this.getSourceSummary(dataSourceCode,
                                                         matchKey,
                                                         principle,
+                                                        onlyLoaded,
                                                         GET, 
                                                         uriInfo, 
                                                         timers, 
@@ -230,6 +306,9 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    *                  (<code>"*"</code>) for all principles, or 
    *                  <code>null</code> for only retrieving statistics
    *                  that are not specific to a principle.
+   * @param onlyLoaded Set to <code>true</code> to only consider data sources
+   *                   that have loaded record, otherwise set this to
+   *                   <code>false<code> to consider all data sources.
    * @param httpMethod The {@link SzHttpMethod} of the request.
    * @param uriInfo The {@link UriInfo} for the request.
    * @param timers The {@link Timers} associated with the request.
@@ -246,6 +325,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
     String            dataSource,
     String            matchKey,
     String            principle,
+    boolean           onlyLoaded,
     SzHttpMethod      httpMethod,
     UriInfo           uriInfo,
     Timers            timers,
@@ -318,6 +398,12 @@ public class SummaryStatsServices implements DataMartServicesSupport {
       // release resources
       rs = close(rs);
       ps = close(ps);
+      conn = close(conn);
+
+      // check if we should only consider loaded data sources
+      if (onlyLoaded) {
+        dataSources = getLoadedDataSources(httpMethod, uriInfo, timers, provider);
+      }
 
       // get the cross summaries
       dataSources.forEach(vsDataSource -> {

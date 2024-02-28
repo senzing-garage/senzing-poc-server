@@ -1,5 +1,6 @@
 package com.senzing.poc.model.impl;
 
+import com.senzing.poc.model.SzEntity;
 import com.senzing.poc.model.SzRelation;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzMatchType;
@@ -10,14 +11,14 @@ import com.senzing.poc.model.SzMatchType;
 @JsonDeserialize
 public class SzRelationImpl implements SzRelation {
     /**
-     * The first entity ID for the relation.
+     * The {@link SzEntity} describing the first entity in the relation.
      */
-    private long entityId = 0L;
-
+    private SzEntity entity = null;
+    
     /**
-     * The second entity ID (the related ID) for the relation.
+     * The {@link SzEntity} describing the second entity in the relation.
      */
-    private long relatedId = 0L;
+    private SzEntity relatedEntity = null;
 
     /**
      * The {@link SzMatchType} describing the relationship type for the relation.
@@ -38,53 +39,31 @@ public class SzRelationImpl implements SzRelation {
      * Default constructor.
      */
     public SzRelationImpl() {
-        this.entityId   = 0L;
-        this.relatedId  = 0L;
-        this.matchType  = null;
-        this.matchKey   = null;
-        this.principle  = null;
-    }
-
-    /**
-     * Constructs with the specified parameters.
-     * 
-     * @param entityId The first entity ID for the relation.
-     * @param relatedId The second entity ID (the related ID) for the relation.
-     * @param matchType The {@link SzMatchType} for the relation.
-     * @param matchKey The match key for the relation.
-     * @param principle The principle for the relation.
-     */
-    public SzRelationImpl(long          entityId,
-                          long          relatedId,
-                          SzMatchType   matchType,
-                          String        matchKey,
-                          String        principle)
-    {
-        this.entityId   = entityId;
-        this.relatedId  = relatedId;
-        this.matchType  = matchType;
-        this.matchKey   = matchKey;
-        this.principle  = principle;
+        this.entity         = null;
+        this.relatedEntity  = null;
+        this.matchType      = null;
+        this.matchKey       = null;
+        this.principle      = null;
     }
 
     @Override
-    public long getEntityId() {
-        return this.entityId;
+    public SzEntity getEntity() {
+        return this.entity;
     }
 
     @Override
-    public void setEntityId(long entityId) {
-        this.entityId = entityId;
+    public void setEntity(SzEntity entity) {
+        this.entity = entity;
     }
 
     @Override
-    public long getRelatedId() {
-        return this.relatedId;
+    public SzEntity getRelatedEntity() {
+        return this.relatedEntity;
     }
 
     @Override
-    public void setRelatedId(long relatedId) {
-        this.relatedId = relatedId;
+    public void setRelatedEntity(SzEntity related) {
+        this.relatedEntity = related;
     }
 
     @Override
@@ -115,5 +94,18 @@ public class SzRelationImpl implements SzRelation {
     @Override
     public void setPrinciple(String principle) {
         this.principle = principle;
+    }
+
+    /**
+     * Overridden to return a diagnostic {@link String} describing this instance.
+     * @return A diagnostic {@link String} describing this instance.
+     */
+    @Override
+    public String toString() {
+        return "entity=[ " + this.getEntity() 
+            + " ], relatedEntity=[ " + this.getRelatedEntity()
+            + " ], matchType=[ " + this.getMatchType()
+            + " ], matchKey=[ " + this.getMatchKey()
+            + " ], principle=[ " + this.getPrinciple() + " ]";
     }
 }

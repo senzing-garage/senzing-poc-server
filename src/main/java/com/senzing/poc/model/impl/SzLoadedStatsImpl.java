@@ -1,8 +1,8 @@
 package com.senzing.poc.model.impl;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -37,7 +37,7 @@ public class SzLoadedStatsImpl implements SzLoadedStats {
    * SzSourceLoadedStats} values describing the count statistics for
    * that data source.
    */
-  private Map<String, SzSourceLoadedStats> dataSourceCounts = null;
+  private SortedMap<String, SzSourceLoadedStats> dataSourceCounts = null;
 
   /**
    * Default constructor
@@ -46,7 +46,7 @@ public class SzLoadedStatsImpl implements SzLoadedStats {
     this.totalRecordCount           = 0L;
     this.totalEntityCount           = 0L;
     this.totalUnmatchedRecordCount  = 0L;
-    this.dataSourceCounts           = new LinkedHashMap<>();
+    this.dataSourceCounts           = new TreeMap<>();
   }
 
   @Override

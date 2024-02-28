@@ -1,6 +1,7 @@
 package com.senzing.poc.model;
 
 import java.util.List;
+import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -55,7 +56,7 @@ public interface SzEntitiesPage {
   void setBoundType(SzBoundType boundType);
 
   /**
-   * Gets requested page size representing the maximum number of
+   * Gets the requested page size representing the maximum number of
    * entity ID's that were requested to be included in the page.
    * 
    * @return The requested page size representing the maximum number
@@ -65,7 +66,7 @@ public interface SzEntitiesPage {
   int getPageSize();
 
   /**
-   * Sets requested page size representing the maximum number of
+   * Sets the requested page size representing the maximum number of
    * entity ID's that were requested to be included in the page.
    * 
    * @param pageSize The requested page size representing the 
@@ -75,7 +76,7 @@ public interface SzEntitiesPage {
   void setPageSize(int pageSize);
 
   /**
-   * Gets requested sample size representing the number of entity ID's
+   * Gets the requested sample size representing the number of entity ID's
    * to be randmonly selected from the page of results.
    * 
    * @return The requested page size representing the number of entity ID's
@@ -85,7 +86,7 @@ public interface SzEntitiesPage {
   Integer getSampleSize();
 
   /**
-   * Sets requested sample size representing the number of entity ID's
+   * Sets the requested sample size representing the number of entity ID's
    * to be randmonly selected from the page of results.
    * 
    * @param pageSize The requested sample size representing the number
@@ -233,34 +234,47 @@ public interface SzEntitiesPage {
   void setAfterPageCount(long count);
 
   /**
-   * Gets the {@link List} of {@link Long} entity Id's identifying the 
+   * Gets the {@link List} of {@link SzEntity} instances describing the 
    * entities in this page of results.  The returned {@link List} will
-   * be in ascending order.
+   * be in ascending order of entity ID.
    * 
-   * @return The {@link List} of {@link Long} entity Id's identifying
+   * @return The {@link List} of {@link SzEntity} instances describing
    *         the entities in this page of results (in ascending order).
    */
-  List<Long> getEntityIds();
+  List<SzEntity> getEntities();
 
   /**
-   * Sets the {@link List} of {@link Long} entity Id's identifying the 
-   * entities in this page of results.  The entity IDs will be sorted
-   * and deduplicated when added to this instance.
+   * Sets the {@link List} of {@link SzEntity} instances describing the 
+   * entities in this page of results.  The entities will be sorted in
+   * ascending order of entity ID and deduplicated when added.
    * 
-   * @param entityIdList The {@link List} of {@link Long} entity Id's 
-   *                     identifying the entities in this page of results.
+   * @param entityIdList The {@link List} of {@link SzEntity} instances
+   *                     describing the entities in this page of results.
     */
-  void setEntityIds(List<Long> entityIdList);
+  void setEntities(Collection<SzEntity> entities);
 
   /**
-   * Adds the specified entity ID to the list of entities for this page.
-   * If the specified entity ID is already included, then this method
-   * has no effect.
+   * Adds the specified {@link SzEntity} to the list of entities for this
+   * page.  If an entity with the same entity ID already exists on the 
+   * page then the specified one replaces the existing one.
    * 
-   * @param entityId The entity ID to add to the list of entities for 
-   *                 this page.
+   * @param entity The {@link SzEntity} to add the page of entities.
    */
-  void addEntityId(long entityId);
+  void addEntity(SzEntity entity);
+
+  /**
+   * Removes the entity with the specified entity ID from the list of
+   * entities associated with this instance.  If no entity has the
+   * specified entity ID then this method has no effect.
+   * 
+   * @param entityId The entity ID of the entity to be removed.
+   */
+  void removeEntity(long entityId);
+
+  /**
+   * Removes all entities from the page of entities.
+   */
+  void removeAllEntities();
 
   /**
    * A {@link ModelProvider} for instances of {@link SzEntitiesPage}.

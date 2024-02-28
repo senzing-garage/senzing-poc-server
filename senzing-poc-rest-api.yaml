@@ -2836,6 +2836,8 @@ paths:
         data mart.  *NOTE*: Data mart statistics may be slightly delayed from 
         the entity repository.
       operationId: getLoadedStatistics
+      parameters:
+        - $ref: '#/components/parameters/onlyLoadedQueryParam'
       responses:
         '200':
           description: Successful response
@@ -3192,6 +3194,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
         - $ref: '#/components/parameters/principleWildcardQueryParam'
+        - $ref: '#/components/parameters/onlyLoadedQueryParam'
       responses:
         '200':
           description: Successful response
@@ -3224,6 +3227,7 @@ paths:
         - $ref: '#/components/parameters/dataSourceCodePathParam'
         - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
         - $ref: '#/components/parameters/principleWildcardQueryParam'
+        - $ref: '#/components/parameters/onlyLoadedQueryParam'
       responses:
         '200':
           description: Successful response
@@ -5855,6 +5859,19 @@ components:
         all principles should be returned. 
       schema:
         type: string
+    onlyLoadedQueryParam:
+      in: query
+      name: onlyLoadedSources
+      required: false
+      description: >-
+        The optional parameter to specify if only loaded data sources should
+        be considered when iterating over data sources to retrieve statistics.
+        If not specified, this defaults to `true`.  Set this explicitly to
+        `false` to iterate over all data sources regardless of loaded records
+        in generating the statistics (i.e.: to include the "zeroes").
+      schema:
+        type: boolean
+        default: true
     matchKeyWildcardQueryParam:
       in: query
       name: matchKey
@@ -6594,8 +6611,7 @@ components:
         - totalEntityCount
         - beforePageCount
         - afterPageCount
-        - entityCount
-        - entityIds
+        - entities
       properties:
         bound:
           description: >-
@@ -6612,13 +6628,13 @@ components:
         pageSize:
           description: >-
             The requested page size representing the maximum number of 
-            entity ID's that were included in the page.
+            entities that were included in the page.
           type: integer
           format: int32
           nullable: false
         sampleSize:
           description: >-
-            The requested sample size representing the number of entity ID's
+            The requested sample size representing the number of entities
             to be randmonly selected from the page of results.
           type: integer
           format: int32
@@ -6682,14 +6698,13 @@ components:
           type: integer
           format: int64
           nullable: false
-        entityIds:
+        entities:
           description: >-
-            An array of entity ID's identifying the entities for the page.
-            The entity ID array will be in ascending order.
+            An array of `SzEntity` instances describing the entities for the page.
+            The array will be in ascending order of entity ID.
           type: array
           items:
-            type: integer
-            format: int64
+            $ref: '#/components/schemas/SzEntity'
     SzPagedRelationsResponse:
       description: >-
         Extends the BaseResponse to add the fields describing a list of
@@ -6716,7 +6731,6 @@ components:
         - totalRelationCount
         - beforePageCount
         - afterPageCount
-        - relationCount
         - relations
       properties:
         bound:
@@ -7266,27 +7280,92 @@ components:
               description: >-
                 The data field is the `SzCrossSourceSummary` containing the statistics.
               $ref: '#/components/schemas/SzCrossSourceSummary'
+    SzRecord:
+      description: >-
+        Describes a record that has been synced to the datamart.
+      type: object
+      required:
+        - dataSource
+        - recordId
+        - matchKey
+        - principle
+      properties:
+        dataSource:
+          description: >-
+            The data source code identifying the data source from 
+            which the record was loaded.
+          type: string
+        recordId:
+          description: >-
+            The record ID that uniquely identifies the record within
+            the data source from which it was loaded.
+          type: string
+        matchKey:
+          description: >-
+            The optional match key describing why the record merged
+            into the entity to which it belongs.  This may be absent
+            or `null` if this record belongs to a single-record entity
+            or if it was the inital record of the first multi-record
+            entity to which it belonged (even if it later re-resolved
+            into a larger entity).
+          type: string
+        principle: 
+          description: >-
+            The optioanl principle identifying the resolution rule
+            that was used to merge the record into the entity to which
+            it belonss.  This may be absent or `null` if this record
+            belongs to a single-record entity or if it was the inital
+            record of the first multi-record entity to which it
+            belonged (even if it later re-resolved into a larger entity).
+          type: string
+    SzEntity:
+      description: >-
+        Describes an entity that has been synced to the datamart.
+      type: object
+      required:
+        - entityId
+      properties:
+        entityId:
+          description: >-
+            The entity ID that uniquely identifies the entity.
+          type: integer
+          format: int64
+        entityName:
+          description: >-
+            The best name associated with the entity.
+          type: string
+        recordCount:
+          description: >-
+            The number of records resolved together in the entity.
+          type: integer
+          format: int32
+        relationCount:
+          description: >-
+            The number of entities that are related to this entity.
+          type: integer
+          format: int32
+        records:
+          description: >-
+            The array of `SzRecord` describing the records for this entity.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRecord'
     SzRelation:
       description: >-
         Describes a relationship between two entities.
       type: object
       required:
-        - entityId
-        - relatedId
-        - matchKey
-        - principle
-        - matchType
+        - entity
+        - relatedEntity
       properties:
-        entityId:
+        entity:
           description: >-
-            The entity ID of the first entity in the relationship.
-          type: integer
-          format: int64
-        relatedId:
+            The entity describing the first entity in the relationship.
+          $ref: '#/components/schemas/SzEntity'
+        relatedEntity:
           description: >-
-            The entity ID of the scond entity in the relationship.
-          type: integer
-          format: int64
+            The entity describing the second entity in the relationship.
+          $ref: '#/components/schemas/SzEntity'
         matchType:
           description: >-
             The `SzMatchType` describing the type of the relationship.

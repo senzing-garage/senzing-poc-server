@@ -10,18 +10,18 @@
   <dependencies>
     <dependency>
       <groupId>com.senzing</groupId>
-      <artifactId>senzing-api-server</artifactId>
-      <version>[3.5.9, 3.999.999]</version>
+      <artifactId>senzing-commons</artifactId>
+      <version>[3.2.0, 3.999.999]</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
-      <artifactId>senzing-commons</artifactId>
-      <version>[3.1.4, 3.999.999]</version>
+      <artifactId>senzing-api-server</artifactId>
+      <version>[3.5.10, 3.999.999]</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-listener</artifactId>
-      <version>0.5.3</version>
+      <version>0.5.5</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>

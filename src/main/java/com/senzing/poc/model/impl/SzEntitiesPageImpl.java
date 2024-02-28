@@ -1,14 +1,15 @@
 package com.senzing.poc.model.impl;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzEntitiesPage;
+import com.senzing.poc.model.SzEntity;
 import com.senzing.poc.model.SzBoundType;
 
 /**
@@ -71,7 +72,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
    * The {@link Set} of {@link Long} entity ID's identifying the entities
    * on this page.
    */
-  private SortedSet<Long> entityIds = null;
+  private SortedMap<Long, SzEntity> entities = null;
 
   /**
    * Default constructor
@@ -86,7 +87,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
     this.totalEntityCount   = 0L;
     this.beforePageCount    = 0L;
     this.afterPageCount     = 0L;
-    this.entityIds          = new TreeSet<>();
+    this.entities           = new TreeMap<>();
   }
 
   @Override
@@ -131,12 +132,12 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   @Override
   public Long getMinimumValue() {
-    return this.entityIds.first();
+    return this.entities.firstKey();
   }
 
   @Override
   public Long getMaximumValue() {
-    return this.entityIds.last();
+    return this.entities.lastKey();
   }
 
   @Override
@@ -196,28 +197,34 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   }
 
   @Override
-  public List<Long> getEntityIds() {
-    List<Long> ids = new ArrayList<>(this.entityIds);
-    ids.sort(null);
-    return ids;
+  public List<SzEntity> getEntities() {
+    return new ArrayList<>(this.entities.values());
   }
 
   @Override
-  public void setEntityIds(List<Long> entityIdList) {
-    this.entityIds.clear();
-    if (entityIdList != null) {
-      entityIdList.forEach( entityId -> {
-        if (entityId != null) {
-          this.entityIds.add(entityId);
+  public void setEntities(Collection<SzEntity> entities) {
+    this.entities.clear();
+    if (entities != null) {
+      entities.forEach( entity -> {
+        if (entity != null) {
+          this.entities.put(entity.getEntityId(), entity);
         }
       });
     }
   }
 
   @Override
-  public void addEntityId(long entityId) {
-    if (this.entityIds.contains(entityId)) return;
-    this.entityIds.add(entityId);
+  public void addEntity(SzEntity entity) {
+    this.entities.put(entity.getEntityId(), entity);
   }
 
+  @Override
+  public void removeEntity(long entityId) {
+    this.entities.remove(entityId);
+  }
+
+  @Override
+  public void removeAllEntities() {
+    this.entities.clear();
+  }
 }

@@ -1,8 +1,8 @@
 package com.senzing.poc.model.impl;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -19,13 +19,13 @@ public class SzSummaryStatsImpl implements SzSummaryStats {
    * {@link SzSourceSummary} values describing the count statistics for that
    * data source.
    */
-  private Map<String, SzSourceSummary> sourceSummaries = null;
+  private SortedMap<String, SzSourceSummary> sourceSummaries = null;
 
   /**
    * Default constructor
    */
   public SzSummaryStatsImpl() {
-    this.sourceSummaries = new LinkedHashMap<>();
+    this.sourceSummaries = new TreeMap<>();
   }
 
   @Override

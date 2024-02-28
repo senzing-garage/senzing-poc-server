@@ -1,10 +1,13 @@
 package com.senzing.poc.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
 import com.senzing.poc.model.impl.SzRelationImpl;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * Describes a relationship between two entities.
@@ -12,32 +15,40 @@ import com.senzing.poc.model.impl.SzRelationImpl;
 @JsonDeserialize(using = SzRelation.Factory.class)
 public interface SzRelation {
     /**
-     * Gets the first entity ID for the relation.
+     * Gets the {@link SzEntity} describing the first entity in 
+     * the relationship.
      * 
-     * @return The first entity ID for the relation.
+     * @return The {@link SzEntity} describing the first entity in
+     *         the relationship.
      */
-    long getEntityId();
+    SzEntity getEntity();
 
     /**
-     * Sets the first entity ID for the relation.
+     * Sets the {@link SzEntity} describing the first entity in
+     * the relationship.
      * 
-     * @param entityId The first entity ID for the relation.
+     * @param entity The {@link SzEntity} describing the first entity in
+     *               the relationship.
      */
-    void setEntityId(long entityId);
+    void setEntity(SzEntity entity);
 
     /**
-     * Gets the second entity ID (the related ID) for the relation.
+     * Gets the {@link SzEntity} describing the second entity in 
+     * the relationship.
      * 
-     * @return The second entity ID (the related ID) for the relation.
+     * @return The {@link SzEntity} describing the second entity in
+     *         the relationship.
      */
-    long getRelatedId();
+    SzEntity getRelatedEntity();
 
     /**
-     * Sets the second entity ID (the related ID) for the relation.
+     * Sets the {@link SzEntity} describing the second entity in
+     * the relationship.
      * 
-     * @param relatedId The second entity ID (the related ID) for the relation.
+     * @param entity The {@link SzEntity} describing the second entity
+     *               in the relationship.
      */
-    void setRelatedId(long relatedId);
+    void setRelatedEntity(SzEntity related);
 
     /**
      * Gets the {@link SzMatchType} describing the relationship type for
@@ -46,6 +57,7 @@ public interface SzRelation {
      * @return The {@link SzMatchType} describing the relationship type for
      *         the relation.
      */
+    @JsonInclude(NON_NULL)
     SzMatchType getMatchType();
 
     /**
@@ -62,6 +74,7 @@ public interface SzRelation {
      * 
      * @return The match key for the relation.
      */
+    @JsonInclude(NON_NULL)
     String getMatchKey();
 
     /**
@@ -76,6 +89,7 @@ public interface SzRelation {
      * 
      * @return The principle for the relation.
      */
+    @JsonInclude(NON_NULL)
     String getPrinciple();
 
     /**
@@ -95,24 +109,6 @@ public interface SzRelation {
          * @return The new instance of {@link SzRelation}
          */
         SzRelation create();
-
-        /**
-         * Creates an instance with the specified parameters.
-         * 
-         * @param entityId  The first entity ID for the relation.
-         * @param relatedId The second entity ID (the related ID) for the relation.
-         * @param matchType The {@link SzMatchType} for the relation.
-         * @param matchKey  The match key for the relation.
-         * @param principle The principle for the relation.
-         * 
-         * @return The newly created {@link SzRelation} instance.
-         */
-        SzRelation create(long          entityId,
-                          long          relatedId,
-                          SzMatchType   matchType,
-                          String        matchKey,
-                          String        principle);
-
     }
 
     /**
@@ -131,16 +127,6 @@ public interface SzRelation {
         @Override
         public SzRelation create() {
             return new SzRelationImpl();
-        }
-
-        @Override
-        public SzRelation create(long entityId,
-                long relatedId,
-                SzMatchType matchType,
-                String matchKey,
-                String principle) {
-            return new SzRelationImpl(
-                    entityId, relatedId, matchType, matchKey, principle);
         }
     }
 
@@ -174,27 +160,6 @@ public interface SzRelation {
          */
         public SzRelation create() {
             return this.getProvider().create();
-        }
-
-        /**
-         * Creates an instance with the specified parameters.
-         * 
-         * @param entityId  The first entity ID for the relation.
-         * @param relatedId The second entity ID (the related ID) for the relation.
-         * @param matchType The {@link SzMatchType} for the relation.
-         * @param matchKey  The match key for the relation.
-         * @param principle The principle for the relation.
-         * 
-         * @return The newly created {@link SzRelation} instance.
-         */
-        public SzRelation create(long           entityId,
-                                 long           relatedId,
-                                 SzMatchType    matchType,
-                                 String         matchKey,
-                                 String         principle) 
-        {
-            return this.getProvider().create(
-                    entityId, relatedId, matchType, matchKey, principle);
         }
     }
 

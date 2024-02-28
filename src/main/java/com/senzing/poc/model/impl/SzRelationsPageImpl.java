@@ -329,7 +329,10 @@ public class SzRelationsPageImpl implements SzRelationsPage {
     if (relations != null) {
       relations.forEach( relation -> {
         if (relation != null) {
-          RelationKey key = new RelationKey(relation.getEntityId(), relation.getRelatedId());
+          long        entityId  = relation.getEntity().getEntityId();
+          long        relatedId = relation.getRelatedEntity().getEntityId();
+          RelationKey key       = new RelationKey(entityId, relatedId);
+
           this.relations.put(key, relation);
         }
       });
@@ -338,7 +341,10 @@ public class SzRelationsPageImpl implements SzRelationsPage {
 
   @Override
   public void addRelation(SzRelation relation) {
-    RelationKey key = new RelationKey(relation.getEntityId(), relation.getRelatedId());
+    long        entityId  = relation.getEntity().getEntityId();
+    long        relatedId = relation.getRelatedEntity().getEntityId();
+    RelationKey key       = new RelationKey(entityId, relatedId);
+          
     this.relations.put(key, relation);
   }
 

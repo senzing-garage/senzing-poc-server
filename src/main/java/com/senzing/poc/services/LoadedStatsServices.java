@@ -1,8 +1,8 @@
 package com.senzing.poc.services;
 
 import java.util.Set;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -42,19 +42,27 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    * count and total unmatched record count along with a breakdown of 
    * record count, entity count and unmatched record count by data source.
    *
+   * @param onlyLoaded Set to <code>true</code> to only consider data sources
+   *                   that have loaded record, otherwise set this to
+   *                   <code>false<code> to consider all data sources.
    * @param uriInfo The {@link UriInfo} for the request.
+   * 
+   * @return The {@link SzLoadedStatsResponse} describing the response.
    */
   @GET
   @Path("/")
-  public SzLoadedStatsResponse getLoadedStatistics(@Context UriInfo uriInfo)
+  public SzLoadedStatsResponse getLoadedStatistics(
+    @QueryParam("onlyLoadedSources")  @DefaultValue("true") boolean onlyLoaded,
+    @Context                                                UriInfo uriInfo)
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
     Timers        timers    = this.newTimers();
     try {
-        SzLoadedStats stats = this.getStatistics(GET, 
-                                                uriInfo, 
-                                                timers, 
-                                                provider);
+        SzLoadedStats stats = this.getStatistics(onlyLoaded,
+                                                 GET, 
+                                                 uriInfo, 
+                                                 timers, 
+                                                 provider);
 
         return SzLoadedStatsResponse.FACTORY.create(this.newMeta(GET, 200, timers),
                                                    this.newLinks(uriInfo),
@@ -75,6 +83,9 @@ public class LoadedStatsServices implements DataMartServicesSupport {
   /**
    * Internal method for obtaining the count statistics.
    * 
+   * @param onlyLoaded Set to <code>true</code> to only consider data sources
+   *                   that have loaded record, otherwise set this to
+   *                   <code>false<code> to consider all data sources.
    * @param httpMethod The {@link SzHttpMethod} of the request.
    * @param uriInfo The {@link UriInfo} for the request.
    * @param timers The {@link Timers} associated with the request.
@@ -86,10 +97,11 @@ public class LoadedStatsServices implements DataMartServicesSupport {
    *                                     service a request.
    * @throws InternalServerErrorException If an internal error occurs.
    */
-  protected SzLoadedStats getStatistics(SzHttpMethod     httpMethod,
-                                       UriInfo          uriInfo,
-                                       Timers           timers,
-                                       SzPocProvider    provider)
+  protected SzLoadedStats getStatistics(boolean       onlyLoaded,
+                                        SzHttpMethod  httpMethod,
+                                        UriInfo       uriInfo,
+                                        Timers        timers,
+                                        SzPocProvider provider)
       throws ServiceUnavailableException, InternalServerErrorException
   {
     // get the connection
@@ -120,7 +132,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
       }
 
       // create a map to keep track of the source stats
-      Map<String, SzSourceLoadedStats> sourceStatsMap = new LinkedHashMap<>();
+      SortedMap<String, SzSourceLoadedStats> sourceStatsMap = new TreeMap<>();
 
       // now get the source entity and record counts
       long totalRecordCount = 0L;
@@ -198,6 +210,20 @@ public class LoadedStatsServices implements DataMartServicesSupport {
 
       // set the total unmatched record count
       result.setTotalUnmatchedRecordCount(totalUnmatchedRecordCount);
+
+      if (!onlyLoaded) {
+        // get all data sources
+        Set<String> dataSources = provider.getDataSources();
+        dataSources.forEach(dataSource -> {
+          if (!sourceStatsMap.containsKey(dataSource)) {
+            SzSourceLoadedStats stats = SzSourceLoadedStats.FACTORY.create(dataSource);
+            stats.setEntityCount(0);
+            stats.setRecordCount(0);
+            stats.setUnmatchedRecordCount(0);
+            sourceStatsMap.put(dataSource, stats);
+          }
+        });
+      }
 
       // add the source stats to the result
       sourceStatsMap.values().forEach(stats -> {
