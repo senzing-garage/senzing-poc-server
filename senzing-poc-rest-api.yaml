@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Senzing POC REST API
-  version: "3.5.1"
+  version: "3.5.2"
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
@@ -3249,9 +3249,9 @@ paths:
         - Statistics
       summary: >-
         Gets the cross-summary statistics for one data source versus
-        every another data source (which may be the same).
+        another data source (which may be the same).
       description: >-
-        Gets the summary statisitcs for a primary data source versus another
+        Gets the cross-summary statisitcs for a primary data source versus another
         data source (which may be the same).  If either of the specified data
         source codes is not configured then a 404 Not Found response is returned.
         *NOTE*:  Data mart statistics may be slightly delayed from the entity
@@ -3277,7 +3277,196 @@ paths:
                 $ref: '#/components/schemas/SzCrossSourceSummaryResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the cross-summary statistics for matches for entities having at
+        least one record from a primary data source and at least one **other**
+        record from another data source (which may be the same data source), 
+        optionally for one or more combination of match key and principle.
+      description: >-
+        Gets the cross-summary statisitcs for matches between a primary data
+        source and another data source (which may be the same), optionally for
+        one or more combination of match key and principle.  If either of
+        the specified data source codes is not configured then a 404 Not Found
+        response is returned.  *NOTE*:  Data mart statistics may be slightly
+        delayed from the entity repository.
+      operationId: getCrossSourceMatchStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzMatchCountsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzMatchCountsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzMatchCountsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the cross-summary statistics for ambiguous-match relations between entities
+        having at least one record from one data source and entities having at least
+        one record from another data source (which may be the same), optionally for
+        one or more combination of match key and principle.
+      description: >-
+        Gets the cross-summary statisitcs for ambiguous-match relations between entities
+        having at least one record from a primary data source and entities having
+        at least one record another data source (which may be the same), optionally
+        for one or more combination of match key and principle.  If either of the
+        specified data source codes is not configured then a 404 Not Found response
+        is returned.  *NOTE*:  Data mart statistics may be slightly delayed from
+        the entity repository.
+      operationId: getCrossSourceAmbiguousMatchStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the cross-summary statistics for possible-match relations between entities
+        having at least one record from one data source and entities having at least
+        one record from another data source (which may be the same), optionally for
+        one or more combination of match key and principle.
+      description: >-
+        Gets the cross-summary statisitcs for possible-match relations between entities
+        having at least one record from a primary data source and entities having
+        at least one record another data source (which may be the same), optionally
+        for one or more combination of match key and principle.  If either of the
+        specified data source codes is not configured then a 404 Not Found response
+        is returned.  *NOTE*:  Data mart statistics may be slightly delayed from
+        the entity repository.
+      operationId: getCrossSourcePossibleMatchStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the cross-summary statistics for possible relations between entities
+        having at least one record from one data source and entities having at least
+        one record from another data source (which may be the same), optionally for
+        one or more combination of match key and principle.
+      description: >-
+        Gets the cross-summary statisitcs for possible relations between entities
+        having at least one record from a primary data source and entities having
+        at least one record another data source (which may be the same), optionally
+        for one or more combination of match key and principle.  If either of the
+        specified data source codes is not configured then a 404 Not Found response
+        is returned.  *NOTE*:  Data mart statistics may be slightly delayed from
+        the entity repository.
+      operationId: getCrossSourcePossibleRelationStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations:
+    get:
+      tags:
+        - Statistics
+      summary: >-
+        Gets the cross-summary statistics for disclosed relations between entities
+        having at least one record from one data source and entities having at least
+        one record from another data source (which may be the same), optionally for
+        one or more combination of match key and principle.
+      description: >-
+        Gets the cross-summary statisitcs for disclosed relations between entities
+        having at least one record from a primary data source and entities having
+        at least one record another data source (which may be the same), optionally
+        for one or more combination of match key and principle.  If either of the
+        specified data source codes is not configured then a 404 Not Found response
+        is returned.  *NOTE*:  Data mart statistics may be slightly delayed from
+        the entity repository.
+      operationId: getCrossSourceDisclosedRelationStatistics
+      parameters:
+        - $ref: '#/components/parameters/dataSourceCodePathParam'
+        - $ref: '#/components/parameters/vsDataSourceCodePathParam'
+        - $ref: '#/components/parameters/matchKeyWildcardQueryParam'
+        - $ref: '#/components/parameters/principleWildcardQueryParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+            default:
+              schema:
+                $ref: '#/components/schemas/SzRelationCountsResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /statistics/summary/data-sources/{dataSourceCode}/matches/entities:
     get:
       tags:
         - Statistics
@@ -3346,7 +3535,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/ambiguously-matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/ambiguous-matches/entities:
     get:
       tags:
         - Statistics
@@ -3416,7 +3605,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/ambiguously-matched/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/ambiguous-matches/relations:
     get:
       tags:
         - Statistics
@@ -3486,7 +3675,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/possibly-matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/possible-matches/entities:
     get:
       tags:
         - Statistics
@@ -3556,7 +3745,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/possibly-matched/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/possible-matches/relations:
     get:
       tags:
         - Statistics
@@ -3626,7 +3815,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/possibly-related/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/possible-relations/entities:
     get:
       tags:
         - Statistics
@@ -3695,7 +3884,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/possibly-related/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/possible-relations/relations:
     get:
       tags:
         - Statistics
@@ -3764,7 +3953,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/disclosed-related/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/disclosed-relations/entities:
     get:
       tags:
         - Statistics
@@ -3833,7 +4022,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/disclosed-related/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/disclosed-relations/relations:
     get:
       tags:
         - Statistics
@@ -3902,7 +4091,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches/entities:
     get:
       tags:
         - Statistics
@@ -3974,7 +4163,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguously-matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/entities:
     get:
       tags:
         - Statistics
@@ -4046,7 +4235,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguously-matched/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/relations:
     get:
       tags:
         - Statistics
@@ -4118,7 +4307,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-matched/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/entities:
     get:
       tags:
         - Statistics
@@ -4190,7 +4379,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-matched/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/relations:
     get:
       tags:
         - Statistics
@@ -4262,7 +4451,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-related/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/entities:
     get:
       tags:
         - Statistics
@@ -4333,7 +4522,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-related/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/relations:
     get:
       tags:
         - Statistics
@@ -4405,7 +4594,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-related/entities:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/entities:
     get:
       tags:
         - Statistics
@@ -4476,7 +4665,7 @@ paths:
                 $ref: '#/components/schemas/SzErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
-  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-related/relations:
+  /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/relations:
     get:
       tags:
         - Statistics
@@ -6798,7 +6987,7 @@ components:
             the relationship and the second entity ID value identifies the
             least value of those entity ID's related to the first entity.
             **NOTE:** This field is absent or `null` if there are no results.
-         type: string
+          type: string
           nullable: true
         pageMaximumValue:
           description: >-
@@ -7083,6 +7272,18 @@ components:
         the primary data source to at least one record from the "versus" data source.
       type: object
       properties:
+        matchKey:
+          description: >-
+            The optional match key associated with the statistics.  This may be
+            `null` or absent if the statistics are not associated with a match key.
+          type: string
+          nullable: true
+        principle:
+          description: >-
+            The optional principle associated with the statistics.  This may be
+            `null` or absent if the statistics are not associated with a principle.
+          type: string
+          nullable: true
         entityCount:
           description: >-
             The number of entities having at least one record from the primary data
@@ -7103,6 +7304,18 @@ components:
         entities having at least one record from the "versus" data source.
       type: object
       properties:
+        matchKey:
+          description: >-
+            The optional match key associated with the statistics.  This may be
+            `null` or absent if the statistics are not associated with a match key.
+          type: string
+          nullable: true
+        principle:
+          description: >-
+            The optional principle associated with the statistics.  This may be
+            `null` or absent if the statistics are not associated with a principle.
+          type: string
+          nullable: true
         entityCount:
           description: >-
             The number of entities having at least one record from the primary data
@@ -7124,53 +7337,6 @@ components:
             having at least one record from the "versus" data source.
           type: integer
           format: int64
-    SzSummaryCounts:
-      description: >-
-        Describes the summary statistics between two data sources optionally
-        associated with a principle and match key.
-      type: object
-      properties:
-        matchKey:
-          description: >-
-            The optional match key associated with the statistics.  This may be
-            `null` or absent if the statistics are not associated with a match key.
-          type: string
-          nullable: true
-        principle:
-          description: >-
-            The optional principle associated with the statistics.  This may be
-            `null` or absent if the statistics are not associated with a principle.
-          type: string
-          nullable: true
-        matches:
-          description: >-
-            The entity and record counts associated with matches from records of the
-            primary data source to at least one record of the "versus" data source.
-          $ref: '#/components/schemas/SzMatchCounts'
-        ambiguousMatches:
-          description: >-
-            The entity, record and relationship counts associated with ambiguous matches
-            from entities having at least one record from the primary data source to 
-            entities having at least at least one record from the "versus" data source.
-          $ref: '#/components/schemas/SzRelationCounts'
-        possibleMatches:
-          description: >-
-            The entity, record and relationship counts associated with possible matches 
-            from entities having at least one record from the primary data source to
-            entities having at least one record from the "versus" data source.
-          $ref: '#/components/schemas/SzRelationCounts'
-        possibleRelations:
-          description: >-
-            The entity, record and relationship counts associated with possible relations
-            from entities having at least one record from the primary data source to
-            entities having at least one record from the "versus" data source.
-          $ref: '#/components/schemas/SzRelationCounts'
-        disclosedRelations:
-          description: >-
-            The entity, record and relationship counts associated with disclosed relations
-            from entities having at least one record from the primary data source to
-            entities having at least one record from the "versus" data source.
-          $ref: '#/components/schemas/SzRelationCounts'          
     SzCrossSourceSummary:
       description: >-
         Describes the cross-source statistics between two data sources.
@@ -7178,7 +7344,11 @@ components:
       required:
         - dataSource
         - versusDataSource
-        - summaryCounts
+        - matches
+        - ambiguousMatches
+        - possibleMatches
+        - possibleRelations
+        - disclosedRelations
       properties:
         dataSource:
           description: >-
@@ -7188,15 +7358,137 @@ components:
           description: >-
             The versus data source in the cross comparison.
           type: string
-        summaryCounts:
+        matches:
           description: >-
-            The array of summary statistic counts for each combination of match key
-            and principle that were requested.  If all were requested, this includes
-            the cases where either or both of the match key and principle are absent
-            or `null` indicating tracking across all match keys and/or principles.
+            The array of `SzMatchCounts` describing the entity and record counts 
+            associated with matches from records of the primary data source to at 
+            least one record of the "versus" data source for each combination of 
+            match key and principle that were requested.  If all were requested,
+            this includes the cases where either or both of the match key and
+            principle are absent or `null` indicating tracking across all match
+            keys and/or principles.
           type: array
           items:
-            $ref: '#/components/schemas/SzSummaryCounts'
+            $ref: '#/components/schemas/SzMatchCounts'
+        ambiguousMatches:
+          description: >-
+            The array of `SzRelationCounts` describing the entity, record and
+            relationship counts associated with ambiguous matches from entities
+            having at least one record from the primary data source to entities
+            having at least at least one record from the "versus" data source
+            for each combination of match key and principle that were requested.
+            If all were requested, this includes the cases where either or both
+            of the match key and principle are absent or `null` indicating
+            tracking across all match keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRelationCounts'
+        possibleMatches:
+          description: >-
+            The array of `SzRelationCounts` describing the entity, record and
+            relationship counts associated with possible matches from entities
+            having at least one record from the primary data source to entities
+            having at least one record from the "versus" data source for each
+            combination of match key and principle that were requested.  If all
+            were requested, this includes the cases where either or both of the
+            match key and principle are absent or `null` indicating tracking
+            across all match keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRelationCounts'
+        possibleRelations:
+          description: >-
+            The array of `SzRelationCounts` describing the entity, record and
+            relationship counts associated with possible relations from entities
+            having at least one record from the primary data source to entities
+            having at least one record from the "versus" data source for each
+            combination of match key and principle that were requested.  If all
+            were requested, this includes the cases where either or both of the
+            match key and principle are absent or `null` indicating tracking
+            across all match keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRelationCounts'
+        disclosedRelations:
+          description: >-
+            The array of `SzRelationCounts` describing the entity, record and
+            relationship counts associated with disclosed relations from entities
+            having at least one record from the primary data source to entities
+            having at least one record from the "versus" data source for each
+            combination of match key and principle that were requested.  If all
+            were requested, this includes the cases where either or both of the
+            match key and principle are absent or `null` indicating tracking
+            across all match keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRelationCounts'          
+    SzMatchCountsResponseData:
+      description: >-
+        Describes the cross-summary statistics for matches between two data sources
+        for each requested match key and principle combination.
+      type: object
+      required:
+        - dataSource
+        - versusDataSource
+        - counts
+      properties:
+        dataSource:
+          description: >-
+            The primary data source in the cross comparison.
+          type: string
+        versusDataSource:
+          description: >-
+            The versus data source in the cross comparison.
+          type: string
+        counts:
+          description: >-
+            The array of `SzMatchCounts` describing the entity and record counts 
+            associated with matches from records of the primary data source to at 
+            least one record of the "versus" data source for each combination of 
+            match key and principle that were requested.  If all were requested,
+            this includes the cases where either or both of the match key and
+            principle are absent or `null` indicating tracking across all match
+            keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzMatchCounts'
+    SzRelationCountsResponseData:
+      description: >-
+        Describes the cross-source statistics between two data sources.
+      type: object
+      required:
+        - dataSource
+        - versusDataSource
+        - relationType
+        - counts
+      properties:
+        dataSource:
+          description: >-
+            The primary data source in the cross comparison.
+          type: string
+        versusDataSource:
+          description: >-
+            The versus data source in the cross comparison.
+          type: string
+        relationType:
+          description: >-
+            The `SzRelationType` describing the type of relationship match for
+            the returned statistics.
+          $ref: '#/components/schemas/SzRelationType'
+        counts:
+          description: >-
+            The array of `SzRelationCounts` describing the entity, record and
+            relationship counts associated with the relationships of the 
+            associated `relationType` from entities having at least one record
+            from the primary data source to entities having at least at least
+            one record from the "versus" data source for each combination of
+            match key and principle that were requested.  If all were requested,
+            this includes the cases where either or both of the match key and
+            principle are absent or `null` indicating tracking across all match
+            keys and/or principles.
+          type: array
+          items:
+            $ref: '#/components/schemas/SzRelationCounts'
     SzSourceSummary:
       description: >-
         Describes the source summary and all cross-summaries with that data source.
@@ -7271,7 +7563,7 @@ components:
     SzCrossSourceSummaryResponse:
       description: >-
         Extends the BaseResponse to add the fields for statistics representing
-        summary statistics between two specific data sources.
+        cross-summary statistics between two specific data sources.
       allOf:
         - $ref: '#/components/schemas/SzBaseResponse'
         - type: object
@@ -7280,6 +7572,33 @@ components:
               description: >-
                 The data field is the `SzCrossSourceSummary` containing the statistics.
               $ref: '#/components/schemas/SzCrossSourceSummary'
+    SzMatchCountsResponse:
+      description: >-
+        Extends the `BaseResponse` to add the fields for statistics representing
+        cross-summary statistics on matches between two specific data sources.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzMatchCountsResponseData` containing the
+                statistics.
+              $ref: '#/components/schemas/SzMatchCountsResponseData'
+    SzRelationCountsResponse:
+      description: >-
+        Extends the `BaseResponse` to add the fields for statistics representing
+        cross-summary statistics on relationships of a specific type between two
+        specific data sources.
+      allOf:
+        - $ref: '#/components/schemas/SzBaseResponse'
+        - type: object
+          properties:
+            data:
+              description: >-
+                The data field is the `SzRelationCountsResponseData` containing the
+                statistics.
+              $ref: '#/components/schemas/SzRelationCountsResponseData'
     SzRecord:
       description: >-
         Describes a record that has been synced to the datamart.
@@ -7368,8 +7687,8 @@ components:
           $ref: '#/components/schemas/SzEntity'
         matchType:
           description: >-
-            The `SzMatchType` describing the type of the relationship.
-          $ref: '#/components/schemas/SzMatchType'
+            The `SzRelationType` describing the type of the relationship.
+          $ref: '#/components/schemas/SzRelationType'
         matchKey:
           description: >-
             The match key describing what features matched between
@@ -8341,7 +8660,7 @@ components:
         - POSSIBLE_MATCH
         - POSSIBLE_RELATION
         - DISCLOSED_RELATION
-    SzMatchType:
+    SzRelationType:
       description: >-
         Similar to `SzRelationshipType` but this enumeration is used with the 
         statistics API provided by the data mart replicator.
