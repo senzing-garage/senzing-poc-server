@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated Jackson dependencies to version `2.16.1`
   - Updated `junit-jupiter` to version `5.10.2`
   - Updated `icu4j` to version `74.2`
-  - qUpdated `sqs` to version `2.24.12`
+  - Updated `sqs` to version `2.24.12`
   - Updated `kafka-clients` to version `3.7.0`
   - Updated SLF4J dependencies to version `2.0.12`
   - Updated `org.glassfish/javax.annotation` to `jakarta.annotation-api` version `2.1.1`
