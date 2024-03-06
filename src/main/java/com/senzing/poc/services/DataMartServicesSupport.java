@@ -25,7 +25,7 @@ import com.senzing.poc.model.SzRelationsPage;
 import com.senzing.poc.model.SzRelation;
 import com.senzing.poc.model.SzEntity;
 import com.senzing.poc.model.SzRecord;
-import com.senzing.poc.model.SzMatchType;
+import com.senzing.poc.model.SzRelationType;
 import com.senzing.datamart.SzReplicationProvider;
 import com.senzing.sql.ConnectionProvider;
 import com.senzing.sql.DatabaseType;
@@ -778,7 +778,7 @@ public interface DataMartServicesSupport extends ServicesSupport {
             while (rs.next()) {
                 long        relEntityId     = rs.getLong(1);
                 long        relRelatedId    = rs.getLong(2);
-                String      matchTypeText   = getString(rs, 3);
+                String      relTypeText     = getString(rs, 3);
                 String      relMatchKey     = getString(rs, 4);
                 String      relPrinciple    = getString(rs, 5);
 
@@ -791,8 +791,8 @@ public interface DataMartServicesSupport extends ServicesSupport {
                 String      matchKey        = getString(rs, 12);
                 String      principle       = getString(rs, 13);
 
-                SzMatchType matchType = (matchTypeText == null) ? null
-                    : SzMatchType.valueOf(matchTypeText);
+                SzRelationType relationType = (relTypeText == null) ? null
+                    : SzRelationType.valueOf(relTypeText);
 
                 // create the record object
                 SzRecord record = null;
@@ -848,7 +848,7 @@ public interface DataMartServicesSupport extends ServicesSupport {
                     relation = SzRelation.FACTORY.create();
                     relation.setEntity(entity);
                     relation.setRelatedEntity(related);
-                    relation.setMatchType(matchType);
+                    relation.setRelationType(relationType);
                     relation.setMatchKey(relMatchKey);
                     relation.setPrinciple(relPrinciple);
                 }

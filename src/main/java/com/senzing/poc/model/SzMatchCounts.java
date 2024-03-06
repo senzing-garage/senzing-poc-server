@@ -1,5 +1,8 @@
 package com.senzing.poc.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
@@ -11,6 +14,30 @@ import com.senzing.poc.model.impl.SzMatchCountsImpl;
  * "versus" data source.
  */
 public interface SzMatchCounts {
+    /**
+     * Gets the optional match key associated with the statistics. This may 
+     * be <code>null</code> or absent if the statistics are not
+     * associated with a match key.
+     * 
+     * @return The optional match key associated with the statistics, or
+     *         <code>null</code> or absent if the statistics are not
+     *         associated with a match key.
+     */
+    @JsonInclude(NON_NULL)
+    String getMatchKey();
+
+    /**
+     * Gets the optional principle associated with the statistics. This may 
+     * be <code>null</code> or absent if the statistics are not
+     * associated with a principle.
+     * 
+     * @return The optional principle associated with the statistics, or
+     *         <code>null</code> or absent if the statistics are not
+     *         associated with a principle.
+     */
+    @JsonInclude(NON_NULL)
+    String getPrinciple();
+
     /**
      * Gets the number of entities having at least one record from the
      * primary data source matching to at least one record from the
@@ -65,7 +92,8 @@ public interface SzMatchCounts {
      */
     interface Provider extends ModelProvider<SzMatchCounts> {
         /**
-         * Creates a new instance of {@link SzMatchCounts}.
+         * Creates a new instance of {@link SzMatchCounts} with no 
+         * associated match key or principle.
          *
          * @return The new instance of {@link SzMatchCounts}
          */
@@ -74,12 +102,16 @@ public interface SzMatchCounts {
         /**
          * Creates an instance with the specified parameters.
          * 
-         * @param entityCount The number of entities associated with the statistic.
-         * @param recordCount The number of records associated with the statistic.
+         * @param matchKey The optionally associated match key, or 
+         *                 <code>null</code> if no specific match key
+         *                 is associated.
+         * @param principle The optionally associated principle, or
+         *                  <code>null</code> if no specific principle
+         *                  is associated.
          * 
          * @return The newly created {@link SzMatchCounts} instance.
          */
-        SzMatchCounts create(long entityCount, long recordCount);
+        SzMatchCounts create(String matchKey, String principle);
     }
 
     /**
@@ -102,8 +134,8 @@ public interface SzMatchCounts {
         }
 
         @Override
-        public SzMatchCounts create(long entityCount, long recordCount) {
-            return new SzMatchCountsImpl(entityCount, recordCount);
+        public SzMatchCounts create(String matchKey, String principle) {
+            return new SzMatchCountsImpl(matchKey, principle);
         }
     }
 
@@ -142,14 +174,18 @@ public interface SzMatchCounts {
         /**
          * Creates an instance with the specified parameters.
          * 
-         * @param entityCount The number of entities associated with the statistic.
-         * @param recordCount The number of records associated with the statistic.
+         * @param matchKey The optionally associated match key, or 
+         *                 <code>null</code> if no specific match key
+         *                 is associated.
+         * @param principle The optionally associated principle, or
+         *                  <code>null</code> if no specific principle
+         *                  is associated.
          * 
          * @return The newly created {@link SzMatchCounts} instance.
          */
-        public SzMatchCounts create(long entityCount, long recordCount)
+        public SzMatchCounts create(String matchKey, String principle)
         {
-            return this.getProvider().create(entityCount, recordCount);
+            return this.getProvider().create(matchKey, principle);
         }
     }
 

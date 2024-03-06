@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import com.senzing.poc.model.SzBoundType;
 import com.senzing.poc.model.SzEntitiesPage;
 import com.senzing.poc.model.SzEntitiesPageResponse;
+import com.senzing.poc.model.SzLoadedStats;
 import com.senzing.poc.model.SzRelationsPage;
 import com.senzing.poc.model.SzRelationsPageResponse;
 import com.senzing.poc.model.SzCrossSourceSummary;
@@ -24,8 +26,15 @@ import com.senzing.poc.model.SzCrossSourceSummaryResponse;
 import com.senzing.poc.model.SzSourceSummary;
 import com.senzing.poc.model.SzSourceSummaryResponse;
 import com.senzing.poc.model.SzSummaryStats;
-import com.senzing.poc.model.SzSummaryCounts;
 import com.senzing.poc.model.SzSummaryStatsResponse;
+import com.senzing.poc.model.SzMatchCounts;
+import com.senzing.poc.model.SzRelationCounts;
+import com.senzing.poc.model.SzRelationType;
+import com.senzing.poc.model.SzMatchCountsResponseData;
+import com.senzing.poc.model.SzRelation;
+import com.senzing.poc.model.SzRelationCountsResponseData;
+import com.senzing.poc.model.SzMatchCountsResponse;
+import com.senzing.poc.model.SzRelationCountsResponse;
 import com.senzing.poc.server.SzPocProvider;
 import com.senzing.util.Timers;
 import com.senzing.api.model.SzHttpMethod;
@@ -39,6 +48,7 @@ import static javax.ws.rs.core.MediaType.*;
 import static com.senzing.api.model.SzHttpMethod.GET;
 import static com.senzing.datamart.model.SzReportStatistic.*;
 import static com.senzing.datamart.model.SzReportCode.*;
+import static com.senzing.poc.model.SzRelationType.*;
 
 /**
  * Count Statistics REST services.
@@ -410,6 +420,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
         result.addCrossSourceSummary(this.getCrossSourceSummary(
           dataSource,
           vsDataSource,
+          null,
           matchKey,
           principle,
           httpMethod,
@@ -469,6 +480,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
         SzCrossSourceSummary summary = this.getCrossSourceSummary(
           dataSourceCode,
           vsDataSourceCode,
+          null,
           matchKey,
           principle,
           GET, 
@@ -480,6 +492,354 @@ public class SummaryStatsServices implements DataMartServicesSupport {
           this.newMeta(GET, 200, timers),
           this.newLinks(uriInfo),
           summary);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
+    }
+  }
+
+  /**
+   * Gets the cross-summary statistics for matches for entities having at
+   * least one record from a primary data source and at least one <b>other</b>
+   * record from another data source (which may be the same data source), 
+   * optionally for one or more combination of match key and principle.
+   *
+   * @param dataSourceCode The data source code identifying the primary data
+   *                       source for which the cross summary statistics are
+   *                       being requested.
+   * @param vsDataSourceCode The data source code identifying the "versus" data
+   *                         source for which the cross summary statistics are 
+   *                         being requested.
+   * @param matchKey The optional match key for retrieving statistics
+   *                 specific to a match key, or asterisk 
+   *                 (<code>"*"</code>) for all match keys, or 
+   *                 <code>null</code> for only retrieving statistics
+   *                 that are not specific to a match key.
+   * @param principle The optional principle for retrieving statistics
+   *                  specific to a principle, or asterisk 
+   *                  (<code>"*"</code>) for all principles, or 
+   *                  <code>null</code> for only retrieving statistics
+   *                  that are not specific to a principle.
+   * @param uriInfo The {@link UriInfo} for the request.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches")
+  public SzMatchCountsResponse getCrossSourceMatchSummary(
+    @PathParam("dataSourceCode")    String  dataSourceCode,
+    @PathParam("vsDataSourceCode")  String  vsDataSourceCode,
+    @QueryParam("matchKey")         String  matchKey,
+    @QueryParam("principle")        String  principle,
+    @Context                        UriInfo uriInfo)
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+    try {
+        SzCrossSourceSummary summary = this.getCrossSourceSummary(
+          dataSourceCode,
+          vsDataSourceCode,
+          MATCHED_COUNT,
+          matchKey,
+          principle,
+          GET, 
+          uriInfo, 
+          timers, 
+          provider);
+
+        SzMatchCountsResponseData responseData 
+          = SzMatchCountsResponseData.FACTORY.create(dataSourceCode, vsDataSourceCode);
+
+        responseData.setCounts(summary.getMatches());
+
+        return SzMatchCountsResponse.FACTORY.create(this.newMeta(GET, 200, timers),
+                                                    this.newLinks(uriInfo),
+                                                    responseData);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
+    }
+  }
+
+  /**
+   * Gets the cross-summary statistics for ambiguous-match relations between 
+   * entities having at least one record from one data source and entities
+   * having at least one record from another data source (which may be the
+   * same), optionally for one or more combination of match key and principle.
+   *
+   * @param dataSourceCode The data source code identifying the primary data
+   *                       source for which the cross summary statistics are
+   *                       being requested.
+   * @param vsDataSourceCode The data source code identifying the "versus" data
+   *                         source for which the cross summary statistics are 
+   *                         being requested.
+   * @param matchKey The optional match key for retrieving statistics
+   *                 specific to a match key, or asterisk 
+   *                 (<code>"*"</code>) for all match keys, or 
+   *                 <code>null</code> for only retrieving statistics
+   *                 that are not specific to a match key.
+   * @param principle The optional principle for retrieving statistics
+   *                  specific to a principle, or asterisk 
+   *                  (<code>"*"</code>) for all principles, or 
+   *                  <code>null</code> for only retrieving statistics
+   *                  that are not specific to a principle.
+   * @param uriInfo The {@link UriInfo} for the request.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches")
+  public SzRelationCountsResponse getCrossSourceAmbiguousMatchSummary(
+    @PathParam("dataSourceCode")    String  dataSourceCode,
+    @PathParam("vsDataSourceCode")  String  vsDataSourceCode,
+    @QueryParam("matchKey")         String  matchKey,
+    @QueryParam("principle")        String  principle,
+    @Context                        UriInfo uriInfo)
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+    try {
+        SzCrossSourceSummary summary = this.getCrossSourceSummary(
+          dataSourceCode,
+          vsDataSourceCode,
+          AMBIGUOUS_MATCH_COUNT,
+          matchKey,
+          principle,
+          GET, 
+          uriInfo, 
+          timers, 
+          provider);
+
+        SzRelationCountsResponseData responseData 
+          = SzRelationCountsResponseData.FACTORY.create(
+            dataSourceCode, vsDataSourceCode, AMBIGUOUS_MATCH);
+
+        responseData.setCounts(summary.getAmbiguousMatches());
+
+        return SzRelationCountsResponse.FACTORY.create(
+          this.newMeta(GET, 200, timers),
+          this.newLinks(uriInfo),
+          responseData);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
+    }
+  }
+
+  /**
+   * Gets the cross-summary statistics for possible-match relations between 
+   * entities having at least one record from one data source and entities
+   * having at least one record from another data source (which may be the
+   * same), optionally for one or more combination of match key and principle.
+   *
+   * @param dataSourceCode The data source code identifying the primary data
+   *                       source for which the cross summary statistics are
+   *                       being requested.
+   * @param vsDataSourceCode The data source code identifying the "versus" data
+   *                         source for which the cross summary statistics are 
+   *                         being requested.
+   * @param matchKey The optional match key for retrieving statistics
+   *                 specific to a match key, or asterisk 
+   *                 (<code>"*"</code>) for all match keys, or 
+   *                 <code>null</code> for only retrieving statistics
+   *                 that are not specific to a match key.
+   * @param principle The optional principle for retrieving statistics
+   *                  specific to a principle, or asterisk 
+   *                  (<code>"*"</code>) for all principles, or 
+   *                  <code>null</code> for only retrieving statistics
+   *                  that are not specific to a principle.
+   * @param uriInfo The {@link UriInfo} for the request.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches")
+  public SzRelationCountsResponse getCrossSourcePossibleMatchSummary(
+    @PathParam("dataSourceCode")    String  dataSourceCode,
+    @PathParam("vsDataSourceCode")  String  vsDataSourceCode,
+    @QueryParam("matchKey")         String  matchKey,
+    @QueryParam("principle")        String  principle,
+    @Context                        UriInfo uriInfo)
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+    try {
+        SzCrossSourceSummary summary = this.getCrossSourceSummary(
+          dataSourceCode,
+          vsDataSourceCode,
+          POSSIBLE_MATCH_COUNT,
+          matchKey,
+          principle,
+          GET, 
+          uriInfo, 
+          timers, 
+          provider);
+
+        SzRelationCountsResponseData responseData 
+          = SzRelationCountsResponseData.FACTORY.create(
+            dataSourceCode, vsDataSourceCode, POSSIBLE_MATCH);
+
+        responseData.setCounts(summary.getPossibleMatches());
+
+        return SzRelationCountsResponse.FACTORY.create(
+          this.newMeta(GET, 200, timers),
+          this.newLinks(uriInfo),
+          responseData);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
+    }
+  }
+
+  /**
+   * Gets the cross-summary statistics for possible relations between 
+   * entities having at least one record from one data source and entities
+   * having at least one record from another data source (which may be the
+   * same), optionally for one or more combination of match key and principle.
+   *
+   * @param dataSourceCode The data source code identifying the primary data
+   *                       source for which the cross summary statistics are
+   *                       being requested.
+   * @param vsDataSourceCode The data source code identifying the "versus" data
+   *                         source for which the cross summary statistics are 
+   *                         being requested.
+   * @param matchKey The optional match key for retrieving statistics
+   *                 specific to a match key, or asterisk 
+   *                 (<code>"*"</code>) for all match keys, or 
+   *                 <code>null</code> for only retrieving statistics
+   *                 that are not specific to a match key.
+   * @param principle The optional principle for retrieving statistics
+   *                  specific to a principle, or asterisk 
+   *                  (<code>"*"</code>) for all principles, or 
+   *                  <code>null</code> for only retrieving statistics
+   *                  that are not specific to a principle.
+   * @param uriInfo The {@link UriInfo} for the request.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations")
+  public SzRelationCountsResponse getCrossSourcePossibleRelationSummary(
+    @PathParam("dataSourceCode")    String  dataSourceCode,
+    @PathParam("vsDataSourceCode")  String  vsDataSourceCode,
+    @QueryParam("matchKey")         String  matchKey,
+    @QueryParam("principle")        String  principle,
+    @Context                        UriInfo uriInfo)
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+    try {
+        SzCrossSourceSummary summary = this.getCrossSourceSummary(
+          dataSourceCode,
+          vsDataSourceCode,
+          POSSIBLE_RELATION_COUNT,
+          matchKey,
+          principle,
+          GET, 
+          uriInfo, 
+          timers, 
+          provider);
+
+        SzRelationCountsResponseData responseData 
+          = SzRelationCountsResponseData.FACTORY.create(
+            dataSourceCode, vsDataSourceCode, POSSIBLE_RELATION);
+
+        responseData.setCounts(summary.getPossibleRelations());
+
+        return SzRelationCountsResponse.FACTORY.create(
+          this.newMeta(GET, 200, timers),
+          this.newLinks(uriInfo),
+          responseData);
+        
+    } catch (ClientErrorException e) {
+      throw e;
+
+    } catch (WebApplicationException e) {
+      throw logOnceAndThrow(e);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw this.newInternalServerErrorException(GET, uriInfo, timers, e);
+    }
+  }
+
+  /**
+   * Gets the cross-summary statistics for disclosed relations between 
+   * entities having at least one record from one data source and entities
+   * having at least one record from another data source (which may be the
+   * same), optionally for one or more combination of match key and principle.
+   *
+   * @param dataSourceCode The data source code identifying the primary data
+   *                       source for which the cross summary statistics are
+   *                       being requested.
+   * @param vsDataSourceCode The data source code identifying the "versus" data
+   *                         source for which the cross summary statistics are 
+   *                         being requested.
+   * @param matchKey The optional match key for retrieving statistics
+   *                 specific to a match key, or asterisk 
+   *                 (<code>"*"</code>) for all match keys, or 
+   *                 <code>null</code> for only retrieving statistics
+   *                 that are not specific to a match key.
+   * @param principle The optional principle for retrieving statistics
+   *                  specific to a principle, or asterisk 
+   *                  (<code>"*"</code>) for all principles, or 
+   *                  <code>null</code> for only retrieving statistics
+   *                  that are not specific to a principle.
+   * @param uriInfo The {@link UriInfo} for the request.
+   */
+  @GET
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations")
+  public SzRelationCountsResponse getCrossSourceDisclosedRelationSummary(
+    @PathParam("dataSourceCode")    String  dataSourceCode,
+    @PathParam("vsDataSourceCode")  String  vsDataSourceCode,
+    @QueryParam("matchKey")         String  matchKey,
+    @QueryParam("principle")        String  principle,
+    @Context                        UriInfo uriInfo)
+  {
+    SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
+    Timers        timers    = this.newTimers();
+    try {
+        SzCrossSourceSummary summary = this.getCrossSourceSummary(
+          dataSourceCode,
+          vsDataSourceCode,
+          DISCLOSED_RELATION_COUNT,
+          matchKey,
+          principle,
+          GET, 
+          uriInfo, 
+          timers, 
+          provider);
+
+        SzRelationCountsResponseData responseData 
+          = SzRelationCountsResponseData.FACTORY.create(
+            dataSourceCode, vsDataSourceCode, DISCLOSED_RELATION);
+
+        responseData.setCounts(summary.getDisclosedRelations());
+
+        return SzRelationCountsResponse.FACTORY.create(
+          this.newMeta(GET, 200, timers),
+          this.newLinks(uriInfo),
+          responseData);
         
     } catch (ClientErrorException e) {
       throw e;
@@ -528,6 +888,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
   protected SzCrossSourceSummary getCrossSourceSummary(
     String            dataSource,
     String            vsDataSource,
+    SzReportStatistic requestedStatistic,
     String            requestedMatchKey,
     String            requestedPrinciple,
     SzHttpMethod      httpMethod,
@@ -556,14 +917,19 @@ public class SummaryStatsServices implements DataMartServicesSupport {
         if (requestedPrinciple.length() == 0) requestedPrinciple = null;
     }
 
+    // keep counts
+    int matchCount    = 0;
+    int ambMatchCount = 0;
+    int posMatchCount = 0;
+    int posRelCount   = 0;
+    int discRelCount  = 0;
+
     // get the connection
     Connection            conn    = null;
     PreparedStatement     ps      = null;
     ResultSet             rs      = null;
     SzCrossSourceSummary  result  = SzCrossSourceSummary.FACTORY.create(dataSource, 
                                                                         vsDataSource);
-
-    Map<String, SzSummaryCounts> summaryCountsMap = new LinkedHashMap<>();
 
     try {
       // get the connection to the data mart database
@@ -578,12 +944,19 @@ public class SummaryStatsServices implements DataMartServicesSupport {
         ps = conn.prepareStatement(
           "SELECT statistic, entity_count, record_count, relation_count "
           + "FROM sz_dm_report WHERE report=? AND data_source1 = ? "
-          + "AND data_source2 = ? ORDER BY statistic");
+          + "AND data_source2 = ? AND statistic NOT IN (?, ?) "
+          + ((requestedStatistic != null) ? "AND statistic LIKE ? " : "")
+          + "ORDER BY statistic");
 
         // bind the parameters
         ps.setString(1, reportCode);
         ps.setString(2, dataSource);
         ps.setString(3, vsDataSource);
+        ps.setString(4, ENTITY_COUNT.toString());
+        ps.setString(5, UNMATCHED_COUNT.toString());
+        if (requestedStatistic != null) {
+          ps.setString(6, requestedStatistic.toString() + "%");
+        }
 
         // execute the query
         rs = ps.executeQuery();
@@ -602,6 +975,11 @@ public class SummaryStatsServices implements DataMartServicesSupport {
           String            principle = formatter.getPrinciple();
           String            matchKey  = formatter.getMatchKey();
 
+          // check the statistic
+          if (requestedStatistic != null && requestedStatistic != statistic) {
+            continue;
+          }
+
           // filter on match key and principle
           if (!Objects.equals(principle, requestedPrinciple) 
               && !"*".equals(requestedPrinciple)) {
@@ -611,45 +989,50 @@ public class SummaryStatsServices implements DataMartServicesSupport {
             && !"*".equals(requestedMatchKey)) {
               continue;
           }
-
-          // define a key for looking up the cross summary stats
-          String countsKey = (principle == null ? "" : principle) 
-            + ":" + (matchKey == null ? "" : matchKey);
-
-          SzSummaryCounts summaryCounts = summaryCountsMap.get(countsKey);
-          if (summaryCounts == null) {
-            summaryCounts = SzSummaryCounts.FACTORY.create(matchKey, principle);
-            summaryCountsMap.put(countsKey, summaryCounts);
-          }
           
+          SzMatchCounts     matchCounts = null;
+          SzRelationCounts  relationCounts = null;
+
           switch (statistic) {
             case MATCHED_COUNT:
-              summaryCounts.getMatches().setEntityCount(entityCount);
-              summaryCounts.getMatches().setRecordCount(recordCount);
+              matchCounts = SzMatchCounts.FACTORY.create(matchKey, principle);
+              matchCounts.setEntityCount(entityCount);
+              matchCounts.setRecordCount(recordCount);
               break;
             case AMBIGUOUS_MATCH_COUNT:
-              summaryCounts.getAmbiguousMatches().setEntityCount(entityCount);
-              summaryCounts.getAmbiguousMatches().setRecordCount(recordCount);
-              summaryCounts.getAmbiguousMatches().setRelationCount(relationCount);
+            case POSSIBLE_MATCH_COUNT:
+            case POSSIBLE_RELATION_COUNT:
+            case DISCLOSED_RELATION_COUNT:
+              relationCounts = SzRelationCounts.FACTORY.create(matchKey, principle);
+              relationCounts.setEntityCount(entityCount);
+              relationCounts.setRecordCount(recordCount);
+              relationCounts.setRelationCount(relationCount);
+              break;
+            default:
+              throw new IllegalStateException(
+                "Unexpected statistic encountered.  statistic=[ " + statistic 
+                + " ], formattedStatistic=[ " + encodedStat + " ]");
+          }
+          switch (statistic) {
+            case MATCHED_COUNT:
+              matchCount++;
+              result.addMatches(matchCounts);
+              break;
+            case AMBIGUOUS_MATCH_COUNT:
+              ambMatchCount++;
+              result.addAmbiguousMatches(relationCounts);
               break;
             case POSSIBLE_MATCH_COUNT:
-              summaryCounts.getPossibleMatches().setEntityCount(entityCount);
-              summaryCounts.getPossibleMatches().setRecordCount(recordCount);
-              summaryCounts.getPossibleMatches().setRelationCount(relationCount);
+              posMatchCount++;
+              result.addPossibleMatches(relationCounts);
               break;
             case POSSIBLE_RELATION_COUNT:
-              summaryCounts.getPossibleRelations().setEntityCount(entityCount);
-              summaryCounts.getPossibleRelations().setRecordCount(recordCount);
-              summaryCounts.getPossibleRelations().setRelationCount(relationCount);
+              posRelCount++;
+              result.addPossibleRelations(relationCounts);
               break;
             case DISCLOSED_RELATION_COUNT:
-              summaryCounts.getDisclosedRelations().setEntityCount(entityCount);
-              summaryCounts.getDisclosedRelations().setRecordCount(recordCount);
-              summaryCounts.getDisclosedRelations().setRelationCount(relationCount);
-              break;
-            case ENTITY_COUNT:
-            case UNMATCHED_COUNT:
-              // ignore these stats
+              discRelCount++;
+              result.addDisclosedRelations(relationCounts);
               break;
             default:
               throw new IllegalStateException(
@@ -658,8 +1041,6 @@ public class SummaryStatsServices implements DataMartServicesSupport {
           }
         }
 
-        // set the summary counts
-        result.setSummaryCounts(summaryCountsMap.values());
 
       } finally {
         this.queriedDatabase(timers, "selectCrossSourceSummary");
@@ -668,6 +1049,33 @@ public class SummaryStatsServices implements DataMartServicesSupport {
       // release resources
       rs = close(rs);
       ps = close(ps);
+
+      // handle the zeroes
+      SzReportStatistic stat = requestedStatistic;
+      String            mkey = requestedMatchKey;
+      String            prin = requestedPrinciple;
+      if ("*".equals(mkey)) mkey = null;
+      if ("*".equals(prin)) prin = null;
+      if (matchCount == 0 && (stat == null || stat == MATCHED_COUNT))
+      {
+        result.addMatches(SzMatchCounts.FACTORY.create(mkey, prin));
+      }
+      if (ambMatchCount == 0 && (stat == null || stat == AMBIGUOUS_MATCH_COUNT))
+      {
+        result.addAmbiguousMatches(SzRelationCounts.FACTORY.create(mkey, prin));
+      }
+      if (posMatchCount == 0 && (stat == null || stat == POSSIBLE_MATCH_COUNT))
+      {
+        result.addPossibleMatches(SzRelationCounts.FACTORY.create(mkey, prin));
+      }
+      if (posRelCount == 0 && (stat == null || stat == POSSIBLE_RELATION_COUNT))
+      {
+        result.addPossibleRelations(SzRelationCounts.FACTORY.create(mkey, prin));
+      }
+      if (discRelCount == 0 && (stat == null || stat == DISCLOSED_RELATION_COUNT)) 
+      {
+        result.addDisclosedRelations(SzRelationCounts.FACTORY.create(mkey, prin));
+      }
 
       // return the result
       return result;
@@ -700,7 +1108,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/matched/entities")
+  @Path("/data-sources/{dataSourceCode}/matches/entities")
   public SzEntitiesPageResponse getMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @QueryParam("principle")                                    String      principle,
@@ -743,7 +1151,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/ambiguously-matched/entities")
+  @Path("/data-sources/{dataSourceCode}/ambiguous-matches/entities")
   public SzEntitiesPageResponse getAmbiguouslyMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @QueryParam("principle")                                    String      principle,
@@ -786,7 +1194,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/possibly-matched/entities")
+  @Path("/data-sources/{dataSourceCode}/possible-matches/entities")
   public SzEntitiesPageResponse getPossiblyMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @QueryParam("principle")                                    String      principle,
@@ -829,7 +1237,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/possibly-related/entities")
+  @Path("/data-sources/{dataSourceCode}/possible-relations/entities")
   public SzEntitiesPageResponse getPossiblyRelatedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @QueryParam("principle")                                    String      principle,
@@ -872,7 +1280,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/disclosed-related/entities")
+  @Path("/data-sources/{dataSourceCode}/disclosed-relations/entities")
   public SzEntitiesPageResponse getDisclosedRelatedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @QueryParam("principle")                                    String      principle,
@@ -915,7 +1323,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @param uriInfo The {@link UriInfo} for the request.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matched/entities")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches/entities")
   public SzEntitiesPageResponse getMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -961,7 +1369,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguously-matched/entities")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/entities")
   public SzEntitiesPageResponse getAmbiguouslyMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1007,7 +1415,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-matched/entities")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/entities")
   public SzEntitiesPageResponse getPossiblyMatchedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1051,7 +1459,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-related/entities")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/entities")
   public SzEntitiesPageResponse getPossiblyRelatedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1095,7 +1503,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-related/entities")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/entities")
   public SzEntitiesPageResponse getDisclosedRelatedEntityIds(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1227,7 +1635,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguously-matched/relations")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/relations")
   public SzRelationsPageResponse getAmbiguouslyMatchedRelations(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1273,7 +1681,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-matched/relations")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/relations")
   public SzRelationsPageResponse getPossiblyMatchedRelations(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1319,7 +1727,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possibly-related/relations")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/relations")
   public SzRelationsPageResponse getPossiblyRelatedRelations(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,
@@ -1365,7 +1773,7 @@ public class SummaryStatsServices implements DataMartServicesSupport {
    * @throws NotFoundException If the specified entity size is less than one.
    */
   @GET
-  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-related/relations")
+  @Path("/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/relations")
   public SzRelationsPageResponse getDisclosedRelatedRelations(
     @PathParam("dataSourceCode")                                String      dataSource,
     @PathParam("vsDataSourceCode")                              String      vsDataSource,

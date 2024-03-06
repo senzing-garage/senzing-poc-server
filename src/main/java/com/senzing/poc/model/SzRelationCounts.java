@@ -1,5 +1,8 @@
 package com.senzing.poc.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
@@ -9,9 +12,34 @@ import com.senzing.poc.model.impl.SzRelationCountsImpl;
  * Describes the entity, record and relationship counts for the
  * respective relation type for entities having at least one record
  * from the primary data source to entities having at least one
- * record from the "versus" data source.
+ * record from the "versus" data source.  The statistics are optionally
+ * associated with a specific match key or principle.
  */
 public interface SzRelationCounts {
+    /**
+     * Gets the optional match key associated with the statistics. This may 
+     * be <code>null</code> or absent if the statistics are not
+     * associated with a match key.
+     * 
+     * @return The optional match key associated with the statistics, or
+     *         <code>null</code> or absent if the statistics are not
+     *         associated with a match key.
+     */
+    @JsonInclude(NON_NULL)
+    String getMatchKey();
+
+    /**
+     * Gets the optional principle associated with the statistics. This may 
+     * be <code>null</code> or absent if the statistics are not
+     * associated with a principle.
+     * 
+     * @return The optional principle associated with the statistics, or
+     *         <code>null</code> or absent if the statistics are not
+     *         associated with a principle.
+     */
+    @JsonInclude(NON_NULL)
+    String getPrinciple();
+
     /**
      * The number of entities having at least one record from the 
      * primary data source related by a relationship of the respective
@@ -97,24 +125,26 @@ public interface SzRelationCounts {
      */
     interface Provider extends ModelProvider<SzRelationCounts> {
         /**
-         * Creates a new instance of {@link SzRelationCounts}.
+         * Creates a new instance of {@link SzRelationCounts} with no 
+         * associated match key or principle.
          *
-         * @return The new instance of {@link SzRelationCounts}
+         * @return The new instance of {@link SzRelationCounts}.
          */
         SzRelationCounts create();
 
         /**
          * Creates an instance with the specified parameters.
          * 
-         * @param entityCount The number of entities associated with the statistic.
-         * @param recordCount The number of records associated with the statistic.
-         * @param relationCount The number of relations asscociated with the statistic.
+         * @param matchKey The optionally associated match key, or 
+         *                 <code>null</code> if no specific match key
+         *                 is associated.
+         * @param principle The optionally associated principle, or
+         *                  <code>null</code> if no specific principle
+         *                  is associated.
          * 
-         * @return The newly created {@link SzRelationCounts} instance.
+         * @return The newly created {@link SzMatchCounts} instance.
          */
-        SzRelationCounts create(long entityCount,
-                                long recordCount,
-                                long relationCount);
+        SzRelationCounts create(String matchKey, String principle);
     }
 
     /**
@@ -137,11 +167,9 @@ public interface SzRelationCounts {
         }
 
         @Override
-        public SzRelationCounts create(long entityCount, 
-                                       long recordCount,
-                                       long relationCount) 
+        public SzRelationCounts create(String matchKey, String principle) 
         {
-            return new SzRelationCountsImpl(entityCount, recordCount, relationCount);
+            return new SzRelationCountsImpl(matchKey, principle);
         }
     }
 
@@ -180,17 +208,18 @@ public interface SzRelationCounts {
         /**
          * Creates an instance with the specified parameters.
          * 
-         * @param entityCount The number of entities associated with the statistic.
-         * @param recordCount The number of records associated with the statistic.
-         * @param relationCount The number of relations asscociated with the statistic.
+         * @param matchKey The optionally associated match key, or 
+         *                 <code>null</code> if no specific match key
+         *                 is associated.
+         * @param principle The optionally associated principle, or
+         *                  <code>null</code> if no specific principle
+         *                  is associated.
          * 
          * @return The newly created {@link SzRelationCounts} instance.
          */
-        public SzRelationCounts create(long entityCount, 
-                                       long recordCount,
-                                       long relationCount)
+        public SzRelationCounts create(String matchKey, String principle)
         {
-            return this.getProvider().create(entityCount, recordCount, relationCount);
+            return this.getProvider().create(matchKey, principle);
         }
     }
 

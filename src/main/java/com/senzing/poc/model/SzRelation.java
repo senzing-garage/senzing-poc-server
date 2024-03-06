@@ -51,23 +51,23 @@ public interface SzRelation {
     void setRelatedEntity(SzEntity related);
 
     /**
-     * Gets the {@link SzMatchType} describing the relationship type for
+     * Gets the {@link SzRelationType} describing the relationship type for
      * the relation.
      * 
-     * @return The {@link SzMatchType} describing the relationship type for
+     * @return The {@link SzRelationType} describing the relationship type for
      *         the relation.
      */
     @JsonInclude(NON_NULL)
-    SzMatchType getMatchType();
+    SzRelationType getRelationType();
 
     /**
-     * Sets the {@link SzMatchType} describing the relationship type for the
+     * Sets the {@link SzRelationType} describing the relationship type for the
      * relation.
      * 
-     * @param matchType The {@link SzMatchType} describing the relationship type for
-     *                  the relation.
+     * @param relationType The {@link SzRelationType} describing the relationship
+     *                     type for the relation.
      */
-    void setMatchType(SzMatchType matchType);
+    void setRelationType(SzRelationType relationType);
 
     /**
      * Gets the match key for the relation.

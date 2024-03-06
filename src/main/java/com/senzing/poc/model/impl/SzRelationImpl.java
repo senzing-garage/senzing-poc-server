@@ -3,7 +3,7 @@ package com.senzing.poc.model.impl;
 import com.senzing.poc.model.SzEntity;
 import com.senzing.poc.model.SzRelation;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.senzing.poc.model.SzMatchType;
+import com.senzing.poc.model.SzRelationType;
 
 /**
  * Provides a basic implementation of {@link SzRelation}.
@@ -21,9 +21,9 @@ public class SzRelationImpl implements SzRelation {
     private SzEntity relatedEntity = null;
 
     /**
-     * The {@link SzMatchType} describing the relationship type for the relation.
+     * The {@link SzRelationType} describing the relationship type for the relation.
      */
-    private SzMatchType matchType = null;
+    private SzRelationType relationType = null;
 
     /**
      * The match key for the relation.
@@ -41,7 +41,7 @@ public class SzRelationImpl implements SzRelation {
     public SzRelationImpl() {
         this.entity         = null;
         this.relatedEntity  = null;
-        this.matchType      = null;
+        this.relationType   = null;
         this.matchKey       = null;
         this.principle      = null;
     }
@@ -67,13 +67,13 @@ public class SzRelationImpl implements SzRelation {
     }
 
     @Override
-    public SzMatchType getMatchType() {
-        return this.matchType;
+    public SzRelationType getRelationType() {
+        return this.relationType;
     }
 
     @Override
-    public void setMatchType(SzMatchType matchType) {
-        this.matchType = matchType;
+    public void setRelationType(SzRelationType relationType) {
+        this.relationType = relationType;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class SzRelationImpl implements SzRelation {
     public String toString() {
         return "entity=[ " + this.getEntity() 
             + " ], relatedEntity=[ " + this.getRelatedEntity()
-            + " ], matchType=[ " + this.getMatchType()
+            + " ], relationType=[ " + this.getRelationType()
             + " ], matchKey=[ " + this.getMatchKey()
             + " ], principle=[ " + this.getPrinciple() + " ]";
     }

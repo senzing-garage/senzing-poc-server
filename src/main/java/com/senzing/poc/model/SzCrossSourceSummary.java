@@ -52,57 +52,304 @@ public interface SzCrossSourceSummary {
             throws NullPointerException;
 
     /**
-     * Gets the {@link List} of {@link SzSummaryCounts} describing the
-     * summary statistic counts for each combination of match key and
-     * principle including the cases where either or both of the match
-     * key and principle are absent or null indicating tracking across
-     * all match keys and/or principles.
-     * 
-     * @return The {@link List} of {@link SzSummaryCounts} describing
-     *         the summary statistic counts for each combination of
-     *         match key and principle.
+     * Gets the {@link List} of {@link SzMatchCounts} instances for each
+     * requested match key and principle combination that describe the
+     * entity and record counts for matches between records from the primary
+     * data source to at least one record from the "versus" data source.
+     *
+     * @return The {@link List} of {@link SzMatchCounts} instances for each
+     *         requested match key and principle combination that describe 
+     *         the entity and record counts for matches for this instance.
      */
-    List<SzSummaryCounts> getSummaryCounts();
+    List<SzMatchCounts> getMatches();
 
     /**
-     * Adds the {@link SzSummaryCounts} describing the summary statistic
-     * counts for a specific match key and principle combination, replacing
-     * any existing statistics for that match key and principle combination.
+     * Sets the {@link SzMatchCounts} instances for this instance using the 
+     * specified {@link Collection} of {@link SzMatchCounts}.  Any current
+     * {@link SzMatchCounts} are removed and replaced with the specified 
+     * instances.  If any of the {@link SzMatchCounts} instances have the 
+     * same match-key/principle pairs then the last one wins out replacing
+     * any previously added ones.
      * 
-     * @param counts The {@link SzSummaryCounts} describing the summary
-     *               statistic counts for a specific match key and principle
-     *               combination.
+     * @param matchCounts The {@link Collection} of {@link SzMatchCounts} 
+     *                    instances to set.
      */
-    void addSummaryCounts(SzSummaryCounts counts);
+    void setMatches(Collection<SzMatchCounts> matchCounts);
 
     /**
-     * Removes any statistics associated with the specified match key and
-     * principle combination (either or both of which may be <code>null</code>).
+     * Adds the specified {@link SzMatchCounts} instance to the list of
+     * {@link SzMatchCounts} instances describing the match counts for
+     * this instance, replacing any existing instance with the same match
+     * key and principle combination.
      * 
-     * @param matchKey The match key for the statistics to be removed.
-     * @param principle The principle for the statistics to be removed.
+     * @param matchCounts The {@link SzMatchCounts} instance to add.
      */
-    void removeSummaryCounts(String matchKey, String principle);
+    void addMatches(SzMatchCounts matchCounts);
 
     /**
-     * Removes all summary statistic counts from this instance.
-     */
-    void removeAllSummaryCounts();
-    
-    /**
-     * Removes any existing summary statistic counts and replaces them with
-     * the specified {@link Collection} of {@link SzSummaryCounts} instances
-     * describing the summary statistic counts for each combination of match
-     * key and principle.  <b>NOTE:</b> if the specified {@link Collection}
-     * has any duplicate pairs of match keys and principles then the one
-     * that occurs later in the {@link Collection} wins out and replaces
-     * any that occur prior to it in the {@link Collection}.
+     * Removes the {@link SzMatchCounts} describing the match statistics
+     * associated with the optionally specified match key and principle.
      * 
-     * @param counts The {@link Collection} of {@link SzSummaryCounts} 
-     *               instances describing the summary statistic counts for
-     *               each match key and principle combination.
+     * @param matchKey The match key for the {@link SzMatchCounts} to
+     *                 remove, or <code>null</code> if removing the
+     *                 statistics associated with any match key.
+     * @param principle The principle for the {@link SzMatchCounts} to
+     *                  remove, or <code>null<code> if removing the
+     *                  statistics associated with any principle.
      */
-    void setSummaryCounts(Collection<SzSummaryCounts> counts);
+    void removeMatches(String matchKey, String principle);
+
+    /**
+     * Removes all the {@link SzMatchCounts} describing all the match
+     * statistics associated with every combination of match key and principle.
+     */
+    void removeAllMatches();
+
+    /**
+     * Gets the {@link List} of {@link SzRelationCounts} instances for each
+     * requested match key and principle combination that describe the entity,
+     * record and relationship counts for ambiguous-match relationships between
+     * entities having at least one record from the primary data source and
+     * entities having at least one record from the "versus" data source.
+     *
+     * @return The {@link List} of {@link SzRelationCounts} instances for 
+     *         each requested match key and principle combination 
+     *         describing the ambiguous-match entity, record and
+     *         relationship counts for this instance.
+     */
+    List<SzRelationCounts> getAmbiguousMatches();
+
+    /**
+     * Sets the {@link SzRelationCounts} instances describing the ambiguous
+     * match relation counts for one or more match-key/principle combination
+     * using the specified {@link Collection} of {@link SzRelationCounts}.
+     * Any current {@link SzRelationCounts} are removed and replaced with
+     * the specified instances.  If any of the {@link SzRelationCounts}
+     * instances have the same match-key/principle pairs then the last one
+     * wins out replacing any previously added ones.
+     * 
+     * @param relationCounts The {@link Collection} of {@link SzRelationCounts} 
+     *                       instances to set.
+     */
+    void setAmbiguousMatches(Collection<SzRelationCounts> relationCounts);
+
+    /**
+     * Adds the specified {@link SzRelationCounts} instance to the list of
+     * {@link SzRelationCounts} instances describing the ambiguous-match
+     * relationship counts for this instance, replacing any existing instance
+     * with the same match key and principle combination.
+     * 
+     * @param relationCounts The {@link SzRelationCounts} instance to add.
+     */
+    void addAmbiguousMatches(SzRelationCounts relationCounts);
+
+    /**
+     * Removes the {@link SzRelationCounts} describing the ambiguous
+     * match statistics associated with the optionally specified 
+     * match key and principle.
+     * 
+     * @param matchKey The match key for the ambiguous match {@link
+     *                 SzRelationCounts} to remove, or <code>null</code>
+     *                 if removing the statistics associated with any 
+     *                 match key.
+     * @param principle The principle for the ambiguous match {@link 
+     *                  SzRelationCounts} to remove, or <code>null<code>
+     *                  if removing the statistics associated with any
+     *                  principle.
+     */
+    void removeAmbiguousMatches(String matchKey, String principle);
+
+    /**
+     * Removes all the {@link SzRelationCounts} describing all the
+     * ambiguous match statistics associated with every combination
+     * of match key and principle.
+     */
+    void removeAllAmbiguousMatches();
+
+    /**
+     * Gets the {@link List} of {@link SzRelationCounts} instances for each
+     * requested match key and principle combination that describe the entity,
+     * record and relationship counts for possible-match relationships between
+     * entities having at least one record from the primary data source and
+     * entities having at least one record from the "versus" data source.
+     *
+     * @return The {@link List} of {@link SzRelationCounts} instances for 
+     *         each requested match key and principle combination 
+     *         describing the possible-match entity, record and
+     *         relationship counts for this instance.
+     */
+    List<SzRelationCounts> getPossibleMatches();
+
+    /**
+     * Sets the {@link SzRelationCounts} instances describing the
+     * possible-match relation counts for one or more match-key/principle
+     * combination using the specified {@link Collection} of {@link 
+     * SzRelationCounts}.  Any current {@link SzRelationCounts} are removed
+     * and replaced with the specified instances.  If any of the {@link 
+     * SzRelationCounts} instances have the same match-key/principle pairs
+     * then the last one wins out replacing any previously added ones.
+     * 
+     * @param relationCounts The {@link Collection} of {@link SzRelationCounts} 
+     *                       instances to set.
+     */
+    void setPossibleMatches(Collection<SzRelationCounts> relationCounts);
+
+    /**
+     * Adds the specified {@link SzRelationCounts} instance to the list of
+     * {@link SzRelationCounts} instances describing the possible-match
+     * relationship counts for this instance, replacing any existing instance
+     * with the same match key and principle combination.
+     * 
+     * @param relationCounts The {@link SzRelationCounts} instance to add.
+     */
+    void addPossibleMatches(SzRelationCounts relationCounts);
+
+    /**
+     * Removes the {@link SzRelationCounts} describing the possible
+     * match statistics associated with the optionally specified 
+     * match key and principle.
+     * 
+     * @param matchKey The match key for the possible match {@link
+     *                 SzRelationCounts} to remove, or <code>null</code>
+     *                 if removing the statistics associated with any 
+     *                 match key.
+     * @param principle The principle for the possible match {@link 
+     *                  SzRelationCounts} to remove, or <code>null<code>
+     *                  if removing the statistics associated with any
+     *                  principle.
+     */
+    void removePossibleMatches(String matchKey, String principle);
+
+    /**
+     * Removes all the {@link SzRelationCounts} describing all the
+     * possible match statistics associated with every combination
+     * of match key and principle.
+     */
+    void removeAllPossibleMatches();
+
+    /**
+     * Gets the {@link List} of {@link SzRelationCounts} instances for
+     * each requested match key and principle combination that describe
+     * the entity, record and relationship counts for possible-relation
+     * relationships between entities having at least one record from
+     * the primary data source and entities having at least one record
+     * from the "versus" data source.
+     *
+     * @return The {@link List} of {@link SzRelationCounts} instances for 
+     *         each requested match key and principle combination 
+     *         describing the possible-relation entity, record and
+     *         relationship counts for this instance.
+     */
+    List<SzRelationCounts> getPossibleRelations();
+
+    /**
+     * Sets the {@link SzRelationCounts} instances describing the
+     * possible-relation counts for one or more match-key/principle
+     * combination using the specified {@link Collection} of {@link 
+     * SzRelationCounts}.  Any current {@link SzRelationCounts} are removed
+     * and replaced with the specified instances.  If any of the {@link 
+     * SzRelationCounts} instances have the same match-key/principle pairs
+     * then the last one wins out replacing any previously added ones.
+     * 
+     * @param relationCounts The {@link Collection} of {@link SzRelationCounts} 
+     *                       instances to set.
+     */
+    void setPossibleRelations(Collection<SzRelationCounts> relationCounts);
+
+    /**
+     * Adds the specified {@link SzRelationCounts} instance to the list of
+     * {@link SzRelationCounts} instances describing the possible-relation
+     * relationship counts for this instance, replacing any existing instance
+     * with the same match key and principle combination.
+     * 
+     * @param relationCounts The {@link SzRelationCounts} instance to add.
+     */
+    void addPossibleRelations(SzRelationCounts relationCounts);
+
+    /**
+     * Removes the {@link SzRelationCounts} describing the possible
+     * relation statistics associated with the optionally specified 
+     * match key and principle.
+     * 
+     * @param matchKey The match key for the possible relations {@link
+     *                 SzRelationCounts} to remove, or <code>null</code>
+     *                 if removing the statistics associated with any 
+     *                 match key.
+     * @param principle The principle for the possible relations {@link 
+     *                  SzRelationCounts} to remove, or <code>null<code>
+     *                  if removing the statistics associated with any
+     *                  principle.
+     */
+    void removePossibleRelations(String matchKey, String principle);
+
+    /**
+     * Removes all the {@link SzRelationCounts} describing all the
+     * possible relation statistics associated with every combination
+     * of match key and principle.
+     */
+    void removeAllPossibleRelations();
+
+    /**
+     * Gets the {@link List} of {@link SzRelationCounts} instances for
+     * each requested match key and principle combination that describe
+     * the entity, record and relationship counts for disclosed-relation
+     * relationships between entities having at least one record from
+     * the primary data source and entities having at least one record
+     * from the "versus" data source.
+     *
+     * @return The {@link List} of {@link SzRelationCounts} instances for 
+     *         each requested match key and principle combination 
+     *         describing the disclosed-relation entity, record and
+     *         relationship counts for this instance.
+     */
+    List<SzRelationCounts> getDisclosedRelations();
+
+    /**
+     * Sets the {@link SzRelationCounts} instances describing the
+     * disclosed-relation counts for one or more match-key/principle
+     * combination using the specified {@link Collection} of {@link 
+     * SzRelationCounts}.  Any current {@link SzRelationCounts} are removed
+     * and replaced with the specified instances.  If any of the {@link 
+     * SzRelationCounts} instances have the same match-key/principle pairs
+     * then the last one wins out replacing any previously added ones.
+     * 
+     * @param relationCounts The {@link Collection} of {@link SzRelationCounts} 
+     *                       instances to set.
+     */
+    void setDisclosedRelations(Collection<SzRelationCounts> relationCounts);
+
+    /**
+     * Adds the specified {@link SzRelationCounts} instance to the list of
+     * {@link SzRelationCounts} instances describing the dislosed-relation
+     * relationship counts for this instance, replacing any existing instance
+     * with the same match key and principle combination.
+     * 
+     * @param relationCounts The {@link SzRelationCounts} instance to add.
+     */
+    void addDisclosedRelations(SzRelationCounts relationCounts);
+
+    /**
+     * Removes the {@link SzRelationCounts} describing the disclosed
+     * relation statistics associated with the optionally specified 
+     * match key and principle.
+     * 
+     * @param matchKey The match key for the disclosed relations {@link
+     *                 SzRelationCounts} to remove, or <code>null</code>
+     *                 if removing the statistics associated with any 
+     *                 match key.
+     * @param principle The principle for the disclosed relations {@link 
+     *                  SzRelationCounts} to remove, or <code>null<code>
+     *                  if removing the statistics associated with any
+     *                  principle.
+     */
+    void removeDisclosedRelations(String matchKey, String principle);
+
+    /**
+     * Removes all the {@link SzRelationCounts} describing all the
+     * disclosed relation statistics associated with every combination
+     * of match key and principle.
+     */
+    void removeAllDisclosedRelations();
 
     /**
      * A {@link ModelProvider} for instances of {@link SzCrossSourceSummary}.

@@ -3,7 +3,7 @@ package com.senzing.poc.model;
 /**
  * The various relationship match types for the data mart.
  */
-public enum SzMatchType {
+public enum SzRelationType {
     /**
      * The relationship describes an ambiguous match.
      */

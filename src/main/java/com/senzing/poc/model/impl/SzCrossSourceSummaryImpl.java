@@ -2,12 +2,14 @@ package com.senzing.poc.model.impl;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.SortedMap;
+
 import com.senzing.poc.model.SzCrossSourceSummary;
-import com.senzing.poc.model.SzSummaryCounts;
+import com.senzing.poc.model.SzMatchCounts;
+import com.senzing.poc.model.SzRelationCounts;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -15,128 +17,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize
 public class SzCrossSourceSummaryImpl implements SzCrossSourceSummary {
-    /**
-     * Provides a key for a match key & principle pair that is tolerant
-     * of <code>null</code> match key and/or principle values in its 
-     * {@link #equals(Object)}, {@link #hashCode()} and {@link 
-     * #compareTo(SummaryCountsKey)} functions including comparison against
-     * <code>null</code> references to this class.  Any <code>null</code>
-     * value is sorted as "less-than" a value that is <b>not</b> 
-     * <code>null</code>.
-     */
-    private class SummaryCountsKey implements Comparable<SummaryCountsKey> {
-        /**
-         * The associated match key.
-         */
-        private String matchKey;
-
-        /**
-         * The associated principle.
-         */
-        private String principle;
-
-        /**
-         * Constructs with the specified match key and principle.
-         * @param matchKey The match key to associate with the new instance.
-         * @param principle The principle to associate with the new instance.
-         */
-        private SummaryCountsKey(String matchKey, String principle) {
-            this.matchKey   = matchKey;
-            this.principle  = principle;
-        }
-
-        /**
-         * Gets the associated match key.
-         * @return The associated match key.
-         */
-        public String getMatchKey() {
-            return this.matchKey;
-        }
-
-        /**
-         * Gets the associated principle.
-         * @return The associated principle.
-         */
-        public String getPrinciple() {
-            return this.principle;
-        }
-
-        /**
-         * Implemented to return <code>true</code> if and only if the specified
-         * parameter is a non-null reference to an object of the same class with
-         * an equivalent match key and principle.
-         * 
-         * @param obj The object to compare with.
-         * 
-         * @return <code>true</code> if and only if the specified parameter is a
-         *         non-null reference to an object of the same class with an
-         *         equivalent match key and principle, otherwise <code>false</code>.
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) return false;
-            if (this == obj) return true;
-            if (this.getClass() != obj.getClass()) return false;
-        
-            SummaryCountsKey smk = (SummaryCountsKey) obj;
-            return Objects.equals(this.getMatchKey(), smk.getMatchKey())
-                && Objects.equals(this.getPrinciple(), smk.getPrinciple());
-        }
-
-        /**
-         * Implemented to return a hash code based on the match key and 
-         * principle.
-         * 
-         * @return The hash code for this instance.
-         */
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.getMatchKey(), this.getPrinciple());
-        }
-
-        /**
-         * Implemented to return a negative number, zero (0) or a positive
-         * number depending on whether this instance compares less-than,
-         * equal-to, or greater than the specified parameter with sorting 
-         * first on match key and then principle with <code>null</code> 
-         * values comparing less-than values that are not <code>null</code>.
-         * 
-         * @param key The {@link SummaryCountsKey} to compare with.
-         * 
-         * @return A negative number, zero (0) or a positive number
-         *         depending on whether this instance compares less-than,
-         *         equal-to, or greater than the specified parameter.
-         */
-        @Override
-        public int compareTo(SummaryCountsKey key) {
-            if (key == null) return 1;
-            String mk1 = this.getMatchKey();
-            String mk2 = key.getMatchKey();
-            if (!Objects.equals(mk1, mk2)) {
-                if (mk1 == null) return -1;
-                if (mk2 == null) return 1;
-                return mk1.compareTo(mk2);
-            }
-            String p1 = this.getPrinciple();
-            String p2 = key.getPrinciple();
-            if (Objects.equals(p1, p2)) return 0;
-            if (p1 == null) return -1;
-            if (p2 == null) return 1;
-            return p1.compareTo(p2);
-        }
-        
-        /**
-         * Implemented to return a diagnostic {@link String} describing this
-         * instance with the principle first and then the match key, separated
-         * by a colon.
-         * 
-         * @return A diagnostic {@link String} descrbing this instance.
-         */
-        public String toString() {
-            return this.getPrinciple() + ":" + this.getMatchKey();
-        }
-    }
-
     /**
      * The primary data source in the cross comparison.
      */
@@ -148,12 +28,53 @@ public class SzCrossSourceSummaryImpl implements SzCrossSourceSummary {
     private String versusDataSource = null;
 
     /**
-     * The array of summary statistic counts for each combination of 
-     * match key and principle including the cases where either or both
-     * of the match key and principle are absent or <code>null</code>
-     * indicating tracking across all match keys and/or principles.
+     * The {@link SortedMap} of {@link SzCountsKey} keys to {@link 
+     * SzMatchCounts} values for each requested match-key/principle
+     * combination that describe the entity and record counts for
+     * matches between records from the primary data source to at
+     * least one record from the "versus" data source.
      */
-    private Map<SummaryCountsKey, SzSummaryCounts> summaryCounts;
+    private SortedMap<SzCountsKey, SzMatchCounts> matches = null;
+
+    /**
+     * The {@link SortedMap} of {@link SzCountsKey} keys to {@link 
+     * SzRelationCounts} values for each requested match-key/principle
+     * combination that describes the entity, record and relationship
+     * counts for ambiguous-match relationships between entities having
+     * at least one record from the primary data source and entities
+     * having at least one record from the "versus" data source.
+     */
+    private SortedMap<SzCountsKey, SzRelationCounts> ambiguousMatches = null;
+
+    /**
+     * The {@link SortedMap} of {@link SzCountsKey} keys to {@link 
+     * SzRelationCounts} values for each requested match-key/principle
+     * combination that describes the entity, record and relationship
+     * counts for possible-match relationships between entities having
+     * at least one record from the primary data source and entities
+     * having at least one record from the "versus" data source.
+     */
+    private SortedMap<SzCountsKey, SzRelationCounts> possibleMatches = null;
+
+    /**
+     * The {@link SortedMap} of {@link SzCountsKey} keys to {@link 
+     * SzRelationCounts} values for each requested match-key/principle
+     * combination that describes the entity, record and relationship
+     * counts for possible-relation relationships between entities having
+     * at least one record from the primary data source and entities
+     * having at least one record from the "versus" data source.
+     */
+    private SortedMap<SzCountsKey, SzRelationCounts> possibleRelations = null;
+
+    /**
+     * The {@link SortedMap} of {@link SzCountsKey} keys to {@link 
+     * SzRelationCounts} values for each requested match-key/principle
+     * combination that describes the entity, record and relationship
+     * counts for disclosed-relation relationships between entities having
+     * at least one record from the primary data source and entities
+     * having at least one record from the "versus" data source.
+     */
+    private SortedMap<SzCountsKey, SzRelationCounts> disclosedRelations = null;
 
     /**
      * Default constructor.
@@ -161,7 +82,11 @@ public class SzCrossSourceSummaryImpl implements SzCrossSourceSummary {
     public SzCrossSourceSummaryImpl() {
         this.dataSource         = null;
         this.versusDataSource   = null;
-        this.summaryCounts      = new TreeMap<>();
+        this.matches            = new TreeMap<>();
+        this.ambiguousMatches   = new TreeMap<>();
+        this.possibleMatches    = new TreeMap<>();
+        this.possibleRelations  = new TreeMap<>();
+        this.disclosedRelations = new TreeMap<>();
     }
 
     /**
@@ -173,7 +98,11 @@ public class SzCrossSourceSummaryImpl implements SzCrossSourceSummary {
     public SzCrossSourceSummaryImpl(String dataSource, String vsDataSource) {
         this.dataSource         = dataSource;
         this.versusDataSource   = vsDataSource;
-        this.summaryCounts      = new TreeMap<>();
+        this.matches            = new TreeMap<>();
+        this.ambiguousMatches   = new TreeMap<>();
+        this.possibleMatches    = new TreeMap<>();
+        this.possibleRelations  = new TreeMap<>();
+        this.disclosedRelations = new TreeMap<>();
     }
 
     @Override
@@ -197,36 +126,177 @@ public class SzCrossSourceSummaryImpl implements SzCrossSourceSummary {
     }
 
     @Override
-    public List<SzSummaryCounts> getSummaryCounts() {
-        return new ArrayList<>(this.summaryCounts.values());
+    public List<SzMatchCounts> getMatches() {
+        return new ArrayList<>(this.matches.values());
     }
 
     @Override
-    public void setSummaryCounts(Collection<SzSummaryCounts> counts) {
-        this.summaryCounts.clear();
-        if (counts != null) {
-            counts.forEach(sc -> {
-                this.addSummaryCounts(sc);
+    public void setMatches(Collection<SzMatchCounts> matchCounts) {
+        this.matches.clear();
+        if (matchCounts != null) {
+            matchCounts.forEach(counts -> {
+                SzCountsKey key = new SzCountsKey(
+                    counts.getMatchKey(), counts.getPrinciple());
+                this.matches.put(key, counts);
             });
         }
     }
 
     @Override
-    public void addSummaryCounts(SzSummaryCounts counts) {
-        if (counts == null) return;
-        SummaryCountsKey key = new SummaryCountsKey(
-            counts.getMatchKey(), counts.getPrinciple());
-        this.summaryCounts.put(key, counts);
+    public void addMatches(SzMatchCounts matchCounts) {
+        if (matchCounts == null) return;
+        SzCountsKey key = new SzCountsKey(
+            matchCounts.getMatchKey(), matchCounts.getPrinciple());
+        this.matches.put(key, matchCounts);
     }
 
     @Override
-    public void removeSummaryCounts(String matchKey, String principle) {
-        SummaryCountsKey key = new SummaryCountsKey(matchKey, principle);
-        this.summaryCounts.remove(key);
+    public void removeMatches(String matchKey, String principle) {
+        this.matches.remove(new SzCountsKey(matchKey, principle));
+    }
+    
+    @Override
+    public void removeAllMatches() {
+        this.matches.clear();
     }
 
     @Override
-    public void removeAllSummaryCounts() {
-        this.summaryCounts.clear();
+    public List<SzRelationCounts> getAmbiguousMatches() {
+        return new ArrayList<>(this.ambiguousMatches.values());
+    }
+
+    @Override
+    public void setAmbiguousMatches(Collection<SzRelationCounts> relationCounts) {
+        this.ambiguousMatches.clear();
+        if (relationCounts != null) {
+            relationCounts.forEach(counts -> {
+                SzCountsKey key = new SzCountsKey(
+                    counts.getMatchKey(), counts.getPrinciple());
+                this.ambiguousMatches.put(key, counts);
+            });
+        }
+    }
+
+    @Override
+    public void addAmbiguousMatches(SzRelationCounts relationCounts) {
+        if (relationCounts == null) return;
+        SzCountsKey key = new SzCountsKey(
+            relationCounts.getMatchKey(), relationCounts.getPrinciple());
+        this.ambiguousMatches.put(key, relationCounts);
+    }
+
+    @Override
+    public void removeAmbiguousMatches(String matchKey, String principle) {
+        this.ambiguousMatches.remove(new SzCountsKey(matchKey, principle));
+    }
+    
+    @Override
+    public void removeAllAmbiguousMatches() {
+        this.ambiguousMatches.clear();
+    }
+
+    @Override
+    public List<SzRelationCounts> getPossibleMatches() {
+        return new ArrayList<>(this.possibleMatches.values());
+    }
+
+    @Override
+    public void setPossibleMatches(Collection<SzRelationCounts> relationCounts) {
+        this.possibleMatches.clear();
+        if (relationCounts != null) {
+            relationCounts.forEach(counts -> {
+                SzCountsKey key = new SzCountsKey(
+                    counts.getMatchKey(), counts.getPrinciple());
+                this.possibleMatches.put(key, counts);
+            });
+        }
+    }
+
+    @Override
+    public void addPossibleMatches(SzRelationCounts relationCounts) {
+        if (relationCounts == null) return;
+        SzCountsKey key = new SzCountsKey(
+            relationCounts.getMatchKey(), relationCounts.getPrinciple());
+        this.possibleMatches.put(key, relationCounts);
+    }
+
+    @Override
+    public void removePossibleMatches(String matchKey, String principle) {
+        this.possibleMatches.remove(new SzCountsKey(matchKey, principle));
+    }
+    
+    @Override
+    public void removeAllPossibleMatches() {
+        this.possibleMatches.clear();
+    }
+
+    @Override
+    public List<SzRelationCounts> getPossibleRelations() {
+        return new ArrayList<>(this.possibleRelations.values());
+    }
+
+    @Override
+    public void setPossibleRelations(Collection<SzRelationCounts> relationCounts) {
+        this.possibleRelations.clear();
+        if (relationCounts != null) {
+            relationCounts.forEach(counts -> {
+                SzCountsKey key = new SzCountsKey(
+                    counts.getMatchKey(), counts.getPrinciple());
+                this.possibleRelations.put(key, counts);
+            });
+        }
+    }
+
+    @Override
+    public void addPossibleRelations(SzRelationCounts relationCounts) {
+        if (relationCounts == null) return;
+        SzCountsKey key = new SzCountsKey(
+            relationCounts.getMatchKey(), relationCounts.getPrinciple());
+        this.possibleRelations.put(key, relationCounts);
+    }
+
+    @Override
+    public void removePossibleRelations(String matchKey, String principle) {
+        this.possibleRelations.remove(new SzCountsKey(matchKey, principle));
+    }
+    
+    @Override
+    public void removeAllPossibleRelations() {
+        this.possibleRelations.clear();
+    }
+
+    @Override
+    public List<SzRelationCounts> getDisclosedRelations() {
+        return new ArrayList<>(this.disclosedRelations.values());
+    }
+
+    @Override
+    public void setDisclosedRelations(Collection<SzRelationCounts> relationCounts) {
+        this.disclosedRelations.clear();
+        if (relationCounts != null) {
+            relationCounts.forEach(counts -> {
+                SzCountsKey key = new SzCountsKey(
+                    counts.getMatchKey(), counts.getPrinciple());
+                this.disclosedRelations.put(key, counts);
+            });
+        }
+    }
+
+    @Override
+    public void addDisclosedRelations(SzRelationCounts relationCounts) {
+        if (relationCounts == null) return;
+        SzCountsKey key = new SzCountsKey(
+            relationCounts.getMatchKey(), relationCounts.getPrinciple());
+        this.disclosedRelations.put(key, relationCounts);
+    }
+
+    @Override
+    public void removeDisclosedRelations(String matchKey, String principle) {
+        this.disclosedRelations.remove(new SzCountsKey(matchKey, principle));
+    }
+
+    @Override
+    public void removeAllDisclosedRelations() {
+        this.disclosedRelations.clear();
     }
  }

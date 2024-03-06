@@ -132,11 +132,13 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   @Override
   public Long getMinimumValue() {
+    if (this.entities.size() == 0) return null;
     return this.entities.firstKey();
   }
 
   @Override
   public Long getMaximumValue() {
+    if (this.entities.size() == 0) return null;
     return this.entities.lastKey();
   }
 

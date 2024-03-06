@@ -246,7 +246,9 @@ public interface SzEntitiesPage {
   /**
    * Sets the {@link List} of {@link SzEntity} instances describing the 
    * entities in this page of results.  The entities will be sorted in
-   * ascending order of entity ID and deduplicated when added.
+   * ascending order of entity ID and deduplicated when added with 
+   * entities with duplicate entity ID's being replaced by the one that
+   * occurs last in the specified {@link Collection}. 
    * 
    * @param entityIdList The {@link List} of {@link SzEntity} instances
    *                     describing the entities in this page of results.

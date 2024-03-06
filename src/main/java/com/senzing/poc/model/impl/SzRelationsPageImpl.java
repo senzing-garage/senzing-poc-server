@@ -6,12 +6,9 @@ import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzRelationsPage;
 import com.senzing.poc.model.SzBoundType;
