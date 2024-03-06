@@ -1,11 +1,23 @@
 # senzing-poc-server
 
+If you are beginning your journey with
+[Senzing](https://senzing.com/),
+please start with
+[Senzing Quick Start guides](https://docs.senzing.com/quickstart/).
+
+You are in the
+[Senzing Garage](https://github.com/senzing-garage)
+where projects are "tinkered" on.
+Although this GitHub repository may help you understand an approach to using Senzing,
+it's not considered to be "production ready" and is not considered to be part of the Senzing product.
+Heck, it may not even be appropriate for your application of Senzing!
+
 ## Overview
 
 The Senzing POC API Server serves as a backend to the Senzing POC application.
 No guarantee is made for backwards compatibility with this code base; however,
 the code provided serves as an example for how to extend the
-[Senzing API Server](https://github.com/Senzing/senzing-api-server).
+[Senzing API Server](https://github.com/senzing-garage/senzing-api-server).
 
 The [Senzing POC API OAS specification](http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/main/senzing-poc-rest-api.yaml)
 documents the available API methods, their parameters and the response formats.
@@ -44,7 +56,7 @@ which can be built from the `senzing-api-server` sub-repository via `mvn install
     ```
 
 1. First build / install the `senzing-api-server` sub-repository using the
-   instructions from the [Senzing API Server README.md](https://github.com/Senzing/senzing-api-server)
+   instructions from the [Senzing API Server README.md](https://github.com/senzing-garage/senzing-api-server)
 
 1. Setup your environment.  The API's rely on native libraries and the
    environment must be properly setup to find those libraries:

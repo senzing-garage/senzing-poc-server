@@ -1,3 +1,5 @@
 # Default code owner
 
-* @Senzing/senzing-app-server
+* @senzing-garage/senzing-app-developers
+
+/.github/ @senzing-garage/senzing-devsecops
