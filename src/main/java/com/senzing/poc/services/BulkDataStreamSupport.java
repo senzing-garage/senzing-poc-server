@@ -129,7 +129,7 @@ public interface BulkDataStreamSupport
 
       String charset = bulkDataSet.getCharacterEncoding();
 
-      debugLog("Bulk data character encoding: " + charset);
+      logDebug("Bulk data character encoding: " + charset);
 
       String loadId = (explicitLoadId == null)
           ? formatLoadId(dataCache, fileMetaData) : explicitLoadId;
@@ -191,7 +191,7 @@ public interface BulkDataStreamSupport
             if ((!done)
                 && (resolvedDS == null || resolvedDS.trim().length() == 0))
             {
-              debugLog("Incomplete record not set: "
+              logDebug("Incomplete record not set: "
                            + JsonUtilities.toJsonText(record));
 
               bulkLoadResult.trackIncompleteRecord(resolvedDS);
@@ -216,7 +216,7 @@ public interface BulkDataStreamSupport
                 trackingList.add(trackParams);
                 recordBytes = null;
 
-                debugLog("Batching record " + batchCount
+                logDebug("Batching record " + batchCount
                       + " of " + maxBatchCount + " (max): " + recordText,
                          "Batch size is " + batchBytes.size() + " bytes of "
                              + MAXIMUM_BATCH_BYTES + " bytes (max)");
@@ -245,7 +245,7 @@ public interface BulkDataStreamSupport
                 // send the batch
                 this.sendingAsyncMessage(timers, LOAD_QUEUE_NAME);
                 try {
-                  debugLog("Sending message: " + messageBody);
+                  logDebug("Sending message: " + messageBody);
 
                   // send the info on the async queue
                   loadSink.send(message, (exception, msg) -> {
@@ -302,7 +302,7 @@ public interface BulkDataStreamSupport
                   String[] trackParams = {resolvedDS};
                   trackingList.add(trackParams);
 
-                  debugLog("Batching record " + batchCount
+                  logDebug("Batching record " + batchCount
                              + " of " + maxBatchCount + " (max): " + recordText,
                            "Batch size is " + batchBytes.size() + " bytes of "
                              + MAXIMUM_BATCH_BYTES + " bytes (max)");

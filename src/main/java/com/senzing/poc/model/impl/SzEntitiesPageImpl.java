@@ -1,12 +1,15 @@
 package com.senzing.poc.model.impl;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.List;
+import java.util.Collection;
+
 import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzEntitiesPage;
+import com.senzing.poc.model.SzEntity;
 import com.senzing.poc.model.SzBoundType;
 
 /**
@@ -27,9 +30,25 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   /**
    * The requested page size representing the maximum number of
-   * entity ID's that were requested to be returned.
+   * entity ID's that were requested to be included in the page.
    */
   private int pageSize = 0;
+
+  /**
+   * The requested sample size representing the number of entity ID's
+   * to be randmonly selected from the page of results.
+   */
+  private Integer sampleSize = null;
+
+  /**
+   * The page-minimum value that has been set.
+   */
+  private Long pageMinimumValue = null;
+
+  /**
+   * The page-maximum value that has been set.
+   */
+  private Long pageMaximumValue = null;
 
   /**
    * The total number of entities representing the set of all possible
@@ -41,19 +60,19 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
    * The number of entities in the set that exist on pages before this
    * page.
    */
-  private long beforeEntityCount = 0L;
+  private long beforePageCount = 0L;
 
   /**
    * The number of entities in the set that exist on pages after this
    * page.
    */
-  private long afterEntityCount = 0L;
+  private long afterPageCount = 0L;
 
   /**
    * The {@link Set} of {@link Long} entity ID's identifying the entities
    * on this page.
    */
-  private Set<Long> entityIds = null;
+  private SortedMap<Long, SzEntity> entities = null;
 
   /**
    * Default constructor
@@ -62,10 +81,13 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
     this.bound              = 0L;
     this.boundType          = null;
     this.pageSize           = 0;
+    this.sampleSize         = null;
+    this.pageMinimumValue   = null;
+    this.pageMaximumValue   = null;
     this.totalEntityCount   = 0L;
-    this.beforeEntityCount  = 0L;
-    this.afterEntityCount   = 0L;
-    this.entityIds          = new HashSet<>();
+    this.beforePageCount    = 0L;
+    this.afterPageCount     = 0L;
+    this.entities           = new TreeMap<>();
   }
 
   @Override
@@ -99,6 +121,54 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   }
 
   @Override
+  public Integer getSampleSize() {
+    return this.sampleSize;
+  }
+
+  @Override
+  public void setSampleSize(Integer sampleSize) {
+    this.sampleSize = sampleSize;
+  }
+
+  @Override
+  public Long getMinimumValue() {
+    if (this.entities.size() == 0) return null;
+    return this.entities.firstKey();
+  }
+
+  @Override
+  public Long getMaximumValue() {
+    if (this.entities.size() == 0) return null;
+    return this.entities.lastKey();
+  }
+
+  @Override
+  public Long getPageMinimumValue() {
+    if (this.getSampleSize() == null && this.pageMinimumValue == null) {
+      return this.getMinimumValue();
+    }
+    return this.pageMinimumValue;
+  }
+
+  @Override
+  public void setPageMinimumValue(Long minValue) {
+    this.pageMinimumValue = minValue;
+  }
+
+  @Override
+  public Long getPageMaximumValue() {
+    if (this.getSampleSize() == null && this.pageMaximumValue == null) {
+      return this.getMaximumValue();
+    }
+    return this.pageMaximumValue;
+  }
+
+  @Override
+  public void setPageMaximumValue(Long maxValue) {
+    this.pageMaximumValue = maxValue;
+  }
+
+  @Override
   public long getTotalEntityCount() {
     return this.totalEntityCount;
   }
@@ -109,49 +179,54 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   }
 
   @Override
-  public long getBeforeEntityCount() {
-    return this.beforeEntityCount;
+  public long getBeforePageCount() {
+    return this.beforePageCount;
   }
 
   @Override
-  public void setBeforeEntityCount(long entityCount) {
-    this.beforeEntityCount = entityCount;
-  }
-
-
-  @Override
-  public long getAfterEntityCount() {
-    return this.afterEntityCount;
+  public void setBeforePageCount(long entityCount) {
+    this. beforePageCount = entityCount;
   }
 
   @Override
-  public void setAfterEntityCount(long entityCount) {
-    this.afterEntityCount = entityCount;
+  public long getAfterPageCount() {
+    return this.afterPageCount;
   }
 
   @Override
-  public List<Long> getEntityIds() {
-    List<Long> ids = new ArrayList<>(this.entityIds);
-    ids.sort(null);
-    return ids;
+  public void setAfterPageCount(long entityCount) {
+    this.afterPageCount = entityCount;
   }
 
   @Override
-  public void setEntityIds(List<Long> entityIdList) {
-    this.entityIds.clear();
-    if (entityIdList != null) {
-      entityIdList.forEach( entityId -> {
-        if (entityId != null) {
-          this.entityIds.add(entityId);
+  public List<SzEntity> getEntities() {
+    return new ArrayList<>(this.entities.values());
+  }
+
+  @Override
+  public void setEntities(Collection<SzEntity> entities) {
+    this.entities.clear();
+    if (entities != null) {
+      entities.forEach( entity -> {
+        if (entity != null) {
+          this.entities.put(entity.getEntityId(), entity);
         }
       });
     }
   }
 
   @Override
-  public void addEntityId(long entityId) {
-    if (this.entityIds.contains(entityId)) return;
-    this.entityIds.add(entityId);
+  public void addEntity(SzEntity entity) {
+    this.entities.put(entity.getEntityId(), entity);
   }
 
+  @Override
+  public void removeEntity(long entityId) {
+    this.entities.remove(entityId);
+  }
+
+  @Override
+  public void removeAllEntities() {
+    this.entities.clear();
+  }
 }

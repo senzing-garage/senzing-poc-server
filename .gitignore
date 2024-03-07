@@ -72,3 +72,5 @@ target-v*
 
 # VS Code
 .vscode/
+eclipse-formatter.xml
+

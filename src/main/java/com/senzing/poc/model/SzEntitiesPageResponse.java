@@ -18,9 +18,9 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
   /**
    * Sets the data associated with this response with an {@link SzEntitiesPage}.
    *
-   * @param info The {@link SzEntitiesPage} describing the statistics.
+   * @param entitiesPage The {@link SzEntitiesPage} describing the statistics.
    */
-  void setData(SzEntitiesPage info);
+  void setData(SzEntitiesPage entitiesPage);
 
   /**
    * A {@link ModelProvider} for instances of {@link SzEntitiesPageResponse}.
@@ -43,12 +43,12 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
      *
      * @param links The links for the response.
      *
-     * @param countStats The {@link SzEntitiesPage} describing the data for this 
-     *                  instance.
+     * @param entitiesPage The {@link SzEntitiesPage} describing the data 
+     *                     for this instance.
      */
     SzEntitiesPageResponse create(SzMeta          meta,
                                   SzLinks         links,
-                                  SzEntitiesPage  countStats);
+                                  SzEntitiesPage  entitiesPage);
   }
   
   /**
@@ -73,11 +73,11 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
     }
 
     @Override
-    public SzEntitiesPageResponse create(SzMeta       meta,
-                                       SzLinks      links,
-                                       SzEntitiesPage countStats)
+    public SzEntitiesPageResponse create(SzMeta         meta,
+                                         SzLinks        links,
+                                         SzEntitiesPage entitiesPage)
     {
-      return new SzEntitiesPageResponseImpl(meta, links, countStats);
+      return new SzEntitiesPageResponseImpl(meta, links, entitiesPage);
     }
   }
 
@@ -125,15 +125,15 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
      *
      * @param links The links for the response.
      *
-     * @param CountStats The {@link SzEntitiesPage} describing the
+     * @param entitiesPage The {@link SzEntitiesPage} describing the
      *                     bulk records.
      */
     public SzEntitiesPageResponse create(
         SzMeta          meta,
         SzLinks         links,
-        SzEntitiesPage  countStats)
+        SzEntitiesPage  entitiesPage)
     {
-      return this.getProvider().create(meta, links, countStats);
+      return this.getProvider().create(meta, links, entitiesPage);
     }
   }
 

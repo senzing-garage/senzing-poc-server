@@ -1,13 +1,7 @@
 package com.senzing.poc.model.impl;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ArrayList;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzEntityRelationsCount;
-import com.senzing.poc.model.SzSourceLoadedStats;
 
 /**
  * Provides a default implementation of {@link SzEntityRelationsCount}.

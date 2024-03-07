@@ -1,7 +1,6 @@
 package com.senzing.poc.model.impl;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.senzing.api.services.SzMessageSink;
 import com.senzing.poc.model.SzQueueInfo;
 
 /**

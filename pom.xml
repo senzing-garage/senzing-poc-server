@@ -4,29 +4,29 @@
   <groupId>com.senzing</groupId>
   <artifactId>senzing-poc-server</artifactId>
   <packaging>jar</packaging>
-  <version>3.5.1</version>
+  <version>3.5.2</version>
   <name>senzing-poc-server</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>com.senzing</groupId>
-      <artifactId>senzing-api-server</artifactId>
-      <version>[3.5.9, 3.999.999]</version>
+      <artifactId>senzing-commons</artifactId>
+      <version>[3.2.0, 3.999.999]</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
-      <artifactId>senzing-commons</artifactId>
-      <version>[3.1.4, 3.999.999]</version>
+      <artifactId>senzing-api-server</artifactId>
+      <version>[3.5.10, 3.999.999]</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-listener</artifactId>
-      <version>0.5.3</version>
+      <version>0.5.5</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>data-mart-replicator</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>    
     <dependency>
      <groupId>org.xerial</groupId>
@@ -36,53 +36,53 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlets -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlets</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-rewrite</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-proxy</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-server</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-common</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-servlet</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>javax-websocket-server-impl</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-api</artifactId>
-      <version>9.4.53.v20231009</version>
+      <version>9.4.54.v20240208</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
@@ -133,27 +133,27 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.15.3</version>
+      <version>2.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.15.3</version>
+      <version>2.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.15.3</version>
+      <version>2.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jaxb-annotations</artifactId>
-      <version>2.15.3</version>
+      <version>2.16.1</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.10.1</version>
+      <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -174,7 +174,7 @@
     <dependency>
       <groupId>com.ibm.icu</groupId>
       <artifactId>icu4j</artifactId>
-      <version>74.1</version>
+      <version>74.2</version>
     </dependency>
     <dependency>
       <groupId>org.ini4j</groupId>
@@ -184,22 +184,22 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>sqs</artifactId>
-      <version>2.20.162</version>
+      <version>2.24.12</version>
     </dependency>
     <dependency>
       <groupId>com.rabbitmq</groupId>
       <artifactId>amqp-client</artifactId>
-      <version>5.18.0</version>
+      <version>5.20.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
-      <version>3.6.0</version>
+      <version>3.7.0</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-joda</artifactId>
-      <version>2.15.2</version>
+      <version>2.16.1</version>
     </dependency>
 
     <!-- add dependencies that were present in JDK 8, but optional in JDK 11 -->
@@ -226,33 +226,33 @@
 
     <!-- dependencies needed for generated java client tests -->
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.annotation</artifactId>
-      <version>3.1.1</version>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>2.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>[5.3.25,5.9999.9999)</version>
+      <version>[5.3.32,5.9999.9999)</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>[5.3.25,5.9999.9999)</version>
+      <version>[5.3.32,5.9999.9999)</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>[5.3.25,5.9999.9999)</version>
+      <version>[5.3.32,5.9999.9999)</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>2.2.15</version>
+      <version>2.2.20</version>
       <scope>test</scope>
     </dependency>
 </dependencies>
@@ -310,7 +310,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.5</version>
         <configuration>
           <jvm>${project.build.directory}/java-wrapper/bin/java-wrapper.bat</jvm>
           <systemPropertyVariables>
@@ -330,7 +330,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.12.1</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-Xlint:unchecked</arg>
+            <arg>-Xlint:deprecation</arg>
+          </compilerArgs>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -358,7 +364,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.2</version>
         <configuration>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <filters>

@@ -295,8 +295,9 @@ public class EntityRelationsBreakdownServices
     @PathParam("relationsCount")                                int         relationsCount,
     @QueryParam("bound")      @DefaultValue("0")                long        entityIdBound,
     @QueryParam("boundType")  @DefaultValue("EXCLUSIVE_LOWER")  SzBoundType boundType,
-    @QueryParam("pageSize")   @DefaultValue("100")              int         pageSize,
-    @Context UriInfo                                                        uriInfo)
+    @QueryParam("pageSize")                                     Integer     pageSize,
+    @QueryParam("sampleSize")                                   Integer     sampleSize,
+    @Context                                                    UriInfo     uriInfo)
     throws NotFoundException
   {
     SzPocProvider provider  = (SzPocProvider) this.getApiProvider();
@@ -318,7 +319,8 @@ public class EntityRelationsBreakdownServices
                                                       reportKey, 
                                                       entityIdBound, 
                                                       boundType, 
-                                                      pageSize);
+                                                      pageSize,
+                                                      sampleSize);
 
       return SzEntitiesPageResponse.FACTORY.create(
         this.newMeta(GET, 200, timers),

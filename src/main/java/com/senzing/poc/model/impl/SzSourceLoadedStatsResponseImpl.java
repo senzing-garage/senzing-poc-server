@@ -50,9 +50,9 @@ public class SzSourceLoadedStatsResponseImpl extends SzBasicResponseImpl
    * @param countStats The {@link SzSourceLoadedStats} describing the data
    *                   for this instance.
    */
-  public SzSourceLoadedStatsResponseImpl(SzMeta        meta,
-                                  SzLinks       links,
-                                  SzSourceLoadedStats  countStats)
+  public SzSourceLoadedStatsResponseImpl(SzMeta               meta,
+                                         SzLinks              links,
+                                         SzSourceLoadedStats  countStats)
   {
     super(meta, links);
     Objects.requireNonNull(countStats, "The SzSourceLoadedStats cannot be null");

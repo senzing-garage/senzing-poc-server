@@ -72,11 +72,11 @@ public interface SzLoadedStatsResponse extends SzBasicResponse {
     }
 
     @Override
-    public SzLoadedStatsResponse create(SzMeta       meta,
-                                       SzLinks      links,
-                                       SzLoadedStats LoadedStats)
+    public SzLoadedStatsResponse create(SzMeta        meta,
+                                        SzLinks       links,
+                                        SzLoadedStats loadedStats)
     {
-      return new SzLoadedStatsResponseImpl(meta, links, LoadedStats);
+      return new SzLoadedStatsResponseImpl(meta, links, loadedStats);
     }
   }
 

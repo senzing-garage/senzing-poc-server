@@ -6,6 +6,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.2] - 2024-03-06
+
+### Changed in 3.5.2
+
+- Added Data Mart Statistics service endpoints:
+  - `GET /statistics/summary`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/matches/entities`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/entities`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/ambiguous-matches/relations`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/entities`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-matches/relations`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/entities`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/possible-relations/relations`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/entities`
+  - `GET /statistics/summary/data-sources/{dataSourceCode}/vs/{vsDataSourceCode}/disclosed-relations/relations`
+  - `GET /statistics/loaded/data-sources/{dataSourceCode}/entities`
+- Added supporting classes and interfaces to `com.senzing.poc.model` package to support new endpoints
+- Added `SummaryStatsServices.java` to support new endpoints
+- Updated POC REST API Specification version to 3.5.2
+- Updated `BuildInfo.java` to reflect new specification version
+- Renamed `SzMatchType` to `SzRelationType` since it only dealt with types of relationships
+- Updated dependencies:
+  - Updated `senzing-commons` to version `3.2.0`
+  - Updated Jetty dependencies to version `9.4.54.v20240208`
+  - Updated Jackson dependencies to version `2.16.1`
+  - Updated `junit-jupiter` to version `5.10.2`
+  - Updated `icu4j` to version `74.2`
+  - Updated `sqs` to version `2.24.12`
+  - Updated `kafka-clients` to version `3.7.0`
+  - Updated SLF4J dependencies to version `2.0.12`
+  - Updated `org.glassfish/javax.annotation` to `jakarta.annotation-api` version `2.1.1`
+  - Updated Spring dependencies to version `5.3.32`
+  - Updated `maven-surefire-plugin` to version `3.2.5`
+  - Updated `maven-compiler-plugin` to version `3.12.1`
+  - Updated `maven-shade-plugin` to version `3.5.2`
+
 ## [3.5.1] - 2023-12-15
 
 ### Changed in 3.5.1

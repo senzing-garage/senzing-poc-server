@@ -19,13 +19,13 @@ public class SzLoadedStatsResponseImpl extends SzBasicResponseImpl
   /**
    * The data for this instance.
    */
-  private SzLoadedStats LoadedStats;
+  private SzLoadedStats loadedStats;
 
   /**
    * Default constructor for JSON deserialization.
    */
   protected SzLoadedStatsResponseImpl() {
-    this.LoadedStats = null;
+    this.loadedStats = null;
   }
 
   /**
@@ -47,16 +47,16 @@ public class SzLoadedStatsResponseImpl extends SzBasicResponseImpl
    *
    * @param links The links for the response.
    * 
-   * @param LoadedStats The {@link SzLoadedStats} describing the data
+   * @param loadedStats The {@link SzLoadedStats} describing the data
    *                   for this instance.
    */
-  public SzLoadedStatsResponseImpl(SzMeta        meta,
-                                  SzLinks       links,
-                                  SzLoadedStats  LoadedStats)
+  public SzLoadedStatsResponseImpl(SzMeta         meta,
+                                   SzLinks        links,
+                                   SzLoadedStats  loadedStats)
   {
     super(meta, links);
-    Objects.requireNonNull(LoadedStats, "The SzLoadedStats cannot be null");
-    this.LoadedStats = LoadedStats;
+    Objects.requireNonNull(loadedStats, "The SzLoadedStats cannot be null");
+    this.loadedStats = loadedStats;
   }
 
   /**
@@ -65,15 +65,15 @@ public class SzLoadedStatsResponseImpl extends SzBasicResponseImpl
    * @return The data associated with this response.
    */
   public SzLoadedStats getData() {
-    return this.LoadedStats;
+    return this.loadedStats;
   }
 
   /**
    * Sets the data associated with this response with an {@link SzLoadedStats}.
    *
-   * @param LoadedStats The {@link SzLoadedStats} describing the statistics.
+   * @param loadedStats The {@link SzLoadedStats} describing the statistics.
    */
-  public void setData(SzLoadedStats LoadedStats) {
-    this.LoadedStats = LoadedStats;
+  public void setData(SzLoadedStats loadedStats) {
+    this.loadedStats = loadedStats;
   }
 }

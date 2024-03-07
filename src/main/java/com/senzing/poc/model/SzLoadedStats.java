@@ -2,14 +2,11 @@ package com.senzing.poc.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.api.model.AbstractModelProvider;
 import com.senzing.api.model.ModelFactory;
 import com.senzing.api.model.ModelProvider;
 import com.senzing.poc.model.impl.SzLoadedStatsImpl;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * Describes a count statistics for the repository.

@@ -16,7 +16,7 @@ public class BuildInfo {
   /**
    * The POC REST API specification version implemented by the API Server.
    */
-  public static final String POC_REST_API_VERSION = "3.5.1";
+  public static final String POC_REST_API_VERSION = "3.6.0";
 
   static {
     String resource = "/com/senzing/poc/build-info.properties";
