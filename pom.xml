@@ -4,7 +4,7 @@
   <groupId>com.senzing</groupId>
   <artifactId>senzing-poc-server</artifactId>
   <packaging>jar</packaging>
-  <version>3.5.2</version>
+  <version>3.5.3</version>
   <name>senzing-poc-server</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -21,12 +21,12 @@
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>senzing-listener</artifactId>
-      <version>0.5.5</version>
+      <version>0.5.6</version>
     </dependency>
     <dependency>
       <groupId>com.senzing</groupId>
       <artifactId>data-mart-replicator</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
     </dependency>    
     <dependency>
      <groupId>org.xerial</groupId>
