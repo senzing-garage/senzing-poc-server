@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.4] - 2024-03-21
+
+### Changed in 3.5.4
+
+- Updated `senzing-listener` dependency to version `0.5.7` and `data-mart-replicator`
+  to version `1.1.2` to get fix for PostgreSQL v13.x when using 
+  `com.senzing.listener.communication.sql.PostgreSQLClient`.
+
 ## [3.5.3] - 2024-03-20
 
 ### Changed in 3.5.3
@@ -195,8 +203,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 3.3.5
 
 - In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.4.0`
-
->>>>>>> main
 
 ## [3.3.4] - 2023-01-05
 
