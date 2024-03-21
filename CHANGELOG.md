@@ -204,8 +204,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.4.0`
 
->>>>>>> main
-
 ## [3.3.4] - 2023-01-05
 
 ### Changed in 3.3.4
