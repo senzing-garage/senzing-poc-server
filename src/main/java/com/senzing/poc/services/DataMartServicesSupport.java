@@ -752,8 +752,9 @@ public interface DataMartServicesSupport extends ServicesSupport {
                       + "LEFT OUTER JOIN sz_dm_record AS t8 "
                       + "ON t5.related_id = t8.entity_id "
                       + "WHERE (t5.entity_id, t5.related_id) IN (" + innerQuery + ") "
-                      + ") ORDER BY rel_entity_id, rel_related_id,"
-                      + " entity_id, data_source, record_id");
+                      + ") AS relations_page "
+                      + "ORDER BY rel_entity_id, rel_related_id, entity_id,"
+                      + " data_source, record_id");
 
             // prepare the statement
             ps = conn.prepareStatement(sb.toString());
