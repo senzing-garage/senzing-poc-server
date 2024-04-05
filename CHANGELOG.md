@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed redundant endpoints from OpenAPI specification that were never implemented
 - Fixed SQL syntax error for relations page retrieval
 
+## [3.5.4] - 2024-03-21
+
 ### Changed in 3.5.4
 
 - Updated `senzing-listener` dependency to version `0.5.7` and `data-mart-replicator`
