@@ -9,10 +9,6 @@ FROM ${BASE_BUILDER_IMAGE} as builder
 
 ENV REFRESHED_AT=2024-05-22
 
-LABEL Name="senzing/senzing-poc-server-builder" \
-      Maintainer="support@senzing.com" \
-      Version="3.5.5"
-
 # Set environment variables.
 
 ENV SENZING_ROOT=/opt/senzing
@@ -38,8 +34,8 @@ COPY . /poc-api-server
 WORKDIR /poc-api-server
 
 RUN export POC_API_SERVER_VERSION=$(mvn "help:evaluate" -Dexpression=project.version -q -DforceStdout) \
- && make package \
- && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_VERSION}.jar "/senzing-poc-server.jar"
+  && make package \
+  && cp /poc-api-server/target/senzing-poc-server-${POC_API_SERVER_VERSION}.jar "/senzing-poc-server.jar"
 
 # -----------------------------------------------------------------------------
 # Stage: Final
@@ -50,8 +46,8 @@ FROM ${BASE_IMAGE}
 ENV REFRESHED_AT=2024-05-22
 
 LABEL Name="senzing/senzing-poc-server" \
-      Maintainer="support@senzing.com" \
-      Version="3.5.5"
+  Maintainer="support@senzing.com" \
+  Version="3.5.6"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
@@ -62,24 +58,24 @@ USER root
 # Install packages via apt.
 
 RUN apt update \
- && apt -y install \
-      gnupg2 \
-      jq \
-      libodbc1 \
-      postgresql-client \
-      unixodbc \
- && rm -rf /var/lib/apt/lists/*
+  && apt -y install \
+  gnupg2 \
+  jq \
+  libodbc1 \
+  postgresql-client \
+  unixodbc \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Java-11.
 
 RUN mkdir -p /etc/apt/keyrings \
- && wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public > /etc/apt/keyrings/adoptium.asc
+  && wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public > /etc/apt/keyrings/adoptium.asc
 
 RUN echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >> /etc/apt/sources.list
 
 RUN apt update \
- && apt install -y temurin-11-jdk \
- && rm -rf /var/lib/apt/lists/*
+  && apt install -y temurin-11-jdk \
+  && rm -rf /var/lib/apt/lists/*
 
 # Copy files from repository.
 

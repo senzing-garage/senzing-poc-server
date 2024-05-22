@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.6] - 2024-05-22
+
+### Changed in 3.5.6
+
+- In `Dockerfile`, updated FROM instruction to 
+  - `senzing/senzingapi-runtime:3.10.1`
+  - `senzing/base-image-debian:1.0.23`
+
 ## [3.5.5] - 2024-04-05
 
 ### Changed in 3.5.5
@@ -99,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 3.4.8
 
-- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.8.0
+- In `Dockerfile`, updated FROM instruction to `senzing/senzingapi-runtime:3.8.0`
 - In `pom.xml`, updated:
   - sqs 2.20.162
   - kafka-clients 3.6.0
