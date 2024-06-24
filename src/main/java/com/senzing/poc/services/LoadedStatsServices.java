@@ -428,7 +428,7 @@ public class LoadedStatsServices implements DataMartServicesSupport {
   @Path("/data-sources/{dataSourceCode}/entities")
   public SzEntitiesPageResponse getEntityIdsForDataSource(
     @PathParam("dataSourceCode")                                String      dataSource,
-    @QueryParam("bound")      @DefaultValue("0")                long        entityIdBound,
+    @QueryParam("bound")                                        String      entityIdBound,
     @QueryParam("boundType")  @DefaultValue("EXCLUSIVE_LOWER")  SzBoundType boundType,
     @QueryParam("pageSize")                                     Integer     pageSize,
     @QueryParam("sampleSize")                                   Integer     sampleSize,

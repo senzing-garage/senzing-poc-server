@@ -7,7 +7,7 @@ ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.23
 
 FROM ${BASE_BUILDER_IMAGE} as builder
 
-ENV REFRESHED_AT=2024-05-22
+ENV REFRESHED_AT=2024-06-24
 
 # Set environment variables.
 
@@ -47,7 +47,7 @@ ENV REFRESHED_AT=2024-05-22
 
 LABEL Name="senzing/senzing-poc-server" \
   Maintainer="support@senzing.com" \
-  Version="3.5.6"
+  Version="3.6.0"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 

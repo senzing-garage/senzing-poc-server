@@ -293,7 +293,7 @@ public class EntityRelationsBreakdownServices
   @Path("/{relationsCount}/entities")
   public SzEntitiesPageResponse getEntityIdsForEntitySize(
     @PathParam("relationsCount")                                int         relationsCount,
-    @QueryParam("bound")      @DefaultValue("0")                long        entityIdBound,
+    @QueryParam("bound")                                        String      entityIdBound,
     @QueryParam("boundType")  @DefaultValue("EXCLUSIVE_LOWER")  SzBoundType boundType,
     @QueryParam("pageSize")                                     Integer     pageSize,
     @QueryParam("sampleSize")                                   Integer     sampleSize,

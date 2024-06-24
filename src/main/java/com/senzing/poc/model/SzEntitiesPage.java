@@ -19,21 +19,25 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public interface SzEntitiesPage {
   /**
    * Gets the entity ID bound value that bounds the included
-   * entity ID's.
+   * entity ID's.  This will return an integer {@link String}
+   * or <code>"max"</code> to indicate the maximum legal value
+   * for an entity ID.
    *
    * @return The entity ID bound value that bounds the included
    *         entity ID's.
    */
-  long getBound();
+  String getBound();
 
   /**
    * Sets the entity ID bound value that bounds the included
-   * entity ID's.
+   * entity ID's.  Set to an integer {@link String} or
+   * <code>"max"</code> to indicate the maximum legal value
+   * for an entity ID.
    *
    * @param bound The entity ID bound value that bounds the
    *              included entity ID's.
    */
-  void setBound(long bound);
+  void setBound(String bound);
 
   /**
    * Gets the {@link SzBoundType} that describes how the associated

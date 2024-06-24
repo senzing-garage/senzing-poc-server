@@ -292,7 +292,7 @@ public class EntitySizeBreakdownServices
   @Path("/{entitySize}/entities")
   public SzEntitiesPageResponse getEntityIdsForEntitySize(
     @PathParam("entitySize")                                    int         entitySize,
-    @QueryParam("bound")      @DefaultValue("0")                long        entityIdBound,
+    @QueryParam("bound")                                        String      entityIdBound,
     @QueryParam("boundType")  @DefaultValue("EXCLUSIVE_LOWER")  SzBoundType boundType,
     @QueryParam("pageSize")                                     Integer     pageSize,
     @QueryParam("sampleSize")                                   Integer     sampleSize,
