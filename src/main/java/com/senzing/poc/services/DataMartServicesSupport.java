@@ -203,7 +203,19 @@ public interface DataMartServicesSupport extends ServicesSupport {
      *                                      indicates that it will never be ready to
      *                                      use.
      */
-    default SzEntitiesPage retrieveEntitiesPage(SzHttpMethod httpMethod, UriInfo uriInfo, Timers timers, SzPocProvider provider, String reportKey, long entityIdBound, SzBoundType boundType, Integer pageSize, Integer sampleSize) throws BadRequestException, ServiceUnavailableException, InternalServerErrorException {
+    default SzEntitiesPage retrieveEntitiesPage(SzHttpMethod    httpMethod, 
+                                                UriInfo         uriInfo,
+                                                Timers          timers,
+                                                SzPocProvider   provider,
+                                                String          reportKey,
+                                                String          entityIdBound,
+                                                SzBoundType     boundType,
+                                                Integer         pageSize,
+                                                Integer         sampleSize)
+        throws BadRequestException, 
+               ServiceUnavailableException,
+               InternalServerErrorException 
+    {
         // check the request parameters
         if (pageSize != null && pageSize < 1) {
             throw this.newBadRequestException(httpMethod, uriInfo, timers,
@@ -229,6 +241,25 @@ public interface DataMartServicesSupport extends ServicesSupport {
 
         // check if the bound type is null (this should not be the case)
         if (boundType == null) boundType = EXCLUSIVE_LOWER;
+
+        long boundValue = 0L;
+        // default the bound if not specified
+        if (entityIdBound == null) {
+            boundValue = (boundType.isLower()) ? 0L : Long.MAX_VALUE;
+            entityIdBound = (boundType.isLower()) ? "0" : "max";
+
+        } else if ("max".equals(entityIdBound.trim().toLowerCase())) {
+            boundValue = Long.MAX_VALUE;
+            entityIdBound = entityIdBound.trim().toLowerCase();
+        } else {
+            try {
+                boundValue = Long.parseLong(entityIdBound.trim());
+            } catch (IllegalArgumentException e) {
+                throw this.newBadRequestException(httpMethod, uriInfo, timers,
+                        "The specified entity ID bound is not properly formatted: " 
+                        + entityIdBound);
+            }
+        }
 
         // track the min and max tracking and result count
         long minEntityId    = -1L;
@@ -293,7 +324,7 @@ public interface DataMartServicesSupport extends ServicesSupport {
 
             // bind the parameters
             ps.setString(1, reportKey);
-            ps.setLong(2, entityIdBound);
+            ps.setLong(2, boundValue);
             ps.setInt(3, pageSize);
 
             // execute the query
@@ -600,26 +631,46 @@ public interface DataMartServicesSupport extends ServicesSupport {
                 + sampleSize + ") must be stritly less-than the page size (" + pageSize + ")");
         }
 
+        // check if the bound type is null (this should not be the case)
+        if (boundType == null) boundType = EXCLUSIVE_LOWER;
+
         // parse the relation bound
-        long entityIdBound  = 0L;
-        long relatedIdBound = 0L;
+        long defaultValue   = (boundType.isLower()) ? 0L : Long.MAX_VALUE;
+        long entityIdBound  = defaultValue;
+        long relatedIdBound = defaultValue;
         if (relationBound != null) {
             relationBound = relationBound.trim();
             if (relationBound.length() > 0) {
                 try {
                     int index = relationBound.indexOf(":");
                     if (index < 0) {
-                        entityIdBound = Long.parseLong(relationBound);
+                        if ("max".equals(relationBound.toLowerCase().trim())) {
+                            entityIdBound = Long.MAX_VALUE;
+                            relatedIdBound = Long.MAX_VALUE;
+                            relationBound = "max:max";
+                        } else {
+                            entityIdBound = Long.parseLong(relationBound);
+                        }
                     } else if (index == 0) {
                         throw new IllegalArgumentException();                        
                     } else if (index > 0) {
-                        entityIdBound = Long.parseLong(
-                            relationBound.substring(0, index).trim());
-                        String text = (index == relationBound.length() - 1)
+                        String part1 = relationBound.substring(0, index).trim();
+                        if ("max".equals(part1.toLowerCase())) {
+                            entityIdBound = Long.MAX_VALUE;
+                            part1 = "max";
+                        } else {
+                            entityIdBound = Long.parseLong(part1);
+                        } 
+                        String part2 = (index == relationBound.length() - 1)
                             ? "" : relationBound.substring(index + 1).trim();
-
-                        relatedIdBound = (text.length() == 0) 
-                            ? 0L : Long.parseLong(text);
+                        if ("max".equals(part2.toLowerCase())) {
+                            relatedIdBound = Long.MAX_VALUE;
+                            part2 = "max";
+                        } else {
+                            relatedIdBound = (part2.length() == 0) 
+                                ? defaultValue : Long.parseLong(part2);
+                        }
+                        relationBound = part1 + ":" + part2;
                     }
                 } catch (IllegalArgumentException e) {
                     throw this.newBadRequestException(httpMethod, uriInfo, timers,
@@ -627,6 +678,10 @@ public interface DataMartServicesSupport extends ServicesSupport {
                         + relationBound);
                 }          
             }
+        }
+
+        if (relationBound == null) {
+            relationBound = (boundType.isLower()) ? "0:0" : "max:max";
         }
 
         // default the page size if not specified
@@ -637,9 +692,6 @@ public interface DataMartServicesSupport extends ServicesSupport {
 
         // create
         List<SzRelation> pageResults = new ArrayList<>(pageSize);
-
-        // check if the bound type is null (this should not be the case)
-        if (boundType == null) boundType = EXCLUSIVE_LOWER;
 
         // initialize min and max tracking and result count
         long    minEntityId     = -1L;
@@ -676,23 +728,23 @@ public interface DataMartServicesSupport extends ServicesSupport {
                 case INCLUSIVE_LOWER:
                     sb.append("((entity_id = ? AND related_id >= ?)");
                     sb.append(" OR (entity_id > ?)) ");
-                    sb.append("ORDER BY entity_id, related_id ASC ");
-                break;
+                    sb.append("ORDER BY entity_id ASC, related_id ASC ");
+                    break;
                 case EXCLUSIVE_LOWER:
                     sb.append("((entity_id = ? AND related_id > ?)");
                     sb.append(" OR (entity_id > ?)) ");
-                    sb.append("ORDER BY entity_id, related_id ASC ");
-                break;
+                    sb.append("ORDER BY entity_id ASC, related_id ASC ");
+                    break;
                 case INCLUSIVE_UPPER:
                     sb.append("((entity_id = ? AND related_id <= ?)");
                     sb.append(" OR (entity_id < ?)) ");
-                    sb.append("ORDER BY entity_id, related_id DESC ");
+                    sb.append("ORDER BY entity_id DESC, related_id DESC ");
                     break;
                 case EXCLUSIVE_UPPER:
                     sb.append("((entity_id = ? AND related_id < ?)");
                     sb.append(" OR (entity_id < ?)) ");
-                    sb.append("ORDER BY entity_id, related_id DESC ");
-                break;
+                    sb.append("ORDER BY entity_id DESC, related_id DESC ");
+                    break;
                 default:
                     throw new IllegalStateException(
                         "Unhandled bound type: " + boundType);
