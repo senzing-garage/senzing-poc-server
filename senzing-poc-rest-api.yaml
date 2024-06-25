@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Senzing POC REST API
-  version: "3.5.2"
+  version: "3.6.0"
   description: >-
     This is the Senzing POC REST API.  This API is <b>NOT</b> maintained for
     backwards compatibility.  This API extends the
@@ -5452,33 +5452,42 @@ components:
       required: false
       description: >-
         The optional parameter to provide for "paging" through entity ID's
-        associated with a statistic.  The value is specified as bound on the
-        entity ID values returned.  The type of bound is given by the 
-        `boundType` parameter.  For example, by default the `boundType` is
-        `EXCLUSIVE_LOWER` so the returned entity ID values must satisfy the
-        condition that they are strictly greater than the entity ID bound value.
-        To move to the "next page" of entity ID's specify the greatest entity ID
-        value from the current page and use `boundType` of `EXCLUSIVE_LOWER`.
-        To move to the "previous page" of entity ID's specify the least entity ID
-        value on the current page and use `boundType` of `EXCLUSIVE_UPPER`.  To
-        change the number of results shown on the current page specify the least
-        entity ID value on the current page and specify a `boundType` of 
-        `INCLUSIVE_LOWER` with a new `pageSize` value.
+        associated with a statistic.  The value is specified as a bound on the
+        entity ID values returned and is given as a positive integer number
+        or `max` to indicate the maximum legal value of an entity ID.  The
+        type of bound is given by the `boundType` parameter.  For example, by
+        default the `boundType` is `EXCLUSIVE_LOWER` so the returned entity ID
+        values must satisfy the condition that they are strictly greater than
+        the entity ID bound value.  To move to the "next page" of entity ID's
+        specify the greatest entity ID value from the current page and use
+        `boundType` of `EXCLUSIVE_LOWER`.  To move to the "previous page" of
+        entity ID's specify the least entity ID value on the current page and
+        use `boundType` of `EXCLUSIVE_UPPER`.  To change the number of results
+        shown on the current page specify the least entity ID value on the
+        current page and specify a `boundType` of `INCLUSIVE_LOWER` with a new
+        `pageSize` value.
+
+        If not specified, then the default value is taken as `0` if a
+        `boundType` of `INCLUSIVE_LOWER` or `EXCLUSIVE_LOWER` is being used,
+        otherwise for a `boundType` of `INCLUSIVE_UPPER` or `EXCLUSIVE_UPPER`
+        it defaults to `max` (indicating the maximum legal value of an 
+        entity ID).
       schema:
-        type: integer
-        format: int64
-        default: 0
+        type: string
     relationBoundQueryParam:
       in: query
       name: bound
       required: false
       description: >-
         The optional parameter to provide for "paging" through relationships
-        associated with a statistic.  The value is specified as bound on the
+        associated with a statistic.  The value is specified as a bound on the
         entity ID's in the `SzRelation` values returned and contains two 
-        entity ID values separated by a colon (e.g.: `1000:5500`).  The type
-        of bound is given by the `boundType` parameter.  For example, by default
-        the `boundType` is `EXCLUSIVE_LOWER` so the returned `SzRelation` values
+        entity ID values separated by a colon (e.g.: `1000:5500`).  Either of
+        the entity ID's can be specified as `max` to indicate the maximum legal
+        value of an entity ID (e.g.: `max:max` or `1000:max`).  If `max` is
+        specified by itself it is interpretted as `max:max`. The type of bound
+        is given by the `boundType` parameter.  For example, by default the
+        `boundType` is `EXCLUSIVE_LOWER` so the returned `SzRelation` values
         must be canonically greater than the relationship described by the 
         entity ID values encoded in the bound.  `SzRelation` values are ordered 
         on the first entity ID value and then on the second related entity ID
@@ -5491,9 +5500,13 @@ components:
         results shown on the current page specify the encoded value of the entity
         ID and related ID of the least (first) `SzRelation` on the current page
         and specify a `boundType` of `INCLUSIVE_LOWER` with a new `pageSize` value.
+
+        If not specified, then the default value is taken as `0:0` if a `boundType`
+        of `INCLUSIVE_LOWER` or `EXCLUSIVE_LOWER` is being used, otherwise for a
+        `boundType` of `INCLUSIVE_UPPER` or `EXCLUSIVE_UPPER` it defaults to
+        `max:max` (indicating the maximum legal value for each of the entity ID's).
       schema:
         type: string
-        default: 0:0
     boundTypeQueryParam:
       in: query
       name: boundType
