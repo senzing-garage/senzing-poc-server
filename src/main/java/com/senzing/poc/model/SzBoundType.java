@@ -120,7 +120,7 @@ public enum SzBoundType {
      * @throws NullPointerException If either of the specified values is 
      *                              <code>null</code>.
      */
-    public boolean checkSatisfies(Comparable value, Comparable boundValue) 
+    public <T extends Comparable<T>> boolean checkSatisfies(T value, T boundValue) 
         throws NullPointerException
     {
         Objects.requireNonNull(value, "The specified value cannot be null");

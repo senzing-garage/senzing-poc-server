@@ -20,7 +20,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   /**
    * The entity ID bound value that bounds the included entity ID's.
    */
-  private long bound = 0L;
+  private String bound = null;
 
   /**
    * The {@link SzBoundType} that describes how the bound value
@@ -78,7 +78,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
    * Default constructor
    */
   public SzEntitiesPageImpl() {
-    this.bound              = 0L;
+    this.bound              = null;
     this.boundType          = null;
     this.pageSize           = 0;
     this.sampleSize         = null;
@@ -91,12 +91,12 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   }
 
   @Override
-  public long getBound() {
+  public String getBound() {
     return this.bound;
   }
 
   @Override
-  public void setBound(long bound) {
+  public void setBound(String bound) {
     this.bound = bound;
   }
 
