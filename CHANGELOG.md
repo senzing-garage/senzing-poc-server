@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `jetty-xxxx` dependencies from version `9.4.55.v20240627` to `9.4.56.v20240826`
   - Updated `jersey-xxxx` dependencies from version `2.44` to `2.45`
   - Updated `jackson-xxxx` dependencies from version `2.17.2` to `2.18.0`
+  - Updated `javassist` dependeny from version `3.29.2-GA` to `3.30.2-GA`
   - Updated Amazon `sqs` from version `2.26.27` to `2.28.17`
   - Updated `amqp-client` dependencies from version `5.21.0` to `5.22.0`
   - Updated `junit-jupiter` from version `5.10.3` to `5.11.2`
