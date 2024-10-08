@@ -51,7 +51,7 @@ ENV REFRESHED_AT=2024-06-24
 
 LABEL Name="senzing/senzing-poc-server" \
   Maintainer="support@senzing.com" \
-  Version="3.6.2"
+  Version="3.6.3"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
