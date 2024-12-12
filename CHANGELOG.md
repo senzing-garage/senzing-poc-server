@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.5] - 2024-12-12
+
+### Changed in 3.6.5
+
+- Removed `senzing-listener` dependency since it is now part of `data-mart-replicator`
+
 ## [3.6.4] - 2024-12-06
 
 ### Changed in 3.6.4
