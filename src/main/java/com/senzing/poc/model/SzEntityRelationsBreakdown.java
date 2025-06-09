@@ -12,37 +12,37 @@ import com.senzing.poc.model.impl.SzEntityRelationsBreakdownImpl;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
- * Describes the number of entities in the entity repository at each 
+ * Describes the number of entities in the entity repository at each
  * count statistics for the repository.
  */
 @JsonDeserialize(using = SzEntityRelationsBreakdown.Factory.class)
 public interface SzEntityRelationsBreakdown {
   /**
-   * Gets the {@link List} of {@link SzEntityRelationsCount} describing the 
+   * Gets the {@link List} of {@link SzEntityRelationsCount} describing the
    * number of entities having each distinct number of entity relations.
-   * The returned value list should contain only one element for each 
+   * The returned value list should contain only one element for each
    * distinct number of entity relations that exists in the repository.
    * The {@link List} is returned in descending order of the number of
    * entity relations.
    * 
-   * @return The {@link List} of {@link SzEntityRelationsCount} describing 
+   * @return The {@link List} of {@link SzEntityRelationsCount} describing
    *         the number of entities having each distinct number of entity
    *         relations.
    */
   List<SzEntityRelationsCount> getEntityRelationsCounts();
 
   /**
-   * Sets the {@link List} of {@link SzEntityRelationsCount} describing the 
+   * Sets the {@link List} of {@link SzEntityRelationsCount} describing the
    * number of entities having each distinct number of entity relations.
    * This clears any existing entity relations counts before setting with
-   * those specified.   The specified {@link List} should contain only one
-   * element for each distict number of entity relations, but if duplicates
+   * those specified. The specified {@link List} should contain only one
+   * element for each distinct number of entity relations, but if duplicates
    * are encountered then later values in the {@link List} take precedence,
-   * overwriting prior values from the {@link List}.  Specifying a 
-   * <code>null</code> {@link List} is equivalent to specifying an empty 
+   * overwriting prior values from the {@link List}. Specifying a
+   * <code>null</code> {@link List} is equivalent to specifying an empty
    * {@link List}.
    * 
-   * @param relationsCountList The {@link List} of {@link SzEntityRelationsCount} 
+   * @param relationsCountList The {@link List} of {@link SzEntityRelationsCount}
    *                           describing the number of entities having each
    *                           distinct number of entity relations.
    */
@@ -50,13 +50,13 @@ public interface SzEntityRelationsBreakdown {
 
   /**
    * Adds the specified {@link SzEntityRelationsCount} describing the number of
-   * entities in the entity repository having a specific number of entity 
-   * relations.  If the specified {@link SzEntityRelationsCount} has the same 
+   * entities in the entity repository having a specific number of entity
+   * relations. If the specified {@link SzEntityRelationsCount} has the same
    * entity relations count as an existing {@link SzEntityRelationsCount}
    * instance then the specified value replaces the existing one for that number
    * of entity relations.
    * 
-   * @param relationsCount The {@link SzEntityRelationsCount} describing the 
+   * @param relationsCount The {@link SzEntityRelationsCount} describing the
    *                       number of entities in the entity repository having a
    *                       specific number of entity relations.
    */
@@ -75,12 +75,12 @@ public interface SzEntityRelationsBreakdown {
   }
 
   /**
-   * Provides a default {@link Provider} implementation for {@link SzEntityRelationsBreakdown}
+   * Provides a default {@link Provider} implementation for
+   * {@link SzEntityRelationsBreakdown}
    * that produces instances of {@link SzEntityRelationsBreakdownImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzEntityRelationsBreakdown>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
@@ -95,11 +95,12 @@ public interface SzEntityRelationsBreakdown {
   }
 
   /**
-   * Provides a {@link ModelFactory} implementation for {@link SzEntityRelationsBreakdown}.
+   * Provides a {@link ModelFactory} implementation for
+   * {@link SzEntityRelationsBreakdown}.
    */
   class Factory extends ModelFactory<SzEntityRelationsBreakdown, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -108,8 +109,9 @@ public interface SzEntityRelationsBreakdown {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -121,8 +123,7 @@ public interface SzEntityRelationsBreakdown {
      * 
      * @return The new instance of {@link SzEntityRelationsBreakdown}
      */
-    public SzEntityRelationsBreakdown create()
-    {
+    public SzEntityRelationsBreakdown create() {
       return this.getProvider().create();
     }
   }

@@ -28,54 +28,52 @@ public interface SzSummaryStatsResponse extends SzBasicResponse {
     /**
      * Constructs with only the {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
     SzSummaryStatsResponse create(SzMeta meta, SzLinks links);
 
     /**
-     * Creates an instance with the specified {@liink SzMeta}, {@link SzLinks}
+     * Creates an instance with the specified {@link SzMeta}, {@link SzLinks}
      * and {@link SzSummaryStats}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
-     * @param stats The {@link SzSummaryStats} describing the data for this 
+     * @param stats The {@link SzSummaryStats} describing the data for this
      *              instance.
      */
-    SzSummaryStatsResponse create(SzMeta          meta,
-                                  SzLinks         links,
-                                  SzSummaryStats  stats);
+    SzSummaryStatsResponse create(SzMeta meta,
+        SzLinks links,
+        SzSummaryStats stats);
   }
-  
+
   /**
    * Provides a default {@link Provider} implementation for {@link
    * SzSummaryStatsResponse} that produces instances of
    * {@link SzSummaryStatsResponseImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzSummaryStatsResponse>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
       super(SzSummaryStatsResponse.class,
-            SzSummaryStatsResponseImpl.class);
+          SzSummaryStatsResponseImpl.class);
     }
 
     @Override
-    public SzSummaryStatsResponse create(SzMeta meta, SzLinks links){
+    public SzSummaryStatsResponse create(SzMeta meta, SzLinks links) {
       return new SzSummaryStatsResponseImpl(meta, links);
     }
 
     @Override
-    public SzSummaryStatsResponse create(SzMeta         meta,
-                                        SzLinks         links,
-                                        SzSummaryStats  stats)
-    {
+    public SzSummaryStatsResponse create(SzMeta meta,
+        SzLinks links,
+        SzSummaryStats stats) {
       return new SzSummaryStatsResponseImpl(meta, links, stats);
     }
   }
@@ -86,7 +84,7 @@ public interface SzSummaryStatsResponse extends SzBasicResponse {
    */
   class Factory extends ModelFactory<SzSummaryStatsResponse, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -95,8 +93,9 @@ public interface SzSummaryStatsResponse extends SzBasicResponse {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -107,7 +106,7 @@ public interface SzSummaryStatsResponse extends SzBasicResponse {
      * Creates an instance of {@link SzSummaryStatsResponse} with the
      * specified {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
@@ -117,19 +116,18 @@ public interface SzSummaryStatsResponse extends SzBasicResponse {
 
     /**
      * Creates an instance of {@link SzSummaryStatsResponse} with the
-     * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
+     * specified {@link SzMeta}, {@link SzLinks} and the specified {@link
      * SzSummaryStats} describing the loaded stats.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
      * @param stats The {@link SzSummaryStats} describing the statistics.
      */
-    public SzSummaryStatsResponse create(SzMeta         meta,
-                                         SzLinks        links,
-                                         SzSummaryStats stats)
-    {
+    public SzSummaryStatsResponse create(SzMeta meta,
+        SzLinks links,
+        SzSummaryStats stats) {
       return this.getProvider().create(meta, links, stats);
     }
   }

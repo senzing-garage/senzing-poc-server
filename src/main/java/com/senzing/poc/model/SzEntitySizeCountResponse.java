@@ -15,7 +15,8 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
   SzEntitySizeCount getData();
 
   /**
-   * Sets the data associated with this response with an {@link SzEntitySizeCount}.
+   * Sets the data associated with this response with an
+   * {@link SzEntitySizeCount}.
    *
    * @param info The {@link SzEntitySizeCount} describing the statistics.
    */
@@ -28,54 +29,52 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
     /**
      * Constructs with only the {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
     SzEntitySizeCountResponse create(SzMeta meta, SzLinks links);
 
     /**
-     * Creates an instance with the specified {@liink SzMeta}, {@link SzLinks}
+     * Creates an instance with the specified {@link SzMeta}, {@link SzLinks}
      * and {@link SzEntitySizeCount}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
-     * @param stats The {@link SzEntitySizeCount} describing the data for 
+     * @param stats The {@link SzEntitySizeCount} describing the data for
      *              this instance.
      */
-    SzEntitySizeCountResponse create(SzMeta                 meta,
-                                         SzLinks            links,
-                                         SzEntitySizeCount  stats);
+    SzEntitySizeCountResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitySizeCount stats);
   }
-  
+
   /**
    * Provides a default {@link Provider} implementation for {@link
    * SzEntitySizeCountResponse} that produces instances of
    * {@link SzEntitySizeCountResponseImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzEntitySizeCountResponse>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
       super(SzEntitySizeCountResponse.class,
-            SzEntitySizeCountResponseImpl.class);
+          SzEntitySizeCountResponseImpl.class);
     }
 
     @Override
-    public SzEntitySizeCountResponse create(SzMeta meta, SzLinks links){
+    public SzEntitySizeCountResponse create(SzMeta meta, SzLinks links) {
       return new SzEntitySizeCountResponseImpl(meta, links);
     }
 
     @Override
-    public SzEntitySizeCountResponse create(SzMeta            meta,
-                                            SzLinks           links,
-                                            SzEntitySizeCount stats)
-    {
+    public SzEntitySizeCountResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitySizeCount stats) {
       return new SzEntitySizeCountResponseImpl(meta, links, stats);
     }
   }
@@ -86,7 +85,7 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
    */
   class Factory extends ModelFactory<SzEntitySizeCountResponse, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -95,8 +94,9 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -107,7 +107,7 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
      * Creates an instance of {@link SzEntitySizeCountResponse} with the
      * specified {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
@@ -117,19 +117,18 @@ public interface SzEntitySizeCountResponse extends SzBasicResponse {
 
     /**
      * Creates an instance of {@link SzEntitySizeCountResponse} with the
-     * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
+     * specified {@link SzMeta}, {@link SzLinks} and the specified {@link
      * SzEntitySizeCount} describing the statistics.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
      * @param stats The {@link SzEntitySizeCount} describing the statistics.
      */
-    public SzEntitySizeCountResponse create(SzMeta            meta,
-                                            SzLinks           links,
-                                            SzEntitySizeCount stats)
-    {
+    public SzEntitySizeCountResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitySizeCount stats) {
       return this.getProvider().create(meta, links, stats);
     }
   }

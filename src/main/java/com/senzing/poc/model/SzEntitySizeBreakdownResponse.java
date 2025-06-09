@@ -15,67 +15,67 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
   SzEntitySizeBreakdown getData();
 
   /**
-   * Sets the data associated with this response with an {@link SzEntitySizeBreakdown}.
+   * Sets the data associated with this response with an
+   * {@link SzEntitySizeBreakdown}.
    *
    * @param info The {@link SzEntitySizeBreakdown} describing the statistics.
    */
   void setData(SzEntitySizeBreakdown info);
 
   /**
-   * A {@link ModelProvider} for instances of {@link SzEntitySizeBreakdownResponse}.
+   * A {@link ModelProvider} for instances of
+   * {@link SzEntitySizeBreakdownResponse}.
    */
   interface Provider extends ModelProvider<SzEntitySizeBreakdownResponse> {
     /**
      * Constructs with only the {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
     SzEntitySizeBreakdownResponse create(SzMeta meta, SzLinks links);
 
     /**
-     * Creates an instance with the specified {@liink SzMeta}, {@link SzLinks}
+     * Creates an instance with the specified {@link SzMeta}, {@link SzLinks}
      * and {@link SzEntitySizeBreakdown}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
      * @param stats The {@link SzEntitySizeBreakdown} describing the data
      *              for this instance.
      */
-    SzEntitySizeBreakdownResponse create(SzMeta                 meta,
-                                         SzLinks                links,
-                                         SzEntitySizeBreakdown  stats);
+    SzEntitySizeBreakdownResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitySizeBreakdown stats);
   }
-  
+
   /**
    * Provides a default {@link Provider} implementation for {@link
    * SzEntitySizeBreakdownResponse} that produces instances of
    * {@link SzEntitySizeBreakdownResponseImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzEntitySizeBreakdownResponse>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
       super(SzEntitySizeBreakdownResponse.class,
-            SzEntitySizeBreakdownResponseImpl.class);
+          SzEntitySizeBreakdownResponseImpl.class);
     }
 
     @Override
-    public SzEntitySizeBreakdownResponse create(SzMeta meta, SzLinks links){
+    public SzEntitySizeBreakdownResponse create(SzMeta meta, SzLinks links) {
       return new SzEntitySizeBreakdownResponseImpl(meta, links);
     }
 
     @Override
-    public SzEntitySizeBreakdownResponse create(SzMeta                meta,
-                                                SzLinks               links,
-                                                SzEntitySizeBreakdown stats)
-    {
+    public SzEntitySizeBreakdownResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitySizeBreakdown stats) {
       return new SzEntitySizeBreakdownResponseImpl(meta, links, stats);
     }
   }
@@ -86,7 +86,7 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
    */
   class Factory extends ModelFactory<SzEntitySizeBreakdownResponse, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -95,8 +95,9 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -107,7 +108,7 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
      * Creates an instance of {@link SzEntitySizeBreakdownResponse} with the
      * specified {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
@@ -117,20 +118,19 @@ public interface SzEntitySizeBreakdownResponse extends SzBasicResponse {
 
     /**
      * Creates an instance of {@link SzEntitySizeBreakdownResponse} with the
-     * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
+     * specified {@link SzMeta}, {@link SzLinks} and the specified {@link
      * SzEntitySizeBreakdown} describing the bulk records.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      *
      * @param stats The {@link SzEntitySizeBreakdown} describing the statistics.
      */
     public SzEntitySizeBreakdownResponse create(
-        SzMeta                meta,
-        SzLinks               links,
-        SzEntitySizeBreakdown stats)
-    {
+        SzMeta meta,
+        SzLinks links,
+        SzEntitySizeBreakdown stats) {
       return this.getProvider().create(meta, links, stats);
     }
   }

@@ -29,54 +29,52 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
     /**
      * Constructs with only the {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
     SzEntitiesPageResponse create(SzMeta meta, SzLinks links);
 
     /**
-     * Creates an instance with the specified {@liink SzMeta}, {@link SzLinks}
+     * Creates an instance with the specified {@link SzMeta}, {@link SzLinks}
      * and {@link SzEntitiesPage}.
      *
-     * @param meta The response meta data.
+     * @param meta         The response meta data.
      *
-     * @param links The links for the response.
+     * @param links        The links for the response.
      *
-     * @param entitiesPage The {@link SzEntitiesPage} describing the data 
+     * @param entitiesPage The {@link SzEntitiesPage} describing the data
      *                     for this instance.
      */
-    SzEntitiesPageResponse create(SzMeta          meta,
-                                  SzLinks         links,
-                                  SzEntitiesPage  entitiesPage);
+    SzEntitiesPageResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitiesPage entitiesPage);
   }
-  
+
   /**
    * Provides a default {@link Provider} implementation for {@link
    * SzEntitiesPageResponse} that produces instances of
    * {@link SzEntitiesPageResponseImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzEntitiesPageResponse>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
       super(SzEntitiesPageResponse.class,
-            SzEntitiesPageResponseImpl.class);
+          SzEntitiesPageResponseImpl.class);
     }
 
     @Override
-    public SzEntitiesPageResponse create(SzMeta meta, SzLinks links){
+    public SzEntitiesPageResponse create(SzMeta meta, SzLinks links) {
       return new SzEntitiesPageResponseImpl(meta, links);
     }
 
     @Override
-    public SzEntitiesPageResponse create(SzMeta         meta,
-                                         SzLinks        links,
-                                         SzEntitiesPage entitiesPage)
-    {
+    public SzEntitiesPageResponse create(SzMeta meta,
+        SzLinks links,
+        SzEntitiesPage entitiesPage) {
       return new SzEntitiesPageResponseImpl(meta, links, entitiesPage);
     }
   }
@@ -87,7 +85,7 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
    */
   class Factory extends ModelFactory<SzEntitiesPageResponse, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -96,8 +94,9 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -108,7 +107,7 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
      * Creates an instance of {@link SzEntitiesPageResponse} with the
      * specified {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
@@ -118,21 +117,20 @@ public interface SzEntitiesPageResponse extends SzBasicResponse {
 
     /**
      * Creates an instance of {@link SzEntitiesPageResponse} with the
-     * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
+     * specified {@link SzMeta}, {@link SzLinks} and the specified {@link
      * SzEntitiesPage} describing the bulk records.
      *
-     * @param meta The response meta data.
+     * @param meta         The response meta data.
      *
-     * @param links The links for the response.
+     * @param links        The links for the response.
      *
      * @param entitiesPage The {@link SzEntitiesPage} describing the
      *                     bulk records.
      */
     public SzEntitiesPageResponse create(
-        SzMeta          meta,
-        SzLinks         links,
-        SzEntitiesPage  entitiesPage)
-    {
+        SzMeta meta,
+        SzLinks links,
+        SzEntitiesPage entitiesPage) {
       return this.getProvider().create(meta, links, entitiesPage);
     }
   }

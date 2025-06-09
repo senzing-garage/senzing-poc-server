@@ -36,7 +36,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   /**
    * The requested sample size representing the number of entity ID's
-   * to be randmonly selected from the page of results.
+   * to be randomly selected from the page of results.
    */
   private Integer sampleSize = null;
 
@@ -78,16 +78,16 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
    * Default constructor
    */
   public SzEntitiesPageImpl() {
-    this.bound              = null;
-    this.boundType          = null;
-    this.pageSize           = 0;
-    this.sampleSize         = null;
-    this.pageMinimumValue   = null;
-    this.pageMaximumValue   = null;
-    this.totalEntityCount   = 0L;
-    this.beforePageCount    = 0L;
-    this.afterPageCount     = 0L;
-    this.entities           = new TreeMap<>();
+    this.bound = null;
+    this.boundType = null;
+    this.pageSize = 0;
+    this.sampleSize = null;
+    this.pageMinimumValue = null;
+    this.pageMaximumValue = null;
+    this.totalEntityCount = 0L;
+    this.beforePageCount = 0L;
+    this.afterPageCount = 0L;
+    this.entities = new TreeMap<>();
   }
 
   @Override
@@ -132,13 +132,15 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   @Override
   public Long getMinimumValue() {
-    if (this.entities.size() == 0) return null;
+    if (this.entities.size() == 0)
+      return null;
     return this.entities.firstKey();
   }
 
   @Override
   public Long getMaximumValue() {
-    if (this.entities.size() == 0) return null;
+    if (this.entities.size() == 0)
+      return null;
     return this.entities.lastKey();
   }
 
@@ -185,7 +187,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
 
   @Override
   public void setBeforePageCount(long entityCount) {
-    this. beforePageCount = entityCount;
+    this.beforePageCount = entityCount;
   }
 
   @Override
@@ -207,7 +209,7 @@ public class SzEntitiesPageImpl implements SzEntitiesPage {
   public void setEntities(Collection<SzEntity> entities) {
     this.entities.clear();
     if (entities != null) {
-      entities.forEach( entity -> {
+      entities.forEach(entity -> {
         if (entity != null) {
           this.entities.put(entity.getEntityId(), entity);
         }

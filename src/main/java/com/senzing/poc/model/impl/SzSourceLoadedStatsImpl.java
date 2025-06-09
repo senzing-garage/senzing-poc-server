@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.senzing.poc.model.SzSourceLoadedStats;
 
 /**
- * Provides a default implementation of {@link SzSourceLoadedsStats}.
+ * Provides a default implementation of {@link SzSourceLoadedStats}.
  */
 @JsonDeserialize
 public class SzSourceLoadedStatsImpl implements SzSourceLoadedStats {
   /**
-   * The data source code 
+   * The data source code
    */
   private String dataSource;
 
@@ -41,13 +41,12 @@ public class SzSourceLoadedStatsImpl implements SzSourceLoadedStats {
    * @throws NullPointerException If the specified data source code is
    *                              <code>null</code>.
    */
-  public SzSourceLoadedStatsImpl(String dataSourceCode) 
-    throws NullPointerException
-  {
+  public SzSourceLoadedStatsImpl(String dataSourceCode)
+      throws NullPointerException {
     Objects.requireNonNull(dataSourceCode, "Data source code cannot be null");
-    this.dataSource           = dataSourceCode;
-    this.recordCount          = 0L;
-    this.entityCount          = 0L;
+    this.dataSource = dataSourceCode;
+    this.recordCount = 0L;
+    this.entityCount = 0L;
     this.unmatchedRecordCount = 0L;
   }
 
