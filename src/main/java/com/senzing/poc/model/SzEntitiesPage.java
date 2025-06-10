@@ -19,7 +19,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public interface SzEntitiesPage {
   /**
    * Gets the entity ID bound value that bounds the included
-   * entity ID's.  This will return an integer {@link String}
+   * entity ID's. This will return an integer {@link String}
    * or <code>"max"</code> to indicate the maximum legal value
    * for an entity ID.
    *
@@ -30,7 +30,7 @@ public interface SzEntitiesPage {
 
   /**
    * Sets the entity ID bound value that bounds the included
-   * entity ID's.  Set to an integer {@link String} or
+   * entity ID's. Set to an integer {@link String} or
    * <code>"max"</code> to indicate the maximum legal value
    * for an entity ID.
    *
@@ -54,7 +54,7 @@ public interface SzEntitiesPage {
    * {@linkplain #getBound() bound value} was applied.
    *
    * @param boundType The the {@link SzBoundType} that describes how
-   *                  the associated {@linkplain #getBound() bound 
+   *                  the associated {@linkplain #getBound() bound
    *                  value} was applied.
    */
   void setBoundType(SzBoundType boundType);
@@ -64,7 +64,7 @@ public interface SzEntitiesPage {
    * entity ID's that were requested to be included in the page.
    * 
    * @return The requested page size representing the maximum number
-   *         of entity ID's that were requested to be included in 
+   *         of entity ID's that were requested to be included in
    *         the page.
    */
   int getPageSize();
@@ -73,7 +73,7 @@ public interface SzEntitiesPage {
    * Sets the requested page size representing the maximum number of
    * entity ID's that were requested to be included in the page.
    * 
-   * @param pageSize The requested page size representing the 
+   * @param pageSize The requested page size representing the
    *                 maximum number of entity ID's that were
    *                 requested to be included in the page.
    */
@@ -81,7 +81,7 @@ public interface SzEntitiesPage {
 
   /**
    * Gets the requested sample size representing the number of entity ID's
-   * to be randmonly selected from the page of results.
+   * to be randomly selected from the page of results.
    * 
    * @return The requested page size representing the number of entity ID's
    *         to be randomly selected from the page of results.
@@ -91,10 +91,10 @@ public interface SzEntitiesPage {
 
   /**
    * Sets the requested sample size representing the number of entity ID's
-   * to be randmonly selected from the page of results.
+   * to be randomly selected from the page of results.
    * 
    * @param pageSize The requested sample size representing the number
-   *                 of entity ID's to be randmonly selected from the
+   *                 of entity ID's to be randomly selected from the
    *                 page of results.
    */
   void setSampleSize(Integer sampleSize);
@@ -121,12 +121,12 @@ public interface SzEntitiesPage {
 
   /**
    * Gets the minimum entity ID of the entire entity page.
-   * This will be the same as the {@linkplain #getMinimumValue() 
+   * This will be the same as the {@linkplain #getMinimumValue()
    * minimum value} the {@linkplain #getSampleSize() sample size}
    * was not specified, however, if sample size was specified then
    * this will be the minimum entity ID value of all the candidate
    * entities on the page that were used for random sample selection
-   * even if that entity was not randomly selected.  This returns
+   * even if that entity was not randomly selected. This returns
    * <code>null</code> if there are no results.
    * 
    * @return The minimum entity ID of the entire entity page, or
@@ -137,12 +137,12 @@ public interface SzEntitiesPage {
 
   /**
    * Sets the minimum entity ID of the entire entity page.
-   * This will be the same as the {@linkplain #getMinimumValue() 
+   * This will be the same as the {@linkplain #getMinimumValue()
    * minimum value} the {@linkplain #getSampleSize() sample size}
    * was not specified, however, if sample size was specified then
    * this will be the minimum entity ID value of all the candidate
    * entities on the page that were used for random sample selection
-   * even if that entity was not randomly selected.  Set this to
+   * even if that entity was not randomly selected. Set this to
    * <code>null</code> if there are no results.
    * 
    * @param minValue The minimum entity ID of the entire entity page,
@@ -152,12 +152,12 @@ public interface SzEntitiesPage {
 
   /**
    * Gets the maximum entity ID of the entire entity page.
-   * This will be the same as the {@linkplain #getMaximumValue() 
+   * This will be the same as the {@linkplain #getMaximumValue()
    * maximum value} the {@linkplain #getSampleSize() sample size}
    * was not specified, however, if sample size was specified then
    * this will be the maximum entity ID value of all the candidate
    * entities on the page that were used for random sample selection
-   * even if that entity was not randomly selected.  This returns
+   * even if that entity was not randomly selected. This returns
    * <code>null</code> if there are no results.
    * 
    * @return The maximum entity ID of the entire entity page, or
@@ -168,12 +168,12 @@ public interface SzEntitiesPage {
 
   /**
    * Sets the maximum entity ID of the entire entity page.
-   * This will be the same as the {@linkplain #getMaximumValue() 
+   * This will be the same as the {@linkplain #getMaximumValue()
    * maximum value} the {@linkplain #getSampleSize() sample size}
    * was not specified, however, if sample size was specified then
    * this will be the maximum entity ID value of all the candidate
    * entities on the page that were used for random sample selection
-   * even if that entity was not randomly selected.  Set this to
+   * even if that entity was not randomly selected. Set this to
    * <code>null</code> if there are no results.
    * 
    * @param maxValue The maximum entity ID of the entire entity page,
@@ -214,7 +214,7 @@ public interface SzEntitiesPage {
    * Sets the number of entities in the set that exist on
    * pages that occur before this page.
    * 
-   * @param count The the number of entities in the set that 
+   * @param count The the number of entities in the set that
    *              exist on pages that occur before this page.
    */
   void setBeforePageCount(long count);
@@ -232,14 +232,14 @@ public interface SzEntitiesPage {
    * Sets the number of entities in the set that exist on
    * pages that occur after this page.
    * 
-   * @param count The the number of entities in the set that 
+   * @param count The the number of entities in the set that
    *              exist on pages that occur after this page.
    */
   void setAfterPageCount(long count);
 
   /**
-   * Gets the {@link List} of {@link SzEntity} instances describing the 
-   * entities in this page of results.  The returned {@link List} will
+   * Gets the {@link List} of {@link SzEntity} instances describing the
+   * entities in this page of results. The returned {@link List} will
    * be in ascending order of entity ID.
    * 
    * @return The {@link List} of {@link SzEntity} instances describing
@@ -248,20 +248,20 @@ public interface SzEntitiesPage {
   List<SzEntity> getEntities();
 
   /**
-   * Sets the {@link List} of {@link SzEntity} instances describing the 
-   * entities in this page of results.  The entities will be sorted in
-   * ascending order of entity ID and deduplicated when added with 
+   * Sets the {@link List} of {@link SzEntity} instances describing the
+   * entities in this page of results. The entities will be sorted in
+   * ascending order of entity ID and deduplicated when added with
    * entities with duplicate entity ID's being replaced by the one that
-   * occurs last in the specified {@link Collection}. 
+   * occurs last in the specified {@link Collection}.
    * 
    * @param entityIdList The {@link List} of {@link SzEntity} instances
    *                     describing the entities in this page of results.
-    */
+   */
   void setEntities(Collection<SzEntity> entities);
 
   /**
    * Adds the specified {@link SzEntity} to the list of entities for this
-   * page.  If an entity with the same entity ID already exists on the 
+   * page. If an entity with the same entity ID already exists on the
    * page then the specified one replaces the existing one.
    * 
    * @param entity The {@link SzEntity} to add the page of entities.
@@ -270,7 +270,7 @@ public interface SzEntitiesPage {
 
   /**
    * Removes the entity with the specified entity ID from the list of
-   * entities associated with this instance.  If no entity has the
+   * entities associated with this instance. If no entity has the
    * specified entity ID then this method has no effect.
    * 
    * @param entityId The entity ID of the entity to be removed.
@@ -299,8 +299,7 @@ public interface SzEntitiesPage {
    * that produces instances of {@link SzEntitiesPageImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzEntitiesPage>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
@@ -319,7 +318,7 @@ public interface SzEntitiesPage {
    */
   class Factory extends ModelFactory<SzEntitiesPage, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -328,8 +327,9 @@ public interface SzEntitiesPage {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -341,8 +341,7 @@ public interface SzEntitiesPage {
      * 
      * @return The new instance of {@link SzEntitiesPage}
      */
-    public SzEntitiesPage create()
-    {
+    public SzEntitiesPage create() {
       return this.getProvider().create();
     }
   }

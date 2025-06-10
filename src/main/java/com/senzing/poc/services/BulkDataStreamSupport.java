@@ -39,8 +39,7 @@ import static com.senzing.util.LoggingUtilities.*;
  * support functions for working with stream loading bulk data.
  */
 public interface BulkDataStreamSupport
-    extends BulkDataSupport, StreamLoadSupport
-{
+    extends BulkDataSupport, StreamLoadSupport {
   /**
    * The maximum number of bytes for a micro batch to avoid queue limits.
    */
@@ -53,17 +52,16 @@ public interface BulkDataStreamSupport
    *
    * @parma provider The {@link SzPocProvider} to use.
    * @param uriInfo The {@link UriInfo} for the request.
-   * @param timers The {@link Timers} tracking timing for the operation.
+   * @param timers  The {@link Timers} tracking timing for the operation.
    *
-   * @throws ForbiddenException If no load queue is configured.
-   * @throws ServiceUnavailableException If too many long-running operaitons are
+   * @throws ForbiddenException          If no load queue is configured.
+   * @throws ServiceUnavailableException If too many long-running operations are
    *                                     already running.
    */
   default AccessToken prepareStreamLoadOperation(SzPocProvider provider,
-                                                 UriInfo       uriInfo,
-                                                 Timers        timers)
-      throws ForbiddenException, ServiceUnavailableException
-  {
+      UriInfo uriInfo,
+      Timers timers)
+      throws ForbiddenException, ServiceUnavailableException {
     if (!provider.hasLoadSink()) {
       throw newForbiddenException(
           POST, uriInfo, timers,
@@ -79,46 +77,46 @@ public interface BulkDataStreamSupport
    *
    */
   default SzBulkLoadResponse streamLoadBulkRecords(
-      SzPocProvider               provider,
-      Timers                      timers,
-      String                      dataSource,
-      String                      mapDataSources,
-      List<String>                mapDataSourceList,
-      String                      explicitLoadId,
-      int                         maxBatchCount,
-      int                         maxFailures,
-      MediaType                   mediaType,
-      InputStream                 dataInputStream,
-      FormDataContentDisposition  fileMetaData,
-      UriInfo                     uriInfo,
-      Long                        progressPeriod,
-      SseEventSink                sseEventSink,
-      Sse                         sse,
-      Session                     webSocketSession)
-  {
+      SzPocProvider provider,
+      Timers timers,
+      String dataSource,
+      String mapDataSources,
+      List<String> mapDataSourceList,
+      String explicitLoadId,
+      int maxBatchCount,
+      int maxFailures,
+      MediaType mediaType,
+      InputStream dataInputStream,
+      FormDataContentDisposition fileMetaData,
+      UriInfo uriInfo,
+      Long progressPeriod,
+      SseEventSink sseEventSink,
+      Sse sse,
+      Session webSocketSession) {
     MediaType specifiedMediaType = mediaType;
 
     // check if the maximum batch count is less-than or equal to zero
-    if (maxBatchCount <= 0) maxBatchCount = Integer.MAX_VALUE;
+    if (maxBatchCount <= 0)
+      maxBatchCount = Integer.MAX_VALUE;
 
     // convert the progress period to nanoseconds
     Long progressNanos = (progressPeriod == null)
-        ? null : progressPeriod * 1000000L;
+        ? null
+        : progressPeriod * 1000000L;
 
-    OutboundSseEvent.Builder eventBuilder
-        = (sseEventSink != null && sse != null) ? sse.newEventBuilder() : null;
+    OutboundSseEvent.Builder eventBuilder = (sseEventSink != null && sse != null) ? sse.newEventBuilder() : null;
 
     SzBulkLoadResult bulkLoadResult = this.newBulkLoadResult();
 
     // populate the entity type and data source maps
     Map<String, String> dataSourceMap = new HashMap<>();
     this.prepareBulkDataMappings(provider,
-                                 uriInfo,
-                                 timers,
-                                 dataSource,
-                                 mapDataSources,
-                                 mapDataSourceList,
-                                 dataSourceMap);
+        uriInfo,
+        timers,
+        dataSource,
+        mapDataSources,
+        mapDataSourceList,
+        dataSourceMap);
 
     ProgressState progressState = new ProgressState();
 
@@ -132,26 +130,26 @@ public interface BulkDataStreamSupport
       logDebug("Bulk data character encoding: " + charset);
 
       String loadId = (explicitLoadId == null)
-          ? formatLoadId(dataCache, fileMetaData) : explicitLoadId;
+          ? formatLoadId(dataCache, fileMetaData)
+          : explicitLoadId;
 
       SzMessageSink loadSink = provider.acquireLoadSink();
 
       // check if we need to auto-detect the media type
-      try (InputStream        is  = dataCache.getInputStream(true);
-           InputStreamReader  isr = new InputStreamReader(is, charset);
-           BufferedReader     br  = new BufferedReader(isr))
-      {
+      try (InputStream is = dataCache.getInputStream(true);
+          InputStreamReader isr = new InputStreamReader(is, charset);
+          BufferedReader br = new BufferedReader(isr)) {
         // if format is null then RecordReader will auto-detect
         RecordReader recordReader = new RecordReader(null,
-                                                     br,
-                                                     dataSourceMap,
-                                                     loadId);
+            br,
+            dataSourceMap,
+            loadId);
 
         this.verifyBulkDataFormat(specifiedMediaType,
-                                  bulkDataSet.getFormat(),
-                                  recordReader.getFormat(),
-                                  uriInfo,
-                                  timers);
+            bulkDataSet.getFormat(),
+            recordReader.getFormat(),
+            uriInfo,
+            timers);
 
         // override the format accordingly
         bulkDataSet.setFormat(recordReader.getFormat());
@@ -163,15 +161,14 @@ public interface BulkDataStreamSupport
         bulkLoadResult.setCharacterEncoding(charset);
         bulkLoadResult.setMediaType(bulkDataSet.getFormat().getMediaType());
 
-        boolean       done      = false;
-        SzMessage[]   failedMsg = { null };
+        boolean done = false;
+        SzMessage[] failedMsg = { null };
 
-        ByteArrayOutputStream batchBytes
-            = new ByteArrayOutputStream(MAXIMUM_BATCH_BYTES);
+        ByteArrayOutputStream batchBytes = new ByteArrayOutputStream(MAXIMUM_BATCH_BYTES);
 
-        int             batchCount    = 0;
-        String          prefix        = "[";
-        List<String[]>  trackingList  = new LinkedList<>();
+        int batchCount = 0;
+        String prefix = "[";
+        List<String[]> trackingList = new LinkedList<>();
 
         boolean aborted = false;
         ProgressUpdater<SzBulkLoadResponse> progressUpdater = null;
@@ -189,10 +186,9 @@ public interface BulkDataStreamSupport
             String resolvedDS = (done) ? null
                 : JsonUtilities.getString(record, "DATA_SOURCE");
             if ((!done)
-                && (resolvedDS == null || resolvedDS.trim().length() == 0))
-            {
+                && (resolvedDS == null || resolvedDS.trim().length() == 0)) {
               logDebug("Incomplete record not set: "
-                           + JsonUtilities.toJsonText(record));
+                  + JsonUtilities.toJsonText(record));
 
               bulkLoadResult.trackIncompleteRecord(resolvedDS);
 
@@ -212,20 +208,20 @@ public interface BulkDataStreamSupport
                 batchBytes.write(prefix.getBytes(UTF_8));
                 batchBytes.write(recordBytes);
                 prefix = ",";
-                String[] trackParams = {resolvedDS};
+                String[] trackParams = { resolvedDS };
                 trackingList.add(trackParams);
                 recordBytes = null;
 
                 logDebug("Batching record " + batchCount
-                      + " of " + maxBatchCount + " (max): " + recordText,
-                         "Batch size is " + batchBytes.size() + " bytes of "
-                             + MAXIMUM_BATCH_BYTES + " bytes (max)");
+                    + " of " + maxBatchCount + " (max): " + recordText,
+                    "Batch size is " + batchBytes.size() + " bytes of "
+                        + MAXIMUM_BATCH_BYTES + " bytes (max)");
               }
 
               // now check if we are sending the current batch
               if ((batchCount > 0)
                   && (done || batchCount >= maxBatchCount
-                  || (batchBytes.size() + 1) >= MAXIMUM_BATCH_BYTES)) {
+                      || (batchBytes.size() + 1) >= MAXIMUM_BATCH_BYTES)) {
                 // create the batch message
                 batchBytes.write("]".getBytes(UTF_8));
                 messageBody = new String(batchBytes.toByteArray(), UTF_8);
@@ -291,21 +287,21 @@ public interface BulkDataStreamSupport
                   bulkLoadResult.trackFailedRecord(
                       resolvedDS,
                       this.newError("Maximum message size ("
-                                        + MAXIMUM_BATCH_BYTES + ") exceeded: "
-                                        + byteCount));
+                          + MAXIMUM_BATCH_BYTES + ") exceeded: "
+                          + byteCount));
                 } else {
                   // add this record to the newly created batch
                   batchCount++;
                   batchBytes.write(prefix.getBytes(UTF_8));
                   batchBytes.write(recordBytes);
                   prefix = ",";
-                  String[] trackParams = {resolvedDS};
+                  String[] trackParams = { resolvedDS };
                   trackingList.add(trackParams);
 
                   logDebug("Batching record " + batchCount
-                             + " of " + maxBatchCount + " (max): " + recordText,
-                           "Batch size is " + batchBytes.size() + " bytes of "
-                             + MAXIMUM_BATCH_BYTES + " bytes (max)");
+                      + " of " + maxBatchCount + " (max): " + recordText,
+                      "Batch size is " + batchBytes.size() + " bytes of "
+                          + MAXIMUM_BATCH_BYTES + " bytes (max)");
                 }
               }
             }
@@ -322,8 +318,7 @@ public interface BulkDataStreamSupport
 
             // check if the timing has gone beyond the specified progress period
             if ((progressNanos != null) && (progressUpdater == null)
-                && (eventBuilder != null || webSocketSession != null))
-            {
+                && (eventBuilder != null || webSocketSession != null)) {
               // create the update response if there is a client expecting it
               progressState.setStartTime(System.nanoTime());
               Supplier<SzBulkLoadResponse> supplier = () -> {
@@ -331,12 +326,12 @@ public interface BulkDataStreamSupport
                     POST, 200, uriInfo, timers, bulkLoadResult);
               };
               progressUpdater = new ProgressUpdater<>(progressNanos,
-                                                      progressState,
-                                                      progressState, // monitor
-                                                      supplier,
-                                                      sseEventSink,
-                                                      eventBuilder,
-                                                      webSocketSession);
+                  progressState,
+                  progressState, // monitor
+                  supplier,
+                  sseEventSink,
+                  eventBuilder,
+                  webSocketSession);
               progressUpdater.start();
             }
           }
@@ -366,38 +361,39 @@ public interface BulkDataStreamSupport
         }
 
       } finally {
-        if (loadSink != null) provider.releaseLoadSink(loadSink);
+        if (loadSink != null)
+          provider.releaseLoadSink(loadSink);
         dataCache.delete();
       }
 
     } catch (IOException e) {
       bulkLoadResult.setStatus(ABORTED);
       SzBulkLoadResponse response = this.newBulkLoadResponse(POST,
-                                                             200,
-                                                             uriInfo,
-                                                             timers,
-                                                             bulkLoadResult);
+          200,
+          uriInfo,
+          timers,
+          bulkLoadResult);
       this.abortOperation(e,
-                          response,
-                          uriInfo,
-                          timers,
-                          progressState.nextEventId(),
-                          eventBuilder,
-                          sseEventSink,
-                          webSocketSession);
+          response,
+          uriInfo,
+          timers,
+          progressState.nextEventId(),
+          eventBuilder,
+          sseEventSink,
+          webSocketSession);
     }
 
     SzBulkLoadResponse response = this.newBulkLoadResponse(POST,
-                                                           200,
-                                                           uriInfo,
-                                                           timers,
-                                                           bulkLoadResult);
+        200,
+        uriInfo,
+        timers,
+        bulkLoadResult);
 
     return this.completeOperation(eventBuilder,
-                                  sseEventSink,
-                                  progressState.nextEventId(),
-                                  webSocketSession,
-                                  response);
+        sseEventSink,
+        progressState.nextEventId(),
+        webSocketSession,
+        response);
   }
 
 }

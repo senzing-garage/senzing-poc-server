@@ -14,7 +14,7 @@ import com.senzing.poc.model.impl.SzLoadedStatsImpl;
 @JsonDeserialize(using = SzLoadedStats.Factory.class)
 public interface SzLoadedStats {
   /**
-   * Gets the total number of records that have been loaded to the 
+   * Gets the total number of records that have been loaded to the
    * entity repository.
    *
    * @return The total number of records that have been loaded to the
@@ -50,9 +50,9 @@ public interface SzLoadedStats {
   void setTotalEntityCount(long entityCount);
 
   /**
-   * Gets the total number of records that have been loaded to the 
+   * Gets the total number of records that have been loaded to the
    * entity repository that did <b>not</b> match against any other
-   * records.   This is also the total number of entities that only
+   * records. This is also the total number of entities that only
    * have a single record.
    *
    * @return The total number of records that have been loaded to the
@@ -63,7 +63,7 @@ public interface SzLoadedStats {
   /**
    * Sets the the total number of records that have been loaded to the
    * entity repository that did <b>not</b> match against any other
-   * record.  This is also the total number of entities that only have
+   * record. This is also the total number of entities that only have
    * a single record.
    *
    * @param recordCount The total number of records that have been loaded
@@ -72,35 +72,35 @@ public interface SzLoadedStats {
   void setTotalUnmatchedRecordCount(long recordCount);
 
   /**
-   * Gets the {@link List} of {@link SzSourceLoadedStats} describing the 
-   * count statistics for each data source.  The returned value list sould
+   * Gets the {@link List} of {@link SzSourceLoadedStats} describing the
+   * count statistics for each data source. The returned value list should
    * contain only one element for each data source.
    * 
-   * @return The {@link List} of {@link SzSourceLoadedStats} describing the 
-   *         count statistics for each data source.  The returned {@link List}
-   *         sould contain only one element for each data source.
+   * @return The {@link List} of {@link SzSourceLoadedStats} describing the
+   *         count statistics for each data source. The returned {@link List}
+   *         should contain only one element for each data source.
    */
   List<SzSourceLoadedStats> getDataSourceCounts();
 
   /**
-   * Sets the {@link List} of {@link SzSourceLoadedStats} describing the 
-   * count statistics for each data source.  This clears any existing 
-   * data source counts before setting with those specified.   The specified
+   * Sets the {@link List} of {@link SzSourceLoadedStats} describing the
+   * count statistics for each data source. This clears any existing
+   * data source counts before setting with those specified. The specified
    * {@link List} should contain only one element for each data source, but
    * if duplicates are encountered then later values in the {@link List}
    * take precedence, overwriting prior values from the {@link List}.
    * Specifying a <code>null</code> {@link List} is equivalent to specifying
    * an empty {@link List}.
    * 
-   * @param statsList The {@link List} of {@link SzSourceLoadedStats} 
+   * @param statsList The {@link List} of {@link SzSourceLoadedStats}
    *                  describing the count statistics for each data source.
    */
   void setDataSourceCounts(List<SzSourceLoadedStats> statsList);
 
   /**
    * Adds the specified {@link SzSourceLoadedStats} describing count statistics
-   * for a data source to the existing {@link SzSourceLoadedStats} for this 
-   * instance.  If the specified {@link SzSourceLoadedStats} has the same 
+   * for a data source to the existing {@link SzSourceLoadedStats} for this
+   * instance. If the specified {@link SzSourceLoadedStats} has the same
    * data source code as an existing {@link SzSourceLoadedStats} instance then
    * the specified value replaces the existing one for that data source code.
    * 
@@ -126,8 +126,7 @@ public interface SzLoadedStats {
    * that produces instances of {@link SzLoadedStatsImpl}.
    */
   class DefaultProvider extends AbstractModelProvider<SzLoadedStats>
-    implements Provider
-  {
+      implements Provider {
     /**
      * Default constructor.
      */
@@ -146,7 +145,7 @@ public interface SzLoadedStats {
    */
   class Factory extends ModelFactory<SzLoadedStats, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -155,8 +154,9 @@ public interface SzLoadedStats {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -168,8 +168,7 @@ public interface SzLoadedStats {
      * 
      * @return The new instance of {@link SzLoadedStats}
      */
-    public SzLoadedStats create()
-    {
+    public SzLoadedStats create() {
       return this.getProvider().create();
     }
   }
