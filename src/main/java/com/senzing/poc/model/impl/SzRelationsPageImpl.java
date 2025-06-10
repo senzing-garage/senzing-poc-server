@@ -37,7 +37,7 @@ public class SzRelationsPageImpl implements SzRelationsPage {
     /**
      * Constructs with the two entity ID's.
      * 
-     * @param entityId The first entity ID.
+     * @param entityId  The first entity ID.
      * @param relatedId The related entity ID.
      */
     private RelationKey(long entityId, long relatedId) {
@@ -57,7 +57,7 @@ public class SzRelationsPageImpl implements SzRelationsPage {
     /**
      * Gets the related entity ID of the relationship.
      * 
-     * @return The related entity ID of the relationship. 
+     * @return The related entity ID of the relationship.
      */
     public long getRelatedId() {
       return this.relatedId;
@@ -65,8 +65,8 @@ public class SzRelationsPageImpl implements SzRelationsPage {
 
     /**
      * Implemented to return <code>true</code> if and only if the
-     * specified parameter is a non-null reference to an object 
-     * ofthe same class with equivalent entity ID and related ID.
+     * specified parameter is a non-null reference to an object
+     * of the same class with equivalent entity ID and related ID.
      * 
      * @param obj The object to compare with.
      * @return <code>true</code> if the objects are equal,
@@ -74,12 +74,15 @@ public class SzRelationsPageImpl implements SzRelationsPage {
      */
     @Override
     public boolean equals(Object obj) {
-      if (obj == null) return false;
-      if (this == obj) return true;
-      if (this.getClass() != obj.getClass()) return false;
+      if (obj == null)
+        return false;
+      if (this == obj)
+        return true;
+      if (this.getClass() != obj.getClass())
+        return false;
       RelationKey key = (RelationKey) obj;
       return this.getEntityId() == key.getEntityId()
-        && this.getRelatedId() == key.getRelatedId();
+          && this.getRelatedId() == key.getRelatedId();
     }
 
     /**
@@ -98,27 +101,32 @@ public class SzRelationsPageImpl implements SzRelationsPage {
      * on related entity ID (both in ascending order) with <code>null</code>
      * values sorted before non-null values.
      * 
-     * @return A negative number, zero (0) or a positive number 
+     * @return A negative number, zero (0) or a positive number
      *         depending on whether this instance compares less-than,
-     *         equal-to or greater-than the specified instance, 
+     *         equal-to or greater-than the specified instance,
      *         respectively.
      */
     @Override
     public int compareTo(RelationKey key) {
-      if (key == null) return 1;
+      if (key == null)
+        return 1;
       long diff = this.getEntityId() - key.getEntityId();
-      if (diff < 0L) return -1;
-      if (diff > 0L) return 1;
+      if (diff < 0L)
+        return -1;
+      if (diff > 0L)
+        return 1;
 
       diff = this.getRelatedId() - key.getRelatedId();
-      if (diff < 0L) return -1;
-      if (diff > 0L) return 1;
+      if (diff < 0L)
+        return -1;
+      if (diff > 0L)
+        return 1;
       return 0;
     }
 
     /**
      * Implemented to format this instance as a relation bound
-     * value with the entity ID followed by the related ID, 
+     * value with the entity ID followed by the related ID,
      * separated by a colon.
      * 
      * @return A relation bound value with the entity ID followed
@@ -148,7 +156,7 @@ public class SzRelationsPageImpl implements SzRelationsPage {
 
   /**
    * The requested sample size representing the number of entity ID's
-   * to be randmonly selected from the page of results.
+   * to be randomly selected from the page of results.
    */
   private Integer sampleSize = null;
 
@@ -191,16 +199,16 @@ public class SzRelationsPageImpl implements SzRelationsPage {
    * Default constructor
    */
   public SzRelationsPageImpl() {
-    this.bound              = "0:0";
-    this.boundType          = null;
-    this.pageSize           = 0;
-    this.sampleSize         = null;
-    this.pageMinimumValue   = null;
-    this.pageMaximumValue   = null;
+    this.bound = "0:0";
+    this.boundType = null;
+    this.pageSize = 0;
+    this.sampleSize = null;
+    this.pageMinimumValue = null;
+    this.pageMaximumValue = null;
     this.totalRelationCount = 0L;
-    this.beforePageCount    = 0L;
-    this.afterPageCount     = 0L;
-    this.relations          = new TreeMap<>();
+    this.beforePageCount = 0L;
+    this.afterPageCount = 0L;
+    this.relations = new TreeMap<>();
   }
 
   @Override
@@ -245,14 +253,16 @@ public class SzRelationsPageImpl implements SzRelationsPage {
 
   @Override
   public String getMinimumValue() {
-    if (this.relations.size() == 0) return null;
+    if (this.relations.size() == 0)
+      return null;
     RelationKey key = this.relations.firstKey();
     return key.toString();
   }
 
   @Override
   public String getMaximumValue() {
-    if (this.relations.size() == 0) return null;
+    if (this.relations.size() == 0)
+      return null;
     RelationKey key = this.relations.lastKey();
     return key.toString();
   }
@@ -303,7 +313,6 @@ public class SzRelationsPageImpl implements SzRelationsPage {
     this.beforePageCount = entityCount;
   }
 
-
   @Override
   public long getAfterPageCount() {
     return this.afterPageCount;
@@ -324,11 +333,11 @@ public class SzRelationsPageImpl implements SzRelationsPage {
   public void setRelations(Collection<SzRelation> relations) {
     this.relations.clear();
     if (relations != null) {
-      relations.forEach( relation -> {
+      relations.forEach(relation -> {
         if (relation != null) {
-          long        entityId  = relation.getEntity().getEntityId();
-          long        relatedId = relation.getRelatedEntity().getEntityId();
-          RelationKey key       = new RelationKey(entityId, relatedId);
+          long entityId = relation.getEntity().getEntityId();
+          long relatedId = relation.getRelatedEntity().getEntityId();
+          RelationKey key = new RelationKey(entityId, relatedId);
 
           this.relations.put(key, relation);
         }
@@ -338,10 +347,10 @@ public class SzRelationsPageImpl implements SzRelationsPage {
 
   @Override
   public void addRelation(SzRelation relation) {
-    long        entityId  = relation.getEntity().getEntityId();
-    long        relatedId = relation.getRelatedEntity().getEntityId();
-    RelationKey key       = new RelationKey(entityId, relatedId);
-          
+    long entityId = relation.getEntity().getEntityId();
+    long relatedId = relation.getRelatedEntity().getEntityId();
+    RelationKey key = new RelationKey(entityId, relatedId);
+
     this.relations.put(key, relation);
   }
 

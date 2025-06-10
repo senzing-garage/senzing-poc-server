@@ -1,13 +1,9 @@
 # senzing-poc-server
 
-If you are beginning your journey with
-[Senzing](https://senzing.com/),
-please start with
-[Senzing Quick Start guides](https://docs.senzing.com/quickstart/).
+If you are beginning your journey with [Senzing],
+please start with [Senzing Quick Start guides].
 
-You are in the
-[Senzing Garage](https://github.com/senzing-garage)
-where projects are "tinkered" on.
+You are in the [Senzing Garage] where projects are "tinkered" on.
 Although this GitHub repository may help you understand an approach to using Senzing,
 it's not considered to be "production ready" and is not considered to be part of the Senzing product.
 Heck, it may not even be appropriate for your application of Senzing!
@@ -16,19 +12,18 @@ Heck, it may not even be appropriate for your application of Senzing!
 
 The Senzing POC API Server serves as a backend to the Senzing POC application.
 No guarantee is made for backwards compatibility with this code base; however,
-the code provided serves as an example for how to extend the
-[Senzing API Server](https://github.com/senzing-garage/senzing-api-server).
+the code provided serves as an example for how to extend the [Senzing API Server].
 
-The [Senzing POC API OAS specification](http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/main/senzing-poc-rest-api.yaml)
-documents the available API methods, their parameters and the response formats.
+The [Senzing POC API OAS specification] documents the available API methods,
+their parameters and the response formats.
 
 ### Contents
 
-1. [Demonstrate using Command Line](#demonstrate-using-command-line)
-    1. [Dependencies](#dependencies)
-    1. [Building](#building)
-    1. [Running](#running)
-1. [License](#license)
+1. [Demonstrate using Command Line]
+   1. [Dependencies]
+   1. [Building]
+   1. [Running]
+1. [License]
 
 ### Legend
 
@@ -51,31 +46,31 @@ which can be built from the `senzing-api-server` sub-repository via `mvn install
 1. Ensure the GIT submodules are cloned (`senzing-api-server` and
    `senzing-api-server/senzing-rest-api-specification`) are cloned:
 
-    ```console
-    git submodule update --init --recursive
-    ```
+   ```console
+   git submodule update --init --recursive
+   ```
 
 1. First build / install the `senzing-api-server` sub-repository using the
-   instructions from the [Senzing API Server README.md](https://github.com/senzing-garage/senzing-api-server)
+   instructions from the [Senzing API Server README.md]
 
-1. Setup your environment.  The API's rely on native libraries and the
+1. Setup your environment. The API's rely on native libraries and the
    environment must be properly setup to find those libraries:
 
-    1. Linux
+   1. Linux
 
-        ```console
-        export SENZING_G2_DIR=/opt/senzing/g2
+      ```console
+      export SENZING_G2_DIR=/opt/senzing/g2
 
-        export LD_LIBRARY_PATH=${SENZING_G2_DIR}/lib:${SENZING_G2_DIR}/lib/debian:$LD_LIBRARY_PATH
-        ```
+      export LD_LIBRARY_PATH=${SENZING_G2_DIR}/lib:${SENZING_G2_DIR}/lib/debian:$LD_LIBRARY_PATH
+      ```
 
-    1. Windows
+   1. Windows
 
-        ```console
-        set SENZING_G2_DIR="C:\Program Files\Senzing\g2"
+      ```console
+      set SENZING_G2_DIR="C:\Program Files\Senzing\g2"
 
-        set Path=%SENZING_G2_DIR%\lib;%Path%
-        ```
+      set Path=%SENZING_G2_DIR%\lib;%Path%
+      ```
 
 ### Building
 
@@ -92,14 +87,14 @@ Where `[version]` is the version number from the `pom.xml` file.
 
 ### Running
 
-To execute the server you will use `java -jar`.  It assumed that your environment
+To execute the server you will use `java -jar`. It assumed that your environment
 is properly configured as described in the "Dependencies" section above.
 
 To start up you must provide the initialization parameters for the Senzing
-native API.  This is done through one of: `--init-file`, `--init-env-var` or the
+native API. This is done through one of: `--init-file`, `--init-env-var` or the
 `--init-json` options to specify how to obtain the initialization JSON parameters.
 
-Other command-line options may be useful to you as well.  Execute
+Other command-line options may be useful to you as well. Execute
 
 ```console
 java -jar target/senzing-poc-server-3.5.0.jar --help
@@ -112,7 +107,7 @@ For example:
 
 java -jar senzing-poc-server-3.5.0.jar <options>
 
-<options> includes: 
+<options> includes:
 
 
 [ Standard Options ]
@@ -173,7 +168,7 @@ java -jar senzing-poc-server-3.5.0.jar <options>
         --> VIA ENVIRONMENT: SENZING_API_SERVER_ALLOWED_ORIGINS
 
    --concurrency <thread-count>
-        Also -concurrency.  Sets the number of threads available for executing 
+        Also -concurrency.  Sets the number of threads available for executing
         Senzing API functions (i.e.: the number of engine threads).
         If not specified, then this defaults to 8.
         --> VIA ENVIRONMENT: SENZING_API_SERVER_CONCURRENCY
@@ -312,32 +307,32 @@ java -jar senzing-poc-server-3.5.0.jar <options>
         --> VIA ENVIRONMENT: SENZING_DATA_MART_SQLITE_DATABASE_FILE
 
    --postgresql-host <hostname>
-        Used to specify the hostname for connecting to PostgreSQL as the 
+        Used to specify the hostname for connecting to PostgreSQL as the
         data-mart database.
         --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_HOST
 
    --postgresql-port <port>
-        Used to specify the port number for connecting to PostgreSQL as the 
+        Used to specify the port number for connecting to PostgreSQL as the
         data-mart database.
         --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_PORT
 
    --postgresql-database <database>
-        Used to specify the database name for connecting to PostgreSQL as the 
+        Used to specify the database name for connecting to PostgreSQL as the
         data-mart database.
         --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_DATABASE
 
    --postgresql-user <user name>
-        Used to specify the user name for connecting to PostgreSQL as the 
+        Used to specify the user name for connecting to PostgreSQL as the
         data-mart database.
         --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_USER
 
    --postgresql-password <password>
-        Used to specify the password for connecting to PostgreSQL as the 
+        Used to specify the password for connecting to PostgreSQL as the
         data-mart database.
         --> VIA ENVIRONMENT: SENZING_DATA_MART_POSTGRESQL_PASSWORD
 
 [ HTTPS / SSL Options ]
-   The following options pertain to HTTPS / SSL configuration.  The 
+   The following options pertain to HTTPS / SSL configuration.  The
    --key-store and --key-store-password options are the minimum required
    options to enable HTTPS / SSL communication.  If HTTPS / SSL communication
    is enabled, then HTTP communication is disabled UNLESS the --http-port
@@ -553,15 +548,11 @@ java -jar senzing-poc-server-3.5.0.jar <options>
 
 ## License
 
-View
-[license information](https://senzing.com/end-user-license-agreement/)
-for the software container in this Docker image.
+View [license information] for the software container in this Docker image.
 Note that this license does not permit further distribution.
 
 This Docker image may also contain software from the
-[Senzing GitHub community](https://github.com/Senzing/)
-under the
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+[Senzing GitHub community] under the [Apache License 2.0].
 
 Further, as with all Docker images,
 this likely also contains other software which may be under other licenses
@@ -571,3 +562,18 @@ along with any direct or indirect dependencies of the primary software being con
 As for any pre-built image usage,
 it is the image user's responsibility to ensure that any use of this image complies
 with any relevant licenses for all software contained within.
+
+[Apache License 2.0]: https://www.apache.org/licenses/LICENSE-2.0
+[Building]: #building
+[Demonstrate using Command Line]: #demonstrate-using-command-line
+[Dependencies]: #dependencies
+[license information]: https://senzing.com/end-user-license-agreement/
+[License]: #license
+[Running]: #running
+[Senzing API Server README.md]: https://github.com/senzing-garage/senzing-api-server
+[Senzing API Server]: https://github.com/senzing-garage/senzing-api-server
+[Senzing Garage]: https://github.com/senzing-garage
+[Senzing GitHub community]: https://github.com/Senzing/
+[Senzing POC API OAS specification]: http://editor.swagger.io/?url=https://raw.githubusercontent.com/Senzing/poc-api-server/main/senzing-poc-rest-api.yaml
+[Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
+[Senzing]: https://senzing.com/

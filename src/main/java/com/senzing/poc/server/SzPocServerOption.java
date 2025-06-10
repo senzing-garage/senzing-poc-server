@@ -17,46 +17,47 @@ import static com.senzing.poc.server.SzPocServerConstants.*;
  * Describes the command-line options for {@link SzPocServer}.
  */
 public enum SzPocServerOption
-    implements CommandLineOption<SzPocServerOption, SzApiServerOption>
-{
+    implements CommandLineOption<SzPocServerOption, SzApiServerOption> {
   /**
    * <p>
    * This option is used to specify the URL to an Amazon SQS queue to be used
-   * for loading records.  The single parameter to this option is the URL.  If
+   * for loading records. The single parameter to this option is the URL. If
    * this option is specified then the load queue parameters for RabbitMQ and
    * Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--sqs-load-url {url}</tt></li>
-   *   <li>Command Line: <tt>-sqsLoadUrl {url}</tt></li>
-   *   <li>Environment: <tt>SENZING_SQS_LOAD_URL="{url}"</tt></tt></li>
+   * <li>Command Line: <tt>--sqs-load-url {url}</tt></li>
+   * <li>Command Line: <tt>-sqsLoadUrl {url}</tt></li>
+   * <li>Environment: <tt>SENZING_SQS_LOAD_URL="{url}"</tt></tt></li>
    * </ul>
    * </p>
    */
   SQS_LOAD_URL(
       "--sqs-load-url", Set.of("-sqsLoadUrl"),
       "SENZING_SQS_LOAD_QUEUE_URL",
-      List.of("SENZING_SQS_QUEUE_URL"), 
+      List.of("SENZING_SQS_QUEUE_URL"),
       false, 1, true,
       SQS_LOAD_QUEUE_GROUP, URL_PROPERTY_KEY, false),
 
   /**
    * <p>
    * This option is used to specify the user name for connecting to RabbitMQ as
-   * part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a user name.  If this option is specified then the other options
+   * part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a user name. If this option is specified then the other options
    * required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-host {username}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadHost {username}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_USERNAME="{username}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_USERNAME="{username}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-host {username}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadHost {username}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_LOAD_USERNAME="{username}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_USERNAME="{username}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -70,18 +71,20 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the password for connecting to RabbitMQ as
-   * part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a password.  If this option is specified then the other options
+   * part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a password. If this option is specified then the other options
    * required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-password {password}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadPassword {password}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_PASSWORD="{password}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_PASSWORD="{password}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-password {password}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadPassword {password}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_LOAD_PASSWORD="{password}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_PASSWORD="{password}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -95,18 +98,19 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the hostname for connecting to RabbitMQ as
-   * part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a hostname or IP address.  If this option is specified then the
+   * part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a hostname or IP address. If this option is specified then the
    * other options required for a RabbitMQ load queue are required and the
    * load queue parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-host {hostname}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadHost {hostname}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_HOST="{hostname}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_HOST="{hostname}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-host {hostname}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadHost {hostname}</tt></li>
+   * <li>Environment: <tt>SENZING_RABBITMQ_LOAD_HOST="{hostname}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_HOST="{hostname}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -120,18 +124,18 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the port number for connecting to RabbitMQ
-   * as part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a port number.  If this option is specified then the other
+   * as part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a port number. If this option is specified then the other
    * options required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-port {port}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadPort {port}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_PORT="{port}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_PORT="{port}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-port {port}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadPort {port}</tt></li>
+   * <li>Environment: <tt>SENZING_RABBITMQ_LOAD_PORT="{port}"</tt></tt></li>
+   * <li>Environment: <tt>SENZING_RABBITMQ_PORT="{port}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -145,18 +149,20 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the virtual host for connecting to RabbitMQ
-   * as part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a virtual host name.  If this option is specified then the other
+   * as part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a virtual host name. If this option is specified then the other
    * options required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-virtual-host {virtual-host}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadVirtualHost {virtual-host}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_VIRTUAL_HOST="{virtual-host}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_VIRTUAL_HOST="{virtual-host}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-virtual-host {virtual-host}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadVirtualHost {virtual-host}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_LOAD_VIRTUAL_HOST="{virtual-host}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_VIRTUAL_HOST="{virtual-host}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -170,18 +176,20 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the exchange for connecting to RabbitMQ
-   * as part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is an exchange name.  If this option is specified then the other
+   * as part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is an exchange name. If this option is specified then the other
    * options required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-exchange {exchange}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadExchange {exchange}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_EXCHANGE="{exchange}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_EXCHANGE="{exchange}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-exchange {exchange}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadExchange {exchange}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_LOAD_EXCHANGE="{exchange}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_EXCHANGE="{exchange}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -195,17 +203,18 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the routing key for connecting to RabbitMQ
-   * as part of specifying a RabbitMQ load queue.  The single parameter to this
-   * option is a routing key.  If this option is specified then the other
+   * as part of specifying a RabbitMQ load queue. The single parameter to this
+   * option is a routing key. If this option is specified then the other
    * options required for a RabbitMQ load queue are required and the load queue
    * parameters pertaining to SQS and Kafka are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--rabbit-load-routing-key {routing-key}</tt></li>
-   *   <li>Command Line: <tt>-rabbitLoadRoutingKey {routing-key}</tt></li>
-   *   <li>Environment: <tt>SENZING_RABBITMQ_LOAD_ROUTING_KEY="{routing-key}"</tt></tt></li>
+   * <li>Command Line: <tt>--rabbit-load-routing-key {routing-key}</tt></li>
+   * <li>Command Line: <tt>-rabbitLoadRoutingKey {routing-key}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_RABBITMQ_LOAD_ROUTING_KEY="{routing-key}"</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -219,9 +228,9 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the bootstrap servers for connecting to
-   * Kafka as part of specifying a Kafka load topic.  The single parameter to
+   * Kafka as part of specifying a Kafka load topic. The single parameter to
    * this option is the Kafka bootstrap servers specification (typically a
-   * hostname or IP address and port number separated by a colon).  If this
+   * hostname or IP address and port number separated by a colon). If this
    * option is specified then the {@link #KAFKA_LOAD_TOPIC} option is required
    * and the load queue parameters pertaining to RabbitMQ and SQS are not
    * allowed.
@@ -229,10 +238,14 @@ public enum SzPocServerOption
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--kafka-load-bootstrap-servers {bootstrap-servers}</tt></li>
-   *   <li>Command Line: <tt>-kafkaLoadBootstrapServers {bootstrap-servers}</tt></li>
-   *   <li>Environment: <tt>SENZING_KAFKA_LOAD_BOOTSTRAP_SERVER="{bootstrap-servers}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_KAFKA_BOOTSTRAP_SERVER="{bootstrap-servers}" (fallback)</tt></tt></li>
+   * <li>Command Line:
+   * <tt>--kafka-load-bootstrap-servers {bootstrap-servers}</tt></li>
+   * <li>Command Line:
+   * <tt>-kafkaLoadBootstrapServers {bootstrap-servers}</tt></li>
+   * <li>Environment:
+   * <tt>SENZING_KAFKA_LOAD_BOOTSTRAP_SERVER="{bootstrap-servers}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_KAFKA_BOOTSTRAP_SERVER="{bootstrap-servers}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -246,8 +259,8 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the <b>optional</b> group ID to set when
-   * connecting to Kafka as part of specifying a Kafka load topic.  The single
-   * parameter to this option is the Kafka group ID.  If this option is
+   * connecting to Kafka as part of specifying a Kafka load topic. The single
+   * parameter to this option is the Kafka group ID. If this option is
    * specified then the {@link #KAFKA_LOAD_BOOTSTRAP_SERVER} and {@link
    * #KAFKA_LOAD_TOPIC} options are required and the load queue parameters
    * pertaining to RabbitMQ and SQS are not allowed.
@@ -255,10 +268,11 @@ public enum SzPocServerOption
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--kafka-load-group {group-id}</tt></li>
-   *   <li>Command Line: <tt>-kafkaLoadGroup {group-id}</tt></li>
-   *   <li>Environment: <tt>SENZING_KAFKA_LOAD_GROUP="{group-id}"</tt></tt></li>
-   *   <li>Environment: <tt>SENZING_KAFKA_GROUP="{group-id}" (fallback)</tt></tt></li>
+   * <li>Command Line: <tt>--kafka-load-group {group-id}</tt></li>
+   * <li>Command Line: <tt>-kafkaLoadGroup {group-id}</tt></li>
+   * <li>Environment: <tt>SENZING_KAFKA_LOAD_GROUP="{group-id}"</tt></tt></li>
+   * <li>Environment:
+   * <tt>SENZING_KAFKA_GROUP="{group-id}" (fallback)</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -272,17 +286,17 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the topic when connecting to Kafka as part
-   * of specifying a Kafka load topic.  The single parameter to this option is
-   * the Kafka topic.  If this option is specified then the {@link
+   * of specifying a Kafka load topic. The single parameter to this option is
+   * the Kafka topic. If this option is specified then the {@link
    * #KAFKA_LOAD_BOOTSTRAP_SERVER} option is required and the load queue
    * parameters pertaining to RabbitMQ and SQS are not allowed.
    * </p>
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <tt>--kafka-load-topic {topic-name}</tt></li>
-   *   <li>Command Line: <tt>-kafkaLoadTopic {topic-name}</tt></li>
-   *   <li>Environment: <tt>SENZING_KAFKA_LOAD_TOPIC="{topic-name}"</tt></tt></li>
+   * <li>Command Line: <tt>--kafka-load-topic {topic-name}</tt></li>
+   * <li>Command Line: <tt>-kafkaLoadTopic {topic-name}</tt></li>
+   * <li>Environment: <tt>SENZING_KAFKA_LOAD_TOPIC="{topic-name}"</tt></tt></li>
    * </ul>
    * </p>
    */
@@ -296,14 +310,15 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the SQLite database file to connect to for
-   * the data mart.  The single parameter to this option is the file path to
-   * the SQLite database file to use.  If this option is specified the database
+   * the data mart. The single parameter to this option is the file path to
+   * the SQLite database file to use. If this option is specified the database
    * options for other database types cannot be specified.
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--sqlite-database-file {file-path}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_SQLITE_DATABASE_FILE="{file-path}"</code></li>
+   * <li>Command Line: <code>--sqlite-database-file {file-path}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_SQLITE_DATABASE_FILE="{file-path}"</code></li>
    * </ul>
    */
   SQLITE_DATABASE_FILE(
@@ -315,16 +330,17 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the PostgreSQL database server host to
-   * connect to for the data mart.  The single parameter to this option is
-   * server host name or IP address for the PostgreSQL database server.  If
+   * connect to for the data mart. The single parameter to this option is
+   * server host name or IP address for the PostgreSQL database server. If
    * this option is specified the database options for other database types
    * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
    * PostgreSQL options (e.g.: {@link #POSTGRESQL_PORT}) are required.
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--postgresql-host {host-name|ip-address}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_HOST="{host-name|ip-address}"</code></li>
+   * <li>Command Line: <code>--postgresql-host {host-name|ip-address}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_POSTGRESQL_HOST="{host-name|ip-address}"</code></li>
    * </ul>
    *
    * @see #POSTGRESQL_PORT
@@ -341,16 +357,17 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the PostgreSQL database server port to
-   * connect to for the data mart.  The single parameter to this option is the
-   * port number for the PostgreSQL database server.  If this option is
+   * connect to for the data mart. The single parameter to this option is the
+   * port number for the PostgreSQL database server. If this option is
    * specified the database options for other database types (e.g.: {@link
    * #SQLITE_DATABASE_FILE}) cannot be specified and the other PostgreSQL
    * options (e.g.: {@link #POSTGRESQL_PORT}) are required.
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--postgresql-port {port-number}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_PORT="{port-number}"</code></li>
+   * <li>Command Line: <code>--postgresql-port {port-number}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_POSTGRESQL_PORT="{port-number}"</code></li>
    * </ul>
    *
    * @see #POSTGRESQL_HOST
@@ -367,16 +384,17 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the PostgreSQL database name for the data
-   * mart.  The single parameter to this option is the PostgreSQL database name
-   * for the data mart.  If this option is specified the database options for
+   * mart. The single parameter to this option is the PostgreSQL database name
+   * for the data mart. If this option is specified the database options for
    * other database types (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be
    * specified and the other PostgreSQL options (e.g.: {@link
    * #POSTGRESQL_HOST}) are required.
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--postgresql-database {database-name}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_DATABASE="{database-name}"</code></li>
+   * <li>Command Line: <code>--postgresql-database {database-name}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_POSTGRESQL_DATABASE="{database-name}"</code></li>
    * </ul>
    *
    * @see #POSTGRESQL_HOST
@@ -394,16 +412,17 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the PostgreSQL database user name to login
-   * to the PostgreSQL database server for the data mart.  The single parameter
-   * to this option is the user name for the PostgreSQL database server.  If
+   * to the PostgreSQL database server for the data mart. The single parameter
+   * to this option is the user name for the PostgreSQL database server. If
    * this option is specified the database options for other database types
    * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
    * PostgreSQL options (e.g.: {@link #POSTGRESQL_HOST}) are required.
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--postgresql-user {user-name}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_USER="{user-name}"</code></li>
+   * <li>Command Line: <code>--postgresql-user {user-name}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_POSTGRESQL_USER="{user-name}"</code></li>
    * </ul>
    *
    * @see #POSTGRESQL_HOST
@@ -420,7 +439,7 @@ public enum SzPocServerOption
   /**
    * <p>
    * This option is used to specify the PostgreSQL database user password to
-   * login to the PostgreSQL database server for the data mart.  The single
+   * login to the PostgreSQL database server for the data mart. The single
    * parameter to this option is the password for the PostgreSQL database user.
    * If this option is specified the database options for other database types
    * (e.g.: {@link #SQLITE_DATABASE_FILE}) cannot be specified and the other
@@ -428,8 +447,9 @@ public enum SzPocServerOption
    * <p>
    * This option can be specified in the following ways:
    * <ul>
-   *   <li>Command Line: <code>--postgresql-password {password}</code></li>
-   *   <li>Environment: <code>SENZING_REPLICATOR_POSTGRESQL_PASSWORD="{password}"</code></li>
+   * <li>Command Line: <code>--postgresql-password {password}</code></li>
+   * <li>Environment:
+   * <code>SENZING_REPLICATOR_POSTGRESQL_PASSWORD="{password}"</code></li>
    * </ul>
    *
    * @see #POSTGRESQL_HOST
@@ -499,12 +519,12 @@ public enum SzPocServerOption
   private int minParamCount;
 
   /**
-   * The maximum number of parmaeters that can be specifeid for this option.
+   * The maximum number of parameters that can be specified for this option.
    */
   private int maxParamCount;
 
   /**
-   * The {@link List} o {@link String} default parameters for this option.  This
+   * The {@link List} o {@link String} default parameters for this option. This
    * is <tt>null</tt> if no default and an empty {@link List} if the option is
    * specified by default with no parameters.
    */
@@ -527,337 +547,326 @@ public enum SzPocServerOption
    */
   private boolean groupOptional;
 
-  SzPocServerOption(String      cmdLineFlag,
-                    Set<String> synonymFlags,
-                    int         parameterCount)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      int parameterCount) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         false,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         null,
-         null,
-         true);
-  }
-  
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    int           parameterCount,
-                    String...     defaultParams) {
-    this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         false,
-         parameterCount,
-         List.of(defaultParams),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        null,
+        null,
+        false,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    int           minParamCount,
-                    int           maxParamCount,
-                    String...     defaultParams) {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      int parameterCount,
+      String... defaultParams) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         false,
-         minParamCount,
-         maxParamCount,
-         List.of(defaultParams),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        false,
+        parameterCount,
+        List.of(defaultParams),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String      cmdLineFlag,
-                    Set<String> synonymFlags,
-                    int         parameterCount,
-                    String      groupName,
-                    String      groupPropertyKey,
-                    boolean     groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      int minParamCount,
+      int maxParamCount,
+      String... defaultParams) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         false,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        false,
+        minParamCount,
+        maxParamCount,
+        List.of(defaultParams),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    int           parameterCount,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      int parameterCount,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         false,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        null,
+        null,
+        false,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String      cmdLineFlag,
-                    Set<String> synonymFlags,
-                    boolean     primary,
-                    int         parameterCount)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      int parameterCount,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         primary,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        false,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    boolean       primary,
-                    int           parameterCount)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      boolean primary,
+      int parameterCount) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         primary,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        null,
+        null,
+        primary,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    int           parameterCount)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      boolean primary,
+      int parameterCount) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         false,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        primary,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String      cmdLineFlag,
-                    Set<String> synonymFlags,
-                    int         parameterCount,
-                    String...   defaultParams)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      int parameterCount) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         false,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         List.of(defaultParams),
-         false,
-         null,
-         null,
-         true);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        false,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    boolean       primary,
-                    int           parameterCount,
-                    boolean       deprecated,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      int parameterCount,
+      String... defaultParams) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         primary,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         Collections.emptyList(),
-         deprecated,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        null,
+        null,
+        false,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        List.of(defaultParams),
+        false,
+        null,
+        null,
+        true);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    boolean       primary,
-                    int           parameterCount,
-                    boolean       deprecated,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      boolean primary,
+      int parameterCount,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         primary,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         deprecated,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        null,
+        null,
+        primary,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        Collections.emptyList(),
+        deprecated,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    boolean       primary,
-                    int           parameterCount,
-                    List<String>  defaultParameters,
-                    boolean       deprecated,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      boolean primary,
+      int parameterCount,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         primary,
-         parameterCount < 0 ? 0 : parameterCount,
-         parameterCount,
-         defaultParameters,
-         deprecated,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        primary,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        deprecated,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String      cmdLineFlag,
-                    Set<String> synonymFlags,
-                    boolean     primary,
-                    int         minParameterCount,
-                    int         maxParameterCount,
-                    boolean     deprecated,
-                    String      groupName,
-                    String      groupPropertyKey,
-                    boolean     groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      boolean primary,
+      int parameterCount,
+      List<String> defaultParameters,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         null,
-         null,
-         primary,
-         minParameterCount,
-         maxParameterCount,
-         null,
-         deprecated,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        primary,
+        parameterCount < 0 ? 0 : parameterCount,
+        parameterCount,
+        defaultParameters,
+        deprecated,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    boolean       primary,
-                    int           minParameterCount,
-                    int           maxParameterCount,
-                    boolean       deprecated,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      boolean primary,
+      int minParameterCount,
+      int maxParameterCount,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
     this(cmdLineFlag,
-         synonymFlags,
-         envVariable,
-         envFallbacks,
-         primary,
-         minParameterCount,
-         maxParameterCount,
-         null,
-         deprecated,
-         groupName,
-         groupPropertyKey,
-         groupOptional);
+        synonymFlags,
+        null,
+        null,
+        primary,
+        minParameterCount,
+        maxParameterCount,
+        null,
+        deprecated,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
   }
 
-  SzPocServerOption(String        cmdLineFlag,
-                    Set<String>   synonymFlags,
-                    String        envVariable,
-                    List<String>  envFallbacks,
-                    boolean       primary,
-                    int           minParameterCount,
-                    int           maxParameterCount,
-                    List<String>  defaultParameters,
-                    boolean       deprecated,
-                    String        groupName,
-                    String        groupPropertyKey,
-                    boolean       groupOptional)
-  {
-    this.cmdLineFlag        = cmdLineFlag;
-    this.synonymFlags       = Set.copyOf(synonymFlags);
-    this.envVariable        = envVariable;
-    this.primary            = primary;
-    this.minParamCount      = minParameterCount;
-    this.maxParamCount      = maxParameterCount;
-    this.deprecated         = deprecated;
-    this.groupName          = groupName;
-    this.groupPropertyKey   = groupPropertyKey;
-    this.groupOptional      = groupOptional;
-    this.envFallbacks       = (envFallbacks == null)
-        ? Collections.emptyList() : List.copyOf(envFallbacks);
-    this.defaultParameters  = (defaultParameters == null)
-        ? Collections.emptyList() : List.copyOf(defaultParameters);
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      boolean primary,
+      int minParameterCount,
+      int maxParameterCount,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
+    this(cmdLineFlag,
+        synonymFlags,
+        envVariable,
+        envFallbacks,
+        primary,
+        minParameterCount,
+        maxParameterCount,
+        null,
+        deprecated,
+        groupName,
+        groupPropertyKey,
+        groupOptional);
+  }
+
+  SzPocServerOption(String cmdLineFlag,
+      Set<String> synonymFlags,
+      String envVariable,
+      List<String> envFallbacks,
+      boolean primary,
+      int minParameterCount,
+      int maxParameterCount,
+      List<String> defaultParameters,
+      boolean deprecated,
+      String groupName,
+      String groupPropertyKey,
+      boolean groupOptional) {
+    this.cmdLineFlag = cmdLineFlag;
+    this.synonymFlags = Set.copyOf(synonymFlags);
+    this.envVariable = envVariable;
+    this.primary = primary;
+    this.minParamCount = minParameterCount;
+    this.maxParamCount = maxParameterCount;
+    this.deprecated = deprecated;
+    this.groupName = groupName;
+    this.groupPropertyKey = groupPropertyKey;
+    this.groupOptional = groupOptional;
+    this.envFallbacks = (envFallbacks == null)
+        ? Collections.emptyList()
+        : List.copyOf(envFallbacks);
+    this.defaultParameters = (defaultParameters == null)
+        ? Collections.emptyList()
+        : List.copyOf(defaultParameters);
   }
 
   /**
@@ -869,10 +878,14 @@ public enum SzPocServerOption
   }
 
   @Override
-  public int getMinimumParameterCount() { return this.minParamCount; }
+  public int getMinimumParameterCount() {
+    return this.minParamCount;
+  }
 
   @Override
-  public int getMaximumParameterCount() { return this.maxParamCount; }
+  public int getMaximumParameterCount() {
+    return this.maxParamCount;
+  }
 
   @Override
   public List<String> getDefaultParameters() {
@@ -937,10 +950,9 @@ public enum SzPocServerOption
 
   static {
     try {
-      Map<SzPocServerOption, Set<Set<CommandLineOption>>> dependencyMap
-          = new LinkedHashMap<>();
-      Map<SzPocServerOption,Set<CommandLineOption>> conflictMap = new LinkedHashMap<>();
-      Map<SzPocServerOption,Set<SzPocServerOption>> altMap = new LinkedHashMap<>();
+      Map<SzPocServerOption, Set<Set<CommandLineOption>>> dependencyMap = new LinkedHashMap<>();
+      Map<SzPocServerOption, Set<CommandLineOption>> conflictMap = new LinkedHashMap<>();
+      Map<SzPocServerOption, Set<SzPocServerOption>> altMap = new LinkedHashMap<>();
       Map<String, SzPocServerOption> lookupMap = new LinkedHashMap<>();
 
       for (SzPocServerOption option : SzPocServerOption.values()) {
@@ -954,7 +966,8 @@ public enum SzPocServerOption
           SzApiServerOption.HELP, SzApiServerOption.VERSION };
       for (SzPocServerOption option : SzPocServerOption.values()) {
         for (CommandLineOption exclOption : exclusiveOptions) {
-          if (option == exclOption) continue;
+          if (option == exclOption)
+            continue;
           Set<CommandLineOption> set = conflictMap.get(option);
           set.add(exclOption);
         }
@@ -977,17 +990,17 @@ public enum SzPocServerOption
       Set<SzPocServerOption> sqsLoadOptions = Set.of(SQS_LOAD_URL);
 
       // enforce that we only have one load queue
-      for (SzPocServerOption option: kafkaLoadOptions) {
+      for (SzPocServerOption option : kafkaLoadOptions) {
         Set<CommandLineOption> conflictSet = conflictMap.get(option);
         conflictSet.addAll(rabbitLoadOptions);
         conflictSet.addAll(sqsLoadOptions);
       }
-      for (SzPocServerOption option: rabbitLoadOptions) {
+      for (SzPocServerOption option : rabbitLoadOptions) {
         Set<CommandLineOption> conflictSet = conflictMap.get(option);
         conflictSet.addAll(kafkaLoadOptions);
         conflictSet.addAll(sqsLoadOptions);
       }
-      for (SzPocServerOption option: sqsLoadOptions) {
+      for (SzPocServerOption option : sqsLoadOptions) {
         Set<CommandLineOption> conflictSet = conflictMap.get(option);
         conflictSet.addAll(kafkaLoadOptions);
         conflictSet.addAll(rabbitLoadOptions);
@@ -1010,18 +1023,18 @@ public enum SzPocServerOption
 
       // create the set of PostgreSQL options
       Set<CommandLineOption> postgreSqlOptions = Set.of(POSTGRESQL_HOST,
-                                                        POSTGRESQL_PORT,
-                                                        POSTGRESQL_DATABASE,
-                                                        POSTGRESQL_USER,
-                                                        POSTGRESQL_PASSWORD);
+          POSTGRESQL_PORT,
+          POSTGRESQL_DATABASE,
+          POSTGRESQL_USER,
+          POSTGRESQL_PASSWORD);
 
       Set<CommandLineOption> requiredPostgreSQL = Set.of(POSTGRESQL_HOST,
-                                                         POSTGRESQL_DATABASE,
-                                                         POSTGRESQL_USER,
-                                                         POSTGRESQL_PASSWORD);
+          POSTGRESQL_DATABASE,
+          POSTGRESQL_USER,
+          POSTGRESQL_PASSWORD);
 
       // setup dependencies and conflicts for the PostgreSQL options
-      for (CommandLineOption option: postgreSqlOptions) {
+      for (CommandLineOption option : postgreSqlOptions) {
         // get the set of dependency sets
         Set<Set<CommandLineOption>> dependencySets = dependencyMap.get(option);
 
@@ -1057,9 +1070,10 @@ public enum SzPocServerOption
 
       // handle dependencies for groups of options that go together
       Map<String, Set<SzPocServerOption>> groups = new LinkedHashMap<>();
-      for (SzPocServerOption option: SzPocServerOption.values()) {
+      for (SzPocServerOption option : SzPocServerOption.values()) {
         String groupName = option.getGroupName();
-        if (groupName == null) continue;
+        if (groupName == null)
+          continue;
         Set<SzPocServerOption> set = groups.get(groupName);
         if (set == null) {
           set = new LinkedHashSet<>();
@@ -1077,8 +1091,9 @@ public enum SzPocServerOption
           others.remove(option);
 
           // remove any options that are not required
-          for (SzPocServerOption opt: group) {
-            if (opt.isGroupOptional()) others.remove(opt);
+          for (SzPocServerOption opt : group) {
+            if (opt.isGroupOptional())
+              others.remove(opt);
           }
 
           // make the others set unmodifiable
@@ -1102,8 +1117,7 @@ public enum SzPocServerOption
   /**
    * The {@link ParameterProcessor} implementation for this class.
    */
-  private static class ParamProcessor implements ParameterProcessor
-  {
+  private static class ParamProcessor implements ParameterProcessor {
     /**
      * Processes the parameters for the specified option.
      *
@@ -1111,13 +1125,14 @@ public enum SzPocServerOption
      * @param params The {@link List} of parameters for the option.
      * @return The processed value.
      * @throws IllegalArgumentException If the specified {@link
-     *         CommandLineOption} is not an instance of {@link
-     *         SzApiServerOption} or is otherwise unrecognized.
+     *                                  CommandLineOption} is not an instance of
+     *                                  {@link
+     *                                  SzApiServerOption} or is otherwise
+     *                                  unrecognized.
      */
     public Object process(CommandLineOption option,
-                          List<String>      params)
-      throws BadOptionParametersException
-    {
+        List<String> params)
+        throws BadOptionParametersException {
       // check if an instance of SzApiServerOption
       if (option instanceof SzApiServerOption) {
         return SzApiServerOption.PARAMETER_PROCESSOR.process(option, params);
@@ -1177,7 +1192,6 @@ public enum SzPocServerOption
    * This instance will only handle instances of {@link CommandLineOption}
    * instances of type {@link SzApiServerOption}.
    */
-  public static final ParameterProcessor PARAMETER_PROCESSOR
-      = new SzPocServerOption.ParamProcessor();
+  public static final ParameterProcessor PARAMETER_PROCESSOR = new SzPocServerOption.ParamProcessor();
 
 }

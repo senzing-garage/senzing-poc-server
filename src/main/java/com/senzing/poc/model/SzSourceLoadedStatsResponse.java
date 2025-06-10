@@ -15,7 +15,8 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
   SzSourceLoadedStats getData();
 
   /**
-   * Sets the data associated with this response with an {@link SzSourceLoadedStats}.
+   * Sets the data associated with this response with an
+   * {@link SzSourceLoadedStats}.
    *
    * @param info The {@link SzSourceLoadedStats} describing the statistics.
    */
@@ -28,55 +29,54 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
     /**
      * Constructs with only the {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
     SzSourceLoadedStatsResponse create(SzMeta meta, SzLinks links);
 
     /**
-     * Creates an instance with the specified {@liink SzMeta}, {@link SzLinks}
+     * Creates an instance with the specified {@link SzMeta}, {@link SzLinks}
      * and {@link SzSourceLoadedStats}.
      *
-     * @param meta The response meta data.
+     * @param meta       The response meta data.
      *
-     * @param links The links for the response.
+     * @param links      The links for the response.
      *
-     * @param countStats The {@link SzSourceLoadedStats} describing the data for this 
-     *                  instance.
+     * @param countStats The {@link SzSourceLoadedStats} describing the data for
+     *                   this
+     *                   instance.
      */
-    SzSourceLoadedStatsResponse create(SzMeta              meta,
-                                      SzLinks             inks,
-                                      SzSourceLoadedStats  countStats);
+    SzSourceLoadedStatsResponse create(SzMeta meta,
+        SzLinks inks,
+        SzSourceLoadedStats countStats);
   }
-  
+
   /**
    * Provides a default {@link Provider} implementation for {@link
    * SzSourceLoadedStatsResponse} that produces instances of
    * {@link SzSourceLoadedStatsResponseImpl}.
    */
-  class DefaultProvider 
-    extends AbstractModelProvider<SzSourceLoadedStatsResponse>
-    implements Provider
-  {
+  class DefaultProvider
+      extends AbstractModelProvider<SzSourceLoadedStatsResponse>
+      implements Provider {
     /**
      * Default constructor.
      */
     public DefaultProvider() {
       super(SzSourceLoadedStatsResponse.class,
-            SzSourceLoadedStatsResponseImpl.class);
+          SzSourceLoadedStatsResponseImpl.class);
     }
 
     @Override
-    public SzSourceLoadedStatsResponse create(SzMeta meta, SzLinks links){
+    public SzSourceLoadedStatsResponse create(SzMeta meta, SzLinks links) {
       return new SzSourceLoadedStatsResponseImpl(meta, links);
     }
 
     @Override
-    public SzSourceLoadedStatsResponse create(SzMeta             meta,
-                                             SzLinks            links,
-                                             SzSourceLoadedStats countStats)
-    {
+    public SzSourceLoadedStatsResponse create(SzMeta meta,
+        SzLinks links,
+        SzSourceLoadedStats countStats) {
       return new SzSourceLoadedStatsResponseImpl(meta, links, countStats);
     }
   }
@@ -87,7 +87,7 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
    */
   class Factory extends ModelFactory<SzSourceLoadedStatsResponse, Provider> {
     /**
-     * Default constructor.  This is public and can only be called after the
+     * Default constructor. This is public and can only be called after the
      * singleton master instance is created as it inherits the same state from
      * the master instance.
      */
@@ -96,8 +96,9 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
     }
 
     /**
-     * Constructs with the default provider.  This constructor is private and
+     * Constructs with the default provider. This constructor is private and
      * is used for the master singleton instance.
+     * 
      * @param defaultProvider The default provider.
      */
     private Factory(Provider defaultProvider) {
@@ -108,7 +109,7 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
      * Creates an instance of {@link SzSourceLoadedStatsResponse} with the
      * specified {@link SzMeta} and {@link SzLinks}.
      *
-     * @param meta The response meta data.
+     * @param meta  The response meta data.
      *
      * @param links The links for the response.
      */
@@ -118,20 +119,19 @@ public interface SzSourceLoadedStatsResponse extends SzBasicResponse {
 
     /**
      * Creates an instance of {@link SzSourceLoadedStatsResponse} with the
-     * specified {@link SzMeta}, {@link SzLinks} and the speicified {@link
+     * specified {@link SzMeta}, {@link SzLinks} and the specified {@link
      * SzSourceLoadedStats} describing the bulk records.
      *
-     * @param meta The response meta data.
+     * @param meta       The response meta data.
      *
-     * @param links The links for the response.
+     * @param links      The links for the response.
      *
      * @param CountStats The {@link SzSourceLoadedStats} describing the
-     *                     bulk records.
+     *                   bulk records.
      */
-    public SzSourceLoadedStatsResponse create(SzMeta             meta,
-                                             SzLinks            links,
-                                             SzSourceLoadedStats countStats)
-    {
+    public SzSourceLoadedStatsResponse create(SzMeta meta,
+        SzLinks links,
+        SzSourceLoadedStats countStats) {
       return this.getProvider().create(meta, links, countStats);
     }
   }

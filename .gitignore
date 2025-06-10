@@ -68,9 +68,11 @@ target-v*
 *.iws
 
 .bash_history
-.history
 
-# VS Code
-.vscode/
+# Visual Studio code
+.vscode/*
+!.vscode/cspell.json
+*.code-workspace
+.history
 eclipse-formatter.xml
 

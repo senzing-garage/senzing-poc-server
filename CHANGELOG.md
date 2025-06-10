@@ -76,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `jetty-xxxx` dependencies from version `9.4.55.v20240627` to `9.4.56.v20240826`
   - Updated `jersey-xxxx` dependencies from version `2.44` to `2.45`
   - Updated `jackson-xxxx` dependencies from version `2.17.2` to `2.18.0`
-  - Updated `javassist` dependeny from version `3.29.2-GA` to `3.30.2-GA`
+  - Updated `javassist` dependency from version `3.29.2-GA` to `3.30.2-GA`
   - Updated Amazon `sqs` from version `2.26.27` to `2.28.17`
   - Updated `amqp-client` dependencies from version `5.21.0` to `5.22.0`
   - Updated `junit-jupiter` from version `5.10.3` to `5.11.2`
@@ -101,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 3.6.1
 
-- In `Dockerfile`, updated FROM instruction to 
+- In `Dockerfile`, updated FROM instruction to
   - `senzing/senzingapi-runtime:3.10.3`
   - `senzing/base-image-debian:1.0.24`
 
@@ -134,7 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 3.5.6
 
-- In `Dockerfile`, updated FROM instruction to 
+- In `Dockerfile`, updated FROM instruction to
   - `senzing/senzingapi-runtime:3.10.1`
   - `senzing/base-image-debian:1.0.23`
 
@@ -150,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 3.5.4
 
 - Updated `senzing-listener` dependency to version `0.5.7` and `data-mart-replicator`
-  to version `1.1.2` to get fix for PostgreSQL v13.x when using 
+  to version `1.1.2` to get fix for PostgreSQL v13.x when using
   `com.senzing.listener.communication.sql.PostgreSQLClient`.
 
 ## [3.5.3] - 2024-03-20
@@ -222,7 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added integration with embedded Data Mart Replicator
   - Added `data-mart-replicator` submodule
-  - Added options to configure data mart database connection 
+  - Added options to configure data mart database connection
   - Added initial REST operations for data mart statistics
 - Deprecated stream loader integration
   - Marked all command-line options deprecated
@@ -376,7 +376,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 3.3.0
 
 - Updated to version `3.4.0` of the `senzing-api-server` which changes the
-  default HTTP and HTTPS ports to 8250 and 8263, respectively.  In addition to
+  default HTTP and HTTPS ports to 8250 and 8263, respectively. In addition to
   adding support for 2 new `SzDetailLevel` values and one new `SzFeatureMode`
   value.
 
@@ -476,7 +476,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.1.0
 
-- Updated to `senzing-api-server` version 2.8.0 using `senzings-common-java`
+- Updated to `senzing-api-server` version 2.8.0 using `senzing-common-java`
 - Now masks the value of the Rabbit MQ password in logs
 - Upgrade to `senzing/senzing-base:1.6.3`
 

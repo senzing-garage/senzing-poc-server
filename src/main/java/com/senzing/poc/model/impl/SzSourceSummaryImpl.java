@@ -53,17 +53,18 @@ public class SzSourceSummaryImpl implements SzSourceSummary {
   /**
    * Constructs with the specified data source code.
    * 
-   * @param dataSourceCode The data source code to assocaited with the source summary.
+   * @param dataSourceCode The data source code to associated with the source
+   *                       summary.
    * 
    */
   public SzSourceSummaryImpl(String dataSourceCode) {
     this.dataSource = dataSourceCode;
-    this.recordCount          = 0L;
-    this.entityCount          = 0L;
+    this.recordCount = 0L;
+    this.entityCount = 0L;
     this.unmatchedRecordCount = 0L;
-    this.crossSummaries       = new LinkedHashMap<>();
+    this.crossSummaries = new LinkedHashMap<>();
   }
-  
+
   @Override
   public String getDataSource() {
     return this.dataSource;
@@ -123,7 +124,8 @@ public class SzSourceSummaryImpl implements SzSourceSummary {
 
   @Override
   public void addCrossSourceSummary(SzCrossSourceSummary crossSummary) {
-    if (crossSummary == null) return;
+    if (crossSummary == null)
+      return;
     this.crossSummaries.put(crossSummary.getVersusDataSource(), crossSummary);
   }
 
