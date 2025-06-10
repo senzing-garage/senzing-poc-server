@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.6] - 2025-06-10
+
+### Changed in 3.6.7
+
+- Updated dependencies:
+  - Updated `senzing-commons-java` dependencies from version `3.3.3` to `3.3.4`
+  - Updated `data-mart-replicator` dependencies from version `1.2.1` to `1.2.2`
+  - Updated `senzing-api-server` dependencies from version `3.5.17` to `3.5.18`
+  - Updated `jersey-xxxx` dependencies from version `2.46` to `2.47`
+  - Updated `jackson-xxxx` dependencies from version `2.18.3` to `2.19.0`
+  - Updated `junit-jupiter` from version `5.12.2` to `5.13.1`
+  - Updated Amazon `sqs` from version `2.31.22` to `2.31.59`
+  - Updated `kafka-clients` from version `3.9.0` to `3.9.1`
+
 ## [3.6.6] - 2025-04-17
 
 ### Changed in 3.6.6
