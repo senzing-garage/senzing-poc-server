@@ -101,7 +101,7 @@ COPY --from=builder "/senzing-poc-server.jar" "/app/senzing-poc-server.jar"
 
 # Copy files from other docker containers.
 
-COPY --from=senzing/senzing-poc-server:1.3.0 "/app/senzing-poc-server.jar" "/appV2/senzing-poc-server.jar"
+COPY --from=senzing/senzing-poc-server:3.6.9@sha256:7a559a2eae215ae4788f573fbfd899b93fabc75010a7fbaf206c475334344703 "/app/senzing-poc-server.jar" "/appV2/senzing-poc-server.jar"
 
 # Make non-root container.
 
