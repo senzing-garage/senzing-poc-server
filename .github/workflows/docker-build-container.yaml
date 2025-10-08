@@ -2,11 +2,12 @@ name: docker build container
 
 on: [push]
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   docker-build-container:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
 
     steps:
@@ -15,6 +16,7 @@ jobs:
         with:
           fetch-depth: "0"
           submodules: recursive
+          persist-credentials: false
 
       - name: get repo name
         id: repo-basename
