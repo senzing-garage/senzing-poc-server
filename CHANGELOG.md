@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.10] - 2025-10-24
+
+### Changed in 3.6.10
+
+- Updated dependencies:
+  - Updated `senzing-commons-java` from version `3.3.6` to `3.3.7`
+  - Updated `senzing-api-server` from version `3.5.20` to `3.5.21`
+  - Updated `data-mart-replicator` from version `1.2.2` to `1.2.4`
+  - Updated `jackson-xxxx` dependencies from version `2.19.2` to `2.20.0`
+  - Updated `junit-jupiter` from version `5.13.4` to `5.14.0`
+  - Updated Amazon `sqs` from version `2.32.19` to `2.35.11`
+  - Updated `amqp-client` dependencies from version `5.26.0` to `5.27.0`
+  - Updated `jetty-xxxx` dependencies from version `9.4.57.v20241219` to `9.4.58.v20250814`
+  - Updated various maven plugin dependencies for builds
+
 ## [3.6.9] - 2025-08-12
 
 ### Changed in 3.6.9

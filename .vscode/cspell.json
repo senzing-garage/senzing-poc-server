@@ -41,6 +41,7 @@
     "JSONLINES",
     "keyrings",
     "libodbc",
+    "libodbccr",
     "mkey",
     "ODBCSYSINI",
     "Pgku",
