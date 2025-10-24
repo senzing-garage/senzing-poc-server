@@ -150,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed entity ID bound default value to be conditional on bound type
 - Changed relation key to allow `max`, `max:<num>` and `<num>:max`
 - Changed relation key bound default value to be conditional on bound type
-- Fixed relation query to use `DESC` clause on `ORDER BY` of both entity ID's
+- Fixed relation query to use `DESC` clause on `ORDER BY` of both entity IDs
 - Updated spec to version 3.6.0 in accordance with type changes
 - Updated dependencies:
   - Updated `senzing-commons` from version `3.2.0` to `3.3.0`
@@ -504,7 +504,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.1.1
 
-- Updated to `senzing-api-server` version 2.8.1 to reduce repo size
+- Updated to `senzing-api-server` version 2.8.1 to reduce repository size
 - Updated POC REST API spec to fix bulk-data examples
 - Updated spring framework dependencies in `pom.xml` tp address security
   vulnerabilities.
