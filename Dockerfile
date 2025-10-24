@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=senzing/senzingapi-runtime:3.12.8
-ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.24
+ARG BASE_IMAGE=senzing/senzingapi-runtime:3.13.0@sha256:edca155d3601238fab622a7dd86471046832328d21f71f7bb2ae5463157f6e10
+ARG BASE_BUILDER_IMAGE=senzing/base-image-debian:1.0.24@sha256:1e00881b45a78d9d93973ba845cd83d35aeb318273e30dde89060e01a9d0167c
 
 # -----------------------------------------------------------------------------
 # Stage: builder
@@ -51,7 +51,7 @@ ENV REFRESHED_AT=2024-06-24
 
 LABEL Name="senzing/senzing-poc-server" \
   Maintainer="support@senzing.com" \
-  Version="3.6.7"
+  Version="3.6.9"
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
@@ -65,7 +65,8 @@ RUN apt-get update \
   && apt-get -y install \
   gnupg2 \
   jq \
-  libodbc1 \
+  libodbc2 \
+  libodbccr2 \
   postgresql-client \
   unixodbc \
   && rm -rf /var/lib/apt/lists/*
@@ -101,7 +102,7 @@ COPY --from=builder "/senzing-poc-server.jar" "/app/senzing-poc-server.jar"
 
 # Copy files from other docker containers.
 
-COPY --from=senzing/senzing-poc-server:1.3.0 "/app/senzing-poc-server.jar" "/appV2/senzing-poc-server.jar"
+COPY --from=senzing/senzing-poc-server:1.3.0@sha256:477c44675aa2178fdb4b0789451ba40906f088b5cdffe8c5a4e5a59de61b6b59 "/app/senzing-poc-server.jar" "/appV2/senzing-poc-server.jar"
 
 # Make non-root container.
 
