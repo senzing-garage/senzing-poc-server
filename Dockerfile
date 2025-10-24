@@ -65,7 +65,8 @@ RUN apt-get update \
   && apt-get -y install \
   gnupg2 \
   jq \
-  libodbc1 \
+  libodbc2 \
+  libodbccr2 \
   postgresql-client \
   unixodbc \
   && rm -rf /var/lib/apt/lists/*
