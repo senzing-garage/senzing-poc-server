@@ -5,6 +5,7 @@
     "adoptium",
     "alnum",
     "awssdk",
+    "barrycaceres",
     "boostrap",
     "Boundaryt",
     "buildx",
@@ -40,6 +41,7 @@
     "jaxb",
     "JDBC",
     "JSONLINES",
+    "kernelsam",
     "keyrings",
     "libodbc",
     "libodbccr",
@@ -59,5 +61,10 @@
     "toplevel",
     "unixodbc"
   ],
-  "ignorePaths": [".git/**", ".gitignore", "pom.xml", "target/**"]
+  "ignorePaths": [
+    ".git/**",
+    ".gitignore",
+    "pom.xml",
+    "target/**"
+  ]
 }
