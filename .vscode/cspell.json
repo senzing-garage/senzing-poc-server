@@ -61,10 +61,5 @@
     "toplevel",
     "unixodbc"
   ],
-  "ignorePaths": [
-    ".git/**",
-    ".gitignore",
-    "pom.xml",
-    "target/**"
-  ]
+  "ignorePaths": [".git/**", ".gitignore", "pom.xml", "target/**"]
 }
